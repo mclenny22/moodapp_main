@@ -1,0 +1,65 @@
+'use client'
+
+import { useAuth } from '@/lib/auth-context'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Badge } from '@/components/ui/badge'
+import { Separator } from '@/components/ui/separator'
+
+export function UserProfile() {
+  const { user, signOut } = useAuth()
+
+  if (!user) {
+    return null
+  }
+
+  const handleSignOut = async () => {
+    await signOut()
+  }
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Profile</CardTitle>
+        <CardDescription>Your account information</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="flex items-center space-x-4">
+          <Avatar>
+            <AvatarFallback>
+              {user.email?.charAt(0).toUpperCase() || 'U'}
+            </AvatarFallback>
+          </Avatar>
+          <div>
+            <p className="text-sm font-medium">{user.email}</p>
+            <p className="text-sm text-muted-foreground">
+              User ID: {user.id.slice(0, 8)}...
+            </p>
+          </div>
+        </div>
+        
+        <Separator />
+        
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium">Email verified</span>
+            <Badge variant={user.email_confirmed_at ? "default" : "secondary"}>
+              {user.email_confirmed_at ? 'Yes' : 'No'}
+            </Badge>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium">Created</span>
+            <span className="text-sm text-muted-foreground">
+              {new Date(user.created_at).toLocaleDateString()}
+            </span>
+          </div>
+        </div>
+
+        <Button onClick={handleSignOut} variant="outline" className="w-full">
+          Sign Out
+        </Button>
+      </CardContent>
+    </Card>
+  )
+} 

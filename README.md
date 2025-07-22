@@ -1,36 +1,133 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Mood App
+
+A Next.js web application with Supabase authentication, built with shadcn/ui components and deployed on Vercel.
+
+## Features
+
+- 🔐 **Supabase Authentication** - Secure user authentication with email/password
+- 📝 **Journal Entry System** - Daily mood tracking with AI analysis
+- 📊 **Sentiment Analysis** - AI-powered emotional tone analysis (-5 to +5 scale)
+- 🏷️ **Theme Extraction** - Automatic tagging of emotional themes
+- 📈 **Trends & Analytics** - Visual mood trends and insights
+- 🎨 **shadcn/ui Components** - Beautiful, accessible UI components
+- 📱 **Mobile-First Design** - Optimized for mobile with 600px max-width on desktop
+- 🌙 **Dark Mode Support** - Built-in dark/light theme switching
+- ⚡ **Next.js 15** - Latest features with App Router
+- 🚀 **Vercel Ready** - Optimized for deployment on Vercel
+
+## Tech Stack
+
+- **Framework**: Next.js 15 with App Router
+- **Styling**: Tailwind CSS
+- **UI Components**: shadcn/ui
+- **Authentication**: Supabase Auth
+- **Database**: Supabase (PostgreSQL)
+- **Deployment**: Vercel
+- **Language**: TypeScript
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+ 
+- npm, yarn, or pnpm
+- Supabase account
+
+### 1. Clone and Install
+
+```bash
+git clone <your-repo-url>
+cd moodapp_main
+npm install
+```
+
+### 2. Set up Supabase
+
+1. Create a new project at [supabase.com](https://supabase.com)
+2. Go to Settings > API to get your project URL and anon key
+3. Copy `env.example` to `.env.local`:
+   ```bash
+   cp env.example .env.local
+   ```
+4. Update `.env.local` with your Supabase credentials:
+   ```env
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+   ```
+
+### 3. Run Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to see the application.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 4. Test the Application
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+**Option A: Demo Mode (No Supabase Setup Required)**
+1. Click "Demo Login" to test the UI without authentication
+2. Explore all features: Today, Journal, and Trends tabs
+3. Test the responsive design on different screen sizes
 
-## Learn More
+**Option B: Full Authentication (Requires Supabase Setup)**
+1. Click "Sign Up" to create a new account
+2. Check your email for the confirmation link
+3. Sign in with your credentials
+4. Start journaling and see AI analysis in action
 
-To learn more about Next.js, take a look at the following resources:
+## Project Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+src/
+├── app/                 # Next.js App Router pages
+├── components/          # React components
+│   ├── auth/           # Authentication components
+│   └── ui/             # shadcn/ui components
+└── lib/                # Utility functions and configurations
+    ├── auth-context.tsx # Authentication context
+    ├── supabase.ts     # Supabase client configuration
+    └── utils.ts        # Utility functions
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Deployment on Vercel
 
-## Deploy on Vercel
+### 1. Push to GitHub
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+git add .
+git commit -m "Initial commit"
+git push origin main
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 2. Deploy on Vercel
+
+1. Connect your GitHub repository to Vercel
+2. Add environment variables in Vercel dashboard:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+3. Deploy!
+
+### 3. Configure Supabase
+
+1. Go to your Supabase project settings
+2. Add your Vercel domain to the allowed redirect URLs
+3. Update your site URL in Supabase settings
+
+## Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
+
+## License
+
+MIT License - see LICENSE file for details
