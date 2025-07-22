@@ -19,7 +19,7 @@ export function UserProfile() {
   }
 
   // Get user's name from metadata or fallback to email
-  const userName = user.user_metadata?.name || user.email?.split('@')[0] || 'User'
+  const userName = user.user_metadata?.display_name || user.user_metadata?.name || user.email?.split('@')[0] || 'User'
   const userInitial = userName.charAt(0).toUpperCase()
 
   return (
