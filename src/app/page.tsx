@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { TodayView } from '@/components/journal/today-view'
 import { JournalView } from '@/components/journal/journal-view'
 import { TrendsView } from '@/components/journal/trends-view'
-import { TestSupabase } from '@/components/test-supabase'
+
 import { UserProfile } from '@/components/auth/user-profile'
 
 export default function Home() {
@@ -36,9 +36,6 @@ export default function Home() {
             </HeaderDescription>
           </Header>
           <SignInForm />
-          
-          {/* Supabase Test */}
-          <TestSupabase />
           
           {/* Demo Login for Testing */}
           <div className="text-center">
