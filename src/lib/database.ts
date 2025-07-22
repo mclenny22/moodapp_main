@@ -9,6 +9,7 @@ export interface JournalEntry {
   sentiment_score: number
   tags: string[]
   memory_weight: number
+  reflection_prompt?: string
   created_at: string
   updated_at: string
 }
@@ -18,6 +19,7 @@ export interface EntryAnalysis {
   summary: string
   tags: string[]
   memory_weight: number
+  reflection_prompt?: string
 }
 
 const supabase = createClient()
@@ -37,7 +39,8 @@ export async function createJournalEntry(
         summary: analysis.summary,
         sentiment_score: analysis.sentiment_score,
         tags: analysis.tags,
-        memory_weight: analysis.memory_weight
+        memory_weight: analysis.memory_weight,
+        reflection_prompt: analysis.reflection_prompt
       })
       .select()
       .single()
@@ -206,6 +209,7 @@ export async function updateJournalEntry(
         sentiment_score: analysis.sentiment_score,
         tags: analysis.tags,
         memory_weight: analysis.memory_weight,
+        reflection_prompt: analysis.reflection_prompt,
         updated_at: new Date().toISOString()
       })
       .eq('id', entryId)

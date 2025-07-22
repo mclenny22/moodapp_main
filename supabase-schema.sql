@@ -8,6 +8,7 @@ CREATE TABLE entries (
     sentiment_score FLOAT CHECK (sentiment_score >= -5 AND sentiment_score <= 5),
     tags TEXT[],
     memory_weight INTEGER CHECK (memory_weight >= 1 AND memory_weight <= 10),
+    reflection_prompt TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     
