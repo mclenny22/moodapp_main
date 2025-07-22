@@ -103,7 +103,7 @@ export function SignInForm() {
             <TabsTrigger value="signup">Sign Up</TabsTrigger>
           </TabsList>
           
-          <TabsContent value="signin" className="space-y-4 mt-4 data-[state=inactive]:animate-out data-[state=inactive]:fade-out-0 data-[state=inactive]:slide-out-to-left-1/4 data-[state=active]:animate-in data-[state=active]:fade-in-0 data-[state=active]:slide-in-from-right-1/4">
+          <TabsContent value="signin" className="space-y-4 mt-4">
             <form onSubmit={handleSignIn} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="signin-email">Email</Label>
@@ -129,13 +129,13 @@ export function SignInForm() {
               </div>
               
               {error && (
-                <Alert variant="destructive" className="animate-in fade-in-0 slide-in-from-top-2 duration-200">
+                <Alert variant="destructive">
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>
               )}
               
               {message && (
-                <Alert className="animate-in fade-in-0 slide-in-from-top-2 duration-200">
+                <Alert>
                   <AlertDescription>{message}</AlertDescription>
                 </Alert>
               )}
@@ -150,7 +150,7 @@ export function SignInForm() {
             </form>
           </TabsContent>
           
-          <TabsContent value="signup" className="space-y-4 mt-4 data-[state=inactive]:animate-out data-[state=inactive]:fade-out-0 data-[state=inactive]:slide-out-to-right-1/4 data-[state=active]:animate-in data-[state=active]:fade-in-0 data-[state=active]:slide-in-from-left-1/4">
+          <TabsContent value="signup" className="space-y-4 mt-4">
             <form onSubmit={handleSignUp} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="signup-name">Full Name</Label>
@@ -187,13 +187,13 @@ export function SignInForm() {
               </div>
               
               {error && (
-                <Alert variant="destructive" className="animate-in fade-in-0 slide-in-from-top-2 duration-200">
+                <Alert variant="destructive">
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>
               )}
               
               {message && (
-                <Alert className="animate-in fade-in-0 slide-in-from-top-2 duration-200">
+                <Alert>
                   <AlertDescription>{message}</AlertDescription>
                 </Alert>
               )}
