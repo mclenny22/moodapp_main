@@ -1,12 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Spinner } from '@/components/ui/spinner'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { useAuth } from '@/lib/auth-context'
-import { createJournalEntry } from '@/lib/database'
+import { createJournalEntry, getTodaysEntry, updateJournalEntry, JournalEntry } from '@/lib/database'
 
 export function TodayView() {
   const { user } = useAuth()
@@ -16,6 +16,100 @@ export function TodayView() {
   const [error, setError] = useState<string | null>(null)
   const [reflectionPrompt, setReflectionPrompt] = useState<string | null>(null)
   const [showSuccessState, setShowSuccessState] = useState(false)
+  const [todaysEntry, setTodaysEntry] = useState<JournalEntry | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [showEditModal, setShowEditModal] = useState(false)
+  const [editContent, setEditContent] = useState('')
+  const [isUpdating, setIsUpdating] = useState(false)
+
+  useEffect(() => {
+    if (user) {
+      checkTodaysEntry()
+    }
+  }, [user])
+
+  const checkTodaysEntry = async () => {
+    if (!user) return
+    
+    setIsLoading(true)
+    try {
+      const entry = await getTodaysEntry(user.id)
+      setTodaysEntry(entry)
+      
+      if (entry) {
+        // If there's already an entry for today, show success state
+        setShowSuccessState(true)
+        setReflectionPrompt(entry.summary) // Use summary as reflection prompt for now
+      }
+    } catch (error) {
+      console.error('Error checking today\'s entry:', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleEditClick = () => {
+    if (todaysEntry) {
+      setEditContent(todaysEntry.content)
+      setShowEditModal(true)
+    }
+  }
+
+  const handleSaveEdit = async () => {
+    if (!editContent.trim() || !user || !todaysEntry) return
+    
+    setIsUpdating(true)
+    setError(null)
+    
+    try {
+      // Analyze sentiment with OpenAI
+      const sentimentResponse = await fetch('/api/sentiment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ content: editContent }),
+      })
+
+      if (!sentimentResponse.ok) {
+        throw new Error('Failed to analyze sentiment')
+      }
+
+      const analysis = await sentimentResponse.json()
+      
+      // Update the entry in database
+      const updatedEntry = await updateJournalEntry(todaysEntry.id, user.id, editContent, analysis)
+      
+      if (!updatedEntry) {
+        throw new Error('Failed to update entry')
+      }
+      
+      // Generate new reflection prompt
+      const reflectionResponse = await fetch('/api/reflection-prompt', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ content: editContent }),
+      })
+
+      if (reflectionResponse.ok) {
+        const { reflectionPrompt: prompt } = await reflectionResponse.json()
+        setReflectionPrompt(prompt)
+      }
+      
+      // Update local state
+      setTodaysEntry(updatedEntry)
+      setShowEditModal(false)
+      setShowSuccessState(true)
+      
+    } catch (error) {
+      console.error('Error updating entry:', error)
+      setError('Failed to update entry. Please try again.')
+    } finally {
+      setIsUpdating(false)
+    }
+  }
 
   const handleSubmit = async () => {
     if (!content.trim() || !user) return
@@ -105,12 +199,7 @@ export function TodayView() {
     }
   }
 
-  const resetForm = () => {
-    setContent('')
-    setError(null)
-    setReflectionPrompt(null)
-    setShowSuccessState(false)
-  }
+
 
   const today = new Date().toLocaleDateString('en-US', {
     weekday: 'long',
@@ -125,7 +214,14 @@ export function TodayView() {
         <h2 className="text-xl font-semibold">{today}</h2>
       </div>
       
-      {showSuccessState ? (
+      {isLoading ? (
+        <div className="flex items-center justify-center py-8">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+            <p className="text-sm text-muted-foreground">Loading...</p>
+          </div>
+        </div>
+      ) : showSuccessState ? (
         <div className="space-y-6">
           <Alert>
             <AlertDescription className="text-lg font-medium">
@@ -148,10 +244,10 @@ export function TodayView() {
             </p>
             <Button 
               variant="outline" 
-              onClick={resetForm}
+              onClick={handleEditClick}
               className="w-full max-w-xs"
             >
-              Write another entry
+              Edit Entry
             </Button>
           </div>
         </div>
@@ -201,6 +297,63 @@ export function TodayView() {
                 'Help me write'
               )}
             </Button>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Modal */}
+      {showEditModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+          <div className="bg-background rounded-lg p-6 w-full max-w-2xl max-h-[80vh] overflow-y-auto">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold">Edit Today&apos;s Entry</h3>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowEditModal(false)}
+              >
+                ✕
+              </Button>
+            </div>
+            
+            {error && (
+              <Alert variant="destructive" className="mb-4">
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+            
+            <Textarea
+              placeholder="Edit your journal entry..."
+              value={editContent}
+              onChange={(e) => setEditContent(e.target.value)}
+              className="min-h-[200px] resize-none mb-4"
+            />
+            
+            <div className="flex gap-2">
+              <Button 
+                onClick={handleSaveEdit}
+                disabled={!editContent.trim() || isUpdating}
+                className="flex-1"
+              >
+                {isUpdating ? (
+                  <>
+                    <Spinner className="mr-2 h-4 w-4" />
+                    Updating...
+                  </>
+                ) : (
+                  'Save Edits'
+                )}
+              </Button>
+              
+              <Button 
+                variant="outline"
+                onClick={() => setShowEditModal(false)}
+                disabled={isUpdating}
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+            </div>
           </div>
         </div>
       )}

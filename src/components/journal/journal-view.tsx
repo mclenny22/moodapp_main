@@ -94,13 +94,20 @@ export function JournalView() {
             >
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between">
-                  <CardTitle className="text-base font-medium">
-                    {new Date(entry.date).toLocaleDateString('en-US', {
-                      weekday: 'short',
-                      month: 'short',
-                      day: 'numeric'
-                    })}
-                  </CardTitle>
+                  <div className="flex items-center gap-2">
+                    <CardTitle className="text-base font-medium">
+                      {new Date(entry.date).toLocaleDateString('en-US', {
+                        weekday: 'short',
+                        month: 'short',
+                        day: 'numeric'
+                      })}
+                    </CardTitle>
+                    {entry.memory_weight >= 7 && (
+                      <Badge variant="outline" className="text-xs bg-yellow-50 text-yellow-700 border-yellow-200">
+                        ⭐ Memorable
+                      </Badge>
+                    )}
+                  </div>
                   <Badge 
                     variant="secondary" 
                     className={`${getSentimentColor(entry.sentiment_score)} border-current`}
@@ -154,9 +161,12 @@ export function JournalView() {
                 <span className={`text-2xl font-bold ${getSentimentColor(selectedEntry.sentiment_score)}`}>
                   {formatSentimentScore(selectedEntry.sentiment_score)}
                 </span>
-                <Badge variant="outline">
-                  Memory: {selectedEntry.memory_weight}/10
-                </Badge>
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline" className={selectedEntry.memory_weight >= 7 ? "bg-yellow-50 text-yellow-700 border-yellow-200" : ""}>
+                    Memory: {selectedEntry.memory_weight}/10
+                    {selectedEntry.memory_weight >= 7 && " ⭐"}
+                  </Badge>
+                </div>
               </div>
               
               <div>
