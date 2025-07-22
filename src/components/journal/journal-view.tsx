@@ -51,21 +51,24 @@ export function JournalView() {
         {mockEntries.map((entry) => (
           <Card 
             key={entry.id}
-            className={`cursor-pointer transition-colors hover:bg-muted/50 ${getSentimentBackgroundColor(entry.sentiment_score)}`}
+            className="cursor-pointer transition-colors hover:bg-muted/50"
             onClick={() => setSelectedEntry(entry)}
           >
-            <CardHeader className="pb-3">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-sm font-medium">
+            <CardHeader className="pb-1">
+              <div className="flex items-start justify-between">
+                <CardTitle className="text-lg font-medium">
                   {new Date(entry.date).toLocaleDateString('en-US', {
                     weekday: 'short',
                     month: 'short',
                     day: 'numeric'
                   })}
                 </CardTitle>
-                <span className={`text-lg font-bold ${getSentimentColor(entry.sentiment_score)}`}>
+                <Badge 
+                  variant="secondary" 
+                  className={`${getSentimentColor(entry.sentiment_score)} border-current`}
+                >
                   {formatSentimentScore(entry.sentiment_score)}
-                </span>
+                </Badge>
               </div>
             </CardHeader>
             <CardContent className="pt-0">

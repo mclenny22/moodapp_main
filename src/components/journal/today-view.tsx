@@ -3,26 +3,89 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Spinner } from '@/components/ui/spinner'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 
 export function TodayView() {
   const [content, setContent] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isGettingHelp, setIsGettingHelp] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const handleSubmit = async () => {
     if (!content.trim()) return
     
     setIsSubmitting(true)
-    // TODO: Implement journal submission with AI analysis
-    console.log('Submitting entry:', content)
+    setError(null)
     
-    // Simulate API call
-    setTimeout(() => {
-      setIsSubmitting(false)
+    try {
+      // Analyze sentiment with OpenAI
+      const sentimentResponse = await fetch('/api/sentiment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ content }),
+      })
+
+      if (!sentimentResponse.ok) {
+        throw new Error('Failed to analyze sentiment')
+      }
+
+      const analysis = await sentimentResponse.json()
+      
+      // TODO: Save to database with analysis
+      console.log('Journal entry with analysis:', {
+        content,
+        sentiment_score: analysis.sentiment_score,
+        summary: analysis.summary,
+        tags: analysis.tags,
+      })
+      
+      // Clear form and show success
       setContent('')
       // TODO: Show success message and redirect to journal view
-    }, 2000)
+      
+    } catch (error) {
+      console.error('Error submitting entry:', error)
+      setError('Failed to submit entry. Please try again.')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const handleHelpWrite = async () => {
+    setIsGettingHelp(true)
+    setError(null)
+    
+    try {
+      const response = await fetch('/api/writing-help', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ currentContent: content }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to get writing help')
+      }
+
+      const { writingStarter } = await response.json()
+      
+      // Add the writing starter to the current content
+      if (content.trim()) {
+        setContent(content + '\n\n' + writingStarter)
+      } else {
+        setContent(writingStarter)
+      }
+      
+    } catch (error) {
+      console.error('Error getting writing help:', error)
+      setError('Failed to get writing help. Please try again.')
+    } finally {
+      setIsGettingHelp(false)
+    }
   }
 
   const today = new Date().toLocaleDateString('en-US', {
@@ -33,11 +96,18 @@ export function TodayView() {
   })
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{today}</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-xl font-semibold">{today}</h2>
+      </div>
+      
+      <div className="space-y-4">
+        {error && (
+          <Alert variant="destructive">
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
+        
         <Textarea
           placeholder="How are you feeling today? Write freely about your thoughts, emotions, and experiences..."
           value={content}
@@ -45,21 +115,39 @@ export function TodayView() {
           className="min-h-[200px] resize-none"
         />
         
-        <Button 
-          onClick={handleSubmit}
-          disabled={!content.trim() || isSubmitting}
-          className="w-full"
-        >
-          {isSubmitting ? (
-            <>
-              <Spinner className="mr-2 h-4 w-4" />
-              Analyzing...
-            </>
-          ) : (
-            'Submit Entry'
-          )}
-        </Button>
-      </CardContent>
-    </Card>
+        <div className="flex gap-2">
+          <Button 
+            onClick={handleSubmit}
+            disabled={!content.trim() || isSubmitting || isGettingHelp}
+            className="flex-1"
+          >
+            {isSubmitting ? (
+              <>
+                <Spinner className="mr-2 h-4 w-4" />
+                Analyzing...
+              </>
+            ) : (
+              'Submit Entry'
+            )}
+          </Button>
+          
+          <Button 
+            variant="outline"
+            onClick={handleHelpWrite}
+            disabled={isSubmitting || isGettingHelp}
+            className="flex-1"
+          >
+            {isGettingHelp ? (
+              <>
+                <Spinner className="mr-2 h-4 w-4" />
+                Getting help...
+              </>
+            ) : (
+              'Help me write'
+            )}
+          </Button>
+        </div>
+      </div>
+    </div>
   )
 } 
