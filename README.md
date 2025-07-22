@@ -65,16 +65,12 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 
 ### 4. Test the Application
 
-**Option A: Demo Mode (No Supabase Setup Required)**
+**Demo Mode (Recommended for Testing)**
 1. Click "Demo Login" to test the UI without authentication
 2. Explore all features: Today, Journal, and Trends tabs
 3. Test the responsive design on different screen sizes
 
-**Option B: Full Authentication (Requires Supabase Setup)**
-1. Click "Sign Up" to create a new account
-2. Check your email for the confirmation link
-3. Sign in with your credentials
-4. Start journaling and see AI analysis in action
+**Note:** Full authentication with Supabase will be added after deployment
 
 ## Project Structure
 

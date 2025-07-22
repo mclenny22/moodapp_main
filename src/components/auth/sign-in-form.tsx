@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { createClient } from '@/lib/supabase'
+// import { createClient } from '@/lib/supabase'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -14,7 +14,7 @@ export function SignInForm() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [message, setMessage] = useState<string | null>(null)
-  const supabase = createClient()
+  // const supabase = createClient()
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -22,24 +22,28 @@ export function SignInForm() {
     setError(null)
     setMessage(null)
 
-    try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      })
+    // TODO: Uncomment when Supabase is connected
+    setError('Authentication not yet connected. Use Demo Login for testing.')
+    setLoading(false)
+    
+    // try {
+    //   const { error } = await supabase.auth.signInWithPassword({
+    //     email,
+    //     password,
+    //   })
 
-      if (error) {
-        setError(error.message)
-      } else {
-        setMessage('Signed in successfully!')
-        // Redirect or refresh to update auth state
-        window.location.reload()
-      }
-    } catch {
-      setError('An unexpected error occurred')
-    } finally {
-      setLoading(false)
-    }
+    //   if (error) {
+    //     setError(error.message)
+    //   } else {
+    //     setMessage('Signed in successfully!')
+    //     // Redirect or refresh to update auth state
+    //     window.location.reload()
+    //   }
+    // } catch {
+    //   setError('An unexpected error occurred')
+    // } finally {
+    //   setLoading(false)
+    // }
   }
 
   const handleSignUp = async (e: React.FormEvent) => {
@@ -48,23 +52,27 @@ export function SignInForm() {
     setError(null)
     setMessage(null)
 
-    try {
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-      })
+    // TODO: Uncomment when Supabase is connected
+    setError('Authentication not yet connected. Use Demo Login for testing.')
+    setLoading(false)
+    
+    // try {
+    //   const { error } = await supabase.auth.signUp({
+    //     email,
+    //     password,
+    //   })
 
-      if (error) {
-        setError(error.message)
-      } else {
-        setMessage('Check your email for the confirmation link!')
-        // For sign up, we don't auto-refresh since they need to confirm email
-      }
-    } catch {
-      setError('An unexpected error occurred')
-    } finally {
-      setLoading(false)
-    }
+    //   if (error) {
+    //     setError(error.message)
+    //   } else {
+    //     setMessage('Check your email for the confirmation link!')
+    //     // For sign up, we don't auto-refresh since they need to confirm email
+    //   }
+    // } catch {
+    //   setError('An unexpected error occurred')
+    // } finally {
+    //   setLoading(false)
+    // }
   }
 
   return (
