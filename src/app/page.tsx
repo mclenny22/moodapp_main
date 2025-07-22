@@ -9,6 +9,7 @@ import { TodayView } from '@/components/journal/today-view'
 import { JournalView } from '@/components/journal/journal-view'
 import { TrendsView } from '@/components/journal/trends-view'
 import { TestSupabase } from '@/components/test-supabase'
+import { UserProfile } from '@/components/auth/user-profile'
 
 export default function Home() {
   const { user, loading, signOut } = useAuth()
@@ -73,19 +74,18 @@ export default function Home() {
           <Button 
             variant="outline" 
             size="sm"
-            onClick={async () => {
-              await signOut()
-            }}
+            onClick={signOut}
           >
             Sign Out
           </Button>
         </div>
 
         <Tabs defaultValue="today" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="today">Today</TabsTrigger>
             <TabsTrigger value="journal">Journal</TabsTrigger>
             <TabsTrigger value="trends">Trends</TabsTrigger>
+            <TabsTrigger value="profile">Profile</TabsTrigger>
           </TabsList>
           
           <TabsContent value="today" className="mt-6">
@@ -98,6 +98,10 @@ export default function Home() {
           
           <TabsContent value="trends" className="mt-6">
             <TrendsView />
+          </TabsContent>
+          
+          <TabsContent value="profile" className="mt-6">
+            <UserProfile />
           </TabsContent>
         </Tabs>
       </div>
