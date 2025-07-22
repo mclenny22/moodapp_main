@@ -230,16 +230,7 @@ export function TodayView() {
             <CheckCircle2Icon className="h-4 w-4" />
             <AlertTitle>Success! Your journal entry has been saved</AlertTitle>
             <AlertDescription>
-              Your thoughts have been recorded and analyzed.
-              {reflectionPrompt && (
-                <>
-                  <br />
-                  <br />
-                  <span className="font-medium">Reflection for today:</span>
-                  <br />
-                  {reflectionPrompt}
-                </>
-              )}
+              {reflectionPrompt}
             </AlertDescription>
           </Alert>
           
