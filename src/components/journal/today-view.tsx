@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Spinner } from '@/components/ui/spinner'
-import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { CheckCircle2Icon } from 'lucide-react'
 import { useAuth } from '@/lib/auth-context'
 import { createJournalEntry, getTodaysEntry, updateJournalEntry, JournalEntry } from '@/lib/database'
 
@@ -226,8 +227,10 @@ export function TodayView() {
       ) : showSuccessState ? (
         <div className="space-y-6">
           <Alert>
-            <AlertDescription className="text-lg font-medium">
-              ✨ Your journal entry has been saved!
+            <CheckCircle2Icon className="h-4 w-4" />
+            <AlertTitle>Success! Your journal entry has been saved</AlertTitle>
+            <AlertDescription>
+              Your thoughts have been recorded and analyzed. Take a moment to reflect on today&apos;s prompt below.
             </AlertDescription>
           </Alert>
           
