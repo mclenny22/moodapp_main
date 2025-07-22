@@ -50,6 +50,7 @@ export async function createJournalEntry(
       return null
     }
 
+    console.log('Successfully created journal entry with reflection prompt:', data.reflection_prompt)
     return data
   } catch (error) {
     console.error('Error creating journal entry:', error)
@@ -222,7 +223,7 @@ export async function updateJournalEntry(
       return null
     }
 
-    console.log('Successfully updated journal entry:', data)
+    console.log('Successfully updated journal entry with reflection prompt:', data.reflection_prompt)
     return data
   } catch (error) {
     console.error('Exception updating journal entry:', error)

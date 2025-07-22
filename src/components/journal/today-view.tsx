@@ -40,6 +40,9 @@ export function TodayView() {
       if (entry) {
         // If there's already an entry for today, show success state
         setShowSuccessState(true)
+        console.log('Today\'s entry:', entry)
+        console.log('Reflection prompt from DB:', entry.reflection_prompt)
+        console.log('Summary from DB:', entry.summary)
         setReflectionPrompt(entry.reflection_prompt || entry.summary) // Use stored reflection prompt or fallback to summary
       }
     } catch (error) {
@@ -98,6 +101,8 @@ export function TodayView() {
         const { reflectionPrompt: prompt } = await reflectionResponse.json()
         setReflectionPrompt(prompt)
         analysis.reflection_prompt = prompt
+        console.log('Generated reflection prompt for edit:', prompt)
+        console.log('Analysis object with reflection prompt:', analysis)
       }
       
       // Update local state
@@ -155,6 +160,8 @@ export function TodayView() {
         const { reflectionPrompt: prompt } = await reflectionResponse.json()
         setReflectionPrompt(prompt)
         analysis.reflection_prompt = prompt
+        console.log('Generated reflection prompt for new entry:', prompt)
+        console.log('Analysis object with reflection prompt:', analysis)
       }
       
       // Show success state
