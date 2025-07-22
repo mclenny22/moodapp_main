@@ -32,6 +32,8 @@ export function SignInForm() {
         setError(error.message)
       } else {
         setMessage('Signed in successfully!')
+        // Redirect or refresh to update auth state
+        window.location.reload()
       }
     } catch {
       setError('An unexpected error occurred')
@@ -56,6 +58,7 @@ export function SignInForm() {
         setError(error.message)
       } else {
         setMessage('Check your email for the confirmation link!')
+        // For sign up, we don't auto-refresh since they need to confirm email
       }
     } catch {
       setError('An unexpected error occurred')
