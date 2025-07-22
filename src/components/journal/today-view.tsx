@@ -5,18 +5,23 @@ import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Spinner } from '@/components/ui/spinner'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import { useAuth } from '@/lib/auth-context'
+import { createJournalEntry } from '@/lib/database'
 
 export function TodayView() {
+  const { user } = useAuth()
   const [content, setContent] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isGettingHelp, setIsGettingHelp] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState<string | null>(null)
 
   const handleSubmit = async () => {
-    if (!content.trim()) return
+    if (!content.trim() || !user) return
     
     setIsSubmitting(true)
     setError(null)
+    setSuccess(null)
     
     try {
       // Analyze sentiment with OpenAI
@@ -34,17 +39,19 @@ export function TodayView() {
 
       const analysis = await sentimentResponse.json()
       
-      // TODO: Save to database with analysis
-      console.log('Journal entry with analysis:', {
-        content,
-        sentiment_score: analysis.sentiment_score,
-        summary: analysis.summary,
-        tags: analysis.tags,
-      })
+      // Save to database with analysis
+      const savedEntry = await createJournalEntry(user.id, content, analysis)
+      
+      if (!savedEntry) {
+        throw new Error('Failed to save entry to database')
+      }
       
       // Clear form and show success
       setContent('')
-      // TODO: Show success message and redirect to journal view
+      setSuccess('Journal entry saved successfully!')
+      
+      // Clear success message after 3 seconds
+      setTimeout(() => setSuccess(null), 3000)
       
     } catch (error) {
       console.error('Error submitting entry:', error)
@@ -105,6 +112,12 @@ export function TodayView() {
         {error && (
           <Alert variant="destructive">
             <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
+        
+        {success && (
+          <Alert>
+            <AlertDescription>{success}</AlertDescription>
           </Alert>
         )}
         

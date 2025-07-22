@@ -1,48 +1,115 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { getSentimentColor } from '@/lib/sentiment-utils'
-
-// Mock data for trends with different time periods
-const mockTrends = {
-  totalEntries: 15,
-  commonTags: [
-    { tag: 'gratitude', count: 8 },
-    { tag: 'work', count: 6 },
-    { tag: 'family', count: 5 },
-    { tag: 'stress', count: 4 },
-    { tag: 'anxiety', count: 3 },
-    { tag: 'joy', count: 3 }
-  ],
-  // Different data for different time periods
-  periodData: {
-    '7d': {
-      averageSentiment: 2.8,
-      sentiments: [2.1, -1.5, 3.2, 0.8, 4.1, -0.5, 2.8],
-      labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-    },
-    '30d': {
-      averageSentiment: 2.1,
-      sentiments: [2.1, -1.5, 3.2, 0.8, 4.1, -0.5, 2.8, 1.9, 3.5, -0.2, 2.3, 1.7, 4.0, -1.1, 2.9, 0.5, 3.1, -0.8, 2.6, 1.3, 3.8, -0.3, 2.4, 1.8, 3.3, -0.6, 2.7, 1.5, 3.6, -0.1],
-      labels: Array.from({length: 30}, (_, i) => `${i + 1}`)
-    },
-    '1y': {
-      averageSentiment: 1.9,
-      sentiments: [2.1, 1.8, 2.3, 1.5, 2.0, 1.9, 2.2, 1.7, 2.1, 1.6, 2.0, 1.8],
-      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-    }
-  }
-}
+import { useAuth } from '@/lib/auth-context'
+import { 
+  getAverageSentiment, 
+  getCommonTags, 
+  getJournalEntriesByDateRange,
+  JournalEntry 
+} from '@/lib/database'
 
 type TimePeriod = '7d' | '30d' | '1y'
 
 export function TrendsView() {
+  const { user } = useAuth()
   const [selectedPeriod, setSelectedPeriod] = useState<TimePeriod>('30d')
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [data, setData] = useState<{
+    averageSentiment: number
+    totalEntries: number
+    commonTags: { tag: string; count: number }[]
+    recentSentiments: number[]
+    labels: string[]
+  }>({
+    averageSentiment: 0,
+    totalEntries: 0,
+    commonTags: [],
+    recentSentiments: [],
+    labels: []
+  })
+
+  useEffect(() => {
+    if (user) {
+      loadTrendsData()
+    }
+  }, [user, selectedPeriod])
+
+  const loadTrendsData = async () => {
+    if (!user) return
+    
+    setLoading(true)
+    setError(null)
+    
+    try {
+      const days = selectedPeriod === '7d' ? 7 : selectedPeriod === '30d' ? 30 : 365
+      const averageSentiment = await getAverageSentiment(user.id, days)
+      const commonTags = await getCommonTags(user.id)
+      
+      // Get entries for the selected period
+      const endDate = new Date().toISOString().split('T')[0]
+      const startDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+      const entries = await getJournalEntriesByDateRange(user.id, startDate, endDate)
+      
+      // Prepare chart data
+      let recentSentiments: number[] = []
+      let labels: string[] = []
+      
+      if (selectedPeriod === '7d') {
+        // Last 7 days
+        recentSentiments = entries.slice(-7).map(entry => entry.sentiment_score)
+        labels = entries.slice(-7).map(entry => 
+          new Date(entry.date).toLocaleDateString('en-US', { weekday: 'short' })
+        )
+      } else if (selectedPeriod === '30d') {
+        // Last 30 days
+        recentSentiments = entries.slice(-30).map(entry => entry.sentiment_score)
+        labels = entries.slice(-30).map(entry => 
+          new Date(entry.date).getDate().toString()
+        )
+      } else {
+        // Last year - group by month
+        const monthlyData = new Map<string, number[]>()
+        entries.forEach(entry => {
+          const month = new Date(entry.date).toLocaleDateString('en-US', { month: 'short' })
+          if (!monthlyData.has(month)) {
+            monthlyData.set(month, [])
+          }
+          monthlyData.get(month)!.push(entry.sentiment_score)
+        })
+        
+        const monthOrder = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        recentSentiments = monthOrder
+          .filter(month => monthlyData.has(month))
+          .map(month => {
+            const scores = monthlyData.get(month)!
+            return scores.reduce((sum, score) => sum + score, 0) / scores.length
+          })
+        labels = monthOrder.filter(month => monthlyData.has(month))
+      }
+      
+      setData({
+        averageSentiment,
+        totalEntries: entries.length,
+        commonTags,
+        recentSentiments,
+        labels
+      })
+      
+    } catch (err) {
+      console.error('Error loading trends data:', err)
+      setError('Failed to load trends data')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const getPeriodLabel = (period: TimePeriod) => {
     switch (period) {
@@ -52,13 +119,45 @@ export function TrendsView() {
     }
   }
 
-  const currentData = mockTrends.periodData[selectedPeriod]
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-semibold">Mood Trends</h2>
+          <Badge variant="secondary">Loading...</Badge>
+        </div>
+        <div className="flex items-center justify-center py-8">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+            <p className="text-sm text-muted-foreground">Loading trends...</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-semibold">Mood Trends</h2>
+          <Badge variant="secondary">{data.totalEntries} entries</Badge>
+        </div>
+        <div className="text-center py-8">
+          <p className="text-sm text-muted-foreground mb-4">{error}</p>
+          <button onClick={loadTrendsData} className="text-sm text-primary hover:underline">
+            Try Again
+          </button>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold">Mood Trends</h2>
-        <Badge variant="secondary">{mockTrends.totalEntries} entries</Badge>
+        <Badge variant="secondary">{data.totalEntries} entries</Badge>
       </div>
 
       {/* Combined Average Sentiment and Mood Trend */}
@@ -97,61 +196,69 @@ export function TrendsView() {
           {/* Average Sentiment */}
           <div className="flex items-center justify-between">
             <div>
-              <span className={`text-3xl font-bold ${getSentimentColor(currentData.averageSentiment)}`}>
-                {currentData.averageSentiment.toFixed(1)}
+              <span className={`text-3xl font-bold ${getSentimentColor(data.averageSentiment)}`}>
+                {data.averageSentiment.toFixed(1)}
               </span>
               <div className="text-sm text-muted-foreground">
-                {currentData.averageSentiment > 0 ? 'Overall positive' : 'Overall neutral'} • {getPeriodLabel(selectedPeriod)}
+                {data.averageSentiment > 0 ? 'Overall positive' : 'Overall neutral'} • {getPeriodLabel(selectedPeriod)}
               </div>
             </div>
           </div>
 
           {/* Mood Trend Chart */}
-          <div>
-            <div className="flex items-end justify-between h-20 mb-2">
-              {currentData.sentiments.map((sentiment, index) => (
-                <div
-                  key={index}
-                  className="flex-1 mx-0.5 bg-muted rounded-t"
-                  style={{
-                    height: `${((sentiment + 5) / 10) * 100}%`,
-                    backgroundColor: sentiment < -1 ? '#3b82f6' : sentiment > 1 ? '#22c55e' : '#6b7280'
-                  }}
-                  title={`${currentData.labels[index]}: ${sentiment.toFixed(1)}`}
-                />
-              ))}
+          {data.recentSentiments.length > 0 ? (
+            <div>
+              <div className="flex items-end justify-between h-20 mb-2">
+                {data.recentSentiments.map((sentiment, index) => (
+                  <div
+                    key={index}
+                    className="flex-1 mx-0.5 bg-muted rounded-t"
+                    style={{
+                      height: `${((sentiment + 5) / 10) * 100}%`,
+                      backgroundColor: sentiment < -1 ? '#3b82f6' : sentiment > 1 ? '#22c55e' : '#6b7280'
+                    }}
+                    title={`${data.labels[index]}: ${sentiment.toFixed(1)}`}
+                  />
+                ))}
+              </div>
+              <div className="text-xs text-muted-foreground text-center">
+                {getPeriodLabel(selectedPeriod)}
+              </div>
             </div>
-            <div className="text-xs text-muted-foreground text-center">
-              {getPeriodLabel(selectedPeriod)}
+          ) : (
+            <div className="text-center py-8">
+              <p className="text-sm text-muted-foreground">No data available for this period</p>
             </div>
-          </div>
+          )}
         </CardContent>
       </Card>
 
       {/* Common Themes */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Common Themes</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            {mockTrends.commonTags.map(({ tag, count }) => (
-              <div key={tag} className="flex items-center justify-between">
-                <Badge variant="outline">{tag}</Badge>
-                <div className="flex items-center space-x-2">
-                  <Progress 
-                    value={(count / mockTrends.commonTags[0].count) * 100} 
-                    className="w-20 h-2"
-                  />
-                  <span className="text-sm text-muted-foreground w-8 text-right">
-                    {count}
-                  </span>
+      {data.commonTags.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Common Themes</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {data.commonTags.map(({ tag, count }) => (
+                <div key={tag} className="flex items-center justify-between">
+                  <Badge variant="outline">{tag}</Badge>
+                  <div className="flex items-center space-x-2">
+                    <Progress 
+                      value={(count / data.commonTags[0].count) * 100} 
+                      className="w-20 h-2"
+                    />
+                    <span className="text-sm text-muted-foreground w-8 text-right">
+                      {count}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Sentiment Distribution */}
       <Card>
@@ -159,27 +266,8 @@ export function TrendsView() {
           <CardTitle>Sentiment Distribution</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-sm">Very Negative (-5 to -3)</span>
-              <Badge variant="outline" className="text-blue-600">2</Badge>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm">Negative (-3 to -1)</span>
-              <Badge variant="outline" className="text-blue-600">3</Badge>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm">Neutral (-1 to +1)</span>
-              <Badge variant="outline" className="text-gray-600">4</Badge>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm">Positive (+1 to +3)</span>
-              <Badge variant="outline" className="text-green-600">4</Badge>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm">Very Positive (+3 to +5)</span>
-              <Badge variant="outline" className="text-green-600">2</Badge>
-            </div>
+          <div className="text-center py-8">
+            <p className="text-sm text-muted-foreground">Coming soon...</p>
           </div>
         </CardContent>
       </Card>

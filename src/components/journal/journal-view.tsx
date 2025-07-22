@@ -1,93 +1,132 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { getSentimentColor, getSentimentBackgroundColor, formatSentimentScore } from '@/lib/sentiment-utils'
-
-// Mock data for now
-const mockEntries = [
-  {
-    id: '1',
-    date: '2024-12-15',
-    content: 'Feeling optimistic about the new project at work. The team is really coming together and I can see progress being made. Had a great conversation with my manager about career growth.',
-    summary: 'Positive reflection on work progress and team dynamics',
-    sentiment_score: 4.2,
-    tags: ['gratitude', 'work', 'family'],
-    memory_weight: 8
-  },
-  {
-    id: '2',
-    date: '2024-12-14',
-    content: 'Struggling with deadlines and feeling overwhelmed. Need to find better ways to manage stress and prioritize tasks.',
-    summary: 'Feeling stressed about work deadlines and time management',
-    sentiment_score: -2.1,
-    tags: ['stress', 'anxiety', 'deadlines'],
-    memory_weight: 6
-  },
-  {
-    id: '3',
-    date: '2024-12-13',
-    content: 'Had a nice dinner with family. Nothing particularly eventful but feeling content and grateful for these quiet moments.',
-    summary: 'Peaceful family time and general contentment',
-    sentiment_score: 1.8,
-    tags: ['family', 'gratitude', 'contentment'],
-    memory_weight: 4
-  }
-]
+import { useAuth } from '@/lib/auth-context'
+import { getJournalEntries, JournalEntry } from '@/lib/database'
 
 export function JournalView() {
-  const [selectedEntry, setSelectedEntry] = useState<typeof mockEntries[0] | null>(null)
+  const { user } = useAuth()
+  const [entries, setEntries] = useState<JournalEntry[]>([])
+  const [selectedEntry, setSelectedEntry] = useState<JournalEntry | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (user) {
+      loadEntries()
+    }
+  }, [user])
+
+  const loadEntries = async () => {
+    if (!user) return
+    
+    setLoading(true)
+    setError(null)
+    
+    try {
+      const userEntries = await getJournalEntries(user.id)
+      setEntries(userEntries)
+    } catch (err) {
+      console.error('Error loading entries:', err)
+      setError('Failed to load journal entries')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-semibold">Journal Entries</h2>
+          <Badge variant="secondary">Loading...</Badge>
+        </div>
+        <div className="flex items-center justify-center py-8">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+            <p className="text-sm text-muted-foreground">Loading entries...</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-semibold">Journal Entries</h2>
+          <Badge variant="secondary">{entries.length} entries</Badge>
+        </div>
+        <div className="text-center py-8">
+          <p className="text-sm text-muted-foreground mb-4">{error}</p>
+          <Button onClick={loadEntries} variant="outline">
+            Try Again
+          </Button>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold">Journal Entries</h2>
-        <Badge variant="secondary">{mockEntries.length} entries</Badge>
+        <Badge variant="secondary">{entries.length} entries</Badge>
       </div>
       
-      <div className="space-y-3">
-        {mockEntries.map((entry) => (
-          <Card 
-            key={entry.id}
-            className="cursor-pointer transition-colors hover:bg-muted/50"
-            onClick={() => setSelectedEntry(entry)}
-          >
-            <CardHeader className="pb-1">
-              <div className="flex items-start justify-between">
-                <CardTitle className="text-lg font-medium">
-                  {new Date(entry.date).toLocaleDateString('en-US', {
-                    weekday: 'short',
-                    month: 'short',
-                    day: 'numeric'
-                  })}
-                </CardTitle>
-                <Badge 
-                  variant="secondary" 
-                  className={`${getSentimentColor(entry.sentiment_score)} border-current`}
-                >
-                  {formatSentimentScore(entry.sentiment_score)}
-                </Badge>
-              </div>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
-                {entry.summary}
-              </p>
-              <div className="flex flex-wrap gap-1">
-                {entry.tags.map((tag) => (
-                  <Badge key={tag} variant="outline" className="text-xs">
-                    {tag}
+      {entries.length === 0 ? (
+        <div className="text-center py-8">
+          <p className="text-sm text-muted-foreground mb-4">No journal entries yet</p>
+          <p className="text-xs text-muted-foreground">Start writing in the Today tab to see your entries here</p>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {entries.map((entry) => (
+            <Card 
+              key={entry.id}
+              className={`cursor-pointer transition-colors hover:bg-muted/50 ${getSentimentBackgroundColor(entry.sentiment_score)}`}
+              onClick={() => setSelectedEntry(entry)}
+            >
+              <CardHeader className="pb-3">
+                <div className="flex items-start justify-between">
+                  <CardTitle className="text-base font-medium">
+                    {new Date(entry.date).toLocaleDateString('en-US', {
+                      weekday: 'short',
+                      month: 'short',
+                      day: 'numeric'
+                    })}
+                  </CardTitle>
+                  <Badge 
+                    variant="secondary" 
+                    className={`${getSentimentColor(entry.sentiment_score)} border-current`}
+                  >
+                    {formatSentimentScore(entry.sentiment_score)}
                   </Badge>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <p className="text-base text-muted-foreground mb-3 line-clamp-2">
+                  {entry.summary}
+                </p>
+                <div className="flex flex-wrap gap-1">
+                  {entry.tags.map((tag) => (
+                    <Badge key={tag} variant="outline" className="text-sm">
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
 
-      {/* Entry Detail Modal - TODO: Implement with Sheet component */}
+      {/* Entry Detail Modal */}
       {selectedEntry && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
           <Card className="w-full max-w-md max-h-[80vh] overflow-y-auto">
