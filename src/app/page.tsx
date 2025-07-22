@@ -68,7 +68,10 @@ export default function Home() {
           <Header>
             <HeaderTitle>Mood App</HeaderTitle>
             <HeaderDescription>
-              Track your emotional journey
+              {(() => {
+                const userName = user.user_metadata?.name || user.email?.split('@')[0] || 'there'
+                return `Welcome back, ${userName}! Track your emotional journey`
+              })()}
             </HeaderDescription>
           </Header>
           <Button 

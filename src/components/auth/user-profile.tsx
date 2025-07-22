@@ -18,6 +18,10 @@ export function UserProfile() {
     await signOut()
   }
 
+  // Get user's name from metadata or fallback to email
+  const userName = user.user_metadata?.name || user.email?.split('@')[0] || 'User'
+  const userInitial = userName.charAt(0).toUpperCase()
+
   return (
     <Card>
       <CardHeader>
@@ -28,14 +32,12 @@ export function UserProfile() {
         <div className="flex items-center space-x-4">
           <Avatar>
             <AvatarFallback>
-              {user.email?.charAt(0).toUpperCase() || 'U'}
+              {userInitial}
             </AvatarFallback>
           </Avatar>
           <div>
-            <p className="text-sm font-medium">{user.email}</p>
-            <p className="text-sm text-muted-foreground">
-              User ID: {user.id.slice(0, 8)}...
-            </p>
+            <p className="text-sm font-medium">{userName}</p>
+            <p className="text-sm text-muted-foreground">{user.email}</p>
           </div>
         </div>
         
@@ -49,7 +51,7 @@ export function UserProfile() {
             </Badge>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium">Created</span>
+            <span className="text-sm font-medium">Member since</span>
             <span className="text-sm text-muted-foreground">
               {new Date(user.created_at).toLocaleDateString()}
             </span>
