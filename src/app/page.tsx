@@ -11,7 +11,7 @@ import { TrendsView } from '@/components/journal/trends-view'
 import { TestSupabase } from '@/components/test-supabase'
 
 export default function Home() {
-  const { user, loading } = useAuth()
+  const { user, loading, signOut } = useAuth()
 
   if (loading) {
     return (
@@ -63,12 +63,23 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-[600px] mx-auto p-4 space-y-6">
-        <Header>
-          <HeaderTitle>Mood App</HeaderTitle>
-          <HeaderDescription>
-            Track your emotional journey
-          </HeaderDescription>
-        </Header>
+        <div className="flex items-center justify-between">
+          <Header>
+            <HeaderTitle>Mood App</HeaderTitle>
+            <HeaderDescription>
+              Track your emotional journey
+            </HeaderDescription>
+          </Header>
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={async () => {
+              await signOut()
+            }}
+          >
+            Sign Out
+          </Button>
+        </div>
 
         <Tabs defaultValue="today" className="w-full">
           <TabsList className="grid w-full grid-cols-3">
