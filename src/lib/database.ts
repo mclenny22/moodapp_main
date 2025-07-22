@@ -202,17 +202,24 @@ export async function updateJournalEntry(
   analysis: EntryAnalysis
 ): Promise<JournalEntry | null> {
   try {
+    console.log('Updating journal entry with analysis:', analysis)
+    console.log('Reflection prompt in analysis:', analysis.reflection_prompt)
+    
+    const updateData = {
+      content,
+      summary: analysis.summary,
+      sentiment_score: analysis.sentiment_score,
+      tags: analysis.tags,
+      memory_weight: analysis.memory_weight,
+      reflection_prompt: analysis.reflection_prompt,
+      updated_at: new Date().toISOString()
+    }
+    
+    console.log('Update data being sent to database:', updateData)
+    
     const { data, error } = await supabase
       .from('entries')
-      .update({
-        content,
-        summary: analysis.summary,
-        sentiment_score: analysis.sentiment_score,
-        tags: analysis.tags,
-        memory_weight: analysis.memory_weight,
-        reflection_prompt: analysis.reflection_prompt,
-        updated_at: new Date().toISOString()
-      })
+      .update(updateData)
       .eq('id', entryId)
       .eq('user_id', userId)
       .select()

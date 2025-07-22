@@ -91,11 +91,15 @@ export function TodayView() {
       })
 
       if (reflectionResponse.ok) {
-        const { reflectionPrompt: prompt } = await reflectionResponse.json()
+        const responseData = await reflectionResponse.json()
+        console.log('Reflection API response:', responseData)
+        const { reflectionPrompt: prompt } = responseData
         setReflectionPrompt(prompt)
         analysis.reflection_prompt = prompt
         console.log('Generated reflection prompt for edit:', prompt)
         console.log('Analysis object with reflection prompt:', analysis)
+      } else {
+        console.error('Reflection API failed:', reflectionResponse.status, reflectionResponse.statusText)
       }
       
       // Update the entry in database with complete analysis
@@ -157,11 +161,15 @@ export function TodayView() {
       })
 
       if (reflectionResponse.ok) {
-        const { reflectionPrompt: prompt } = await reflectionResponse.json()
+        const responseData = await reflectionResponse.json()
+        console.log('Reflection API response for new entry:', responseData)
+        const { reflectionPrompt: prompt } = responseData
         setReflectionPrompt(prompt)
         analysis.reflection_prompt = prompt
         console.log('Generated reflection prompt for new entry:', prompt)
         console.log('Analysis object with reflection prompt:', analysis)
+      } else {
+        console.error('Reflection API failed for new entry:', reflectionResponse.status, reflectionResponse.statusText)
       }
       
       // Show success state
