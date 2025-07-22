@@ -90,7 +90,7 @@ export function SignInForm() {
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="text-center">
         <CardTitle>Welcome to Mood App</CardTitle>
         <CardDescription>
           Track your emotional journey with AI-powered insights

@@ -12,7 +12,7 @@ import { TrendsView } from '@/components/journal/trends-view'
 import { UserProfile } from '@/components/auth/user-profile'
 
 export default function Home() {
-  const { user, loading, signOut } = useAuth()
+  const { user, loading } = useAuth()
 
   if (loading) {
     return (
@@ -28,13 +28,7 @@ export default function Home() {
   if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
-        <div className="w-full max-w-md space-y-6">
-          <Header>
-            <HeaderTitle>Mood App</HeaderTitle>
-            <HeaderDescription>
-              Welcome to your personal mood tracking application
-            </HeaderDescription>
-          </Header>
+        <div className="w-full max-w-md">
           <SignInForm />
           
           {/* Demo Login for Testing */}
@@ -61,7 +55,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-[600px] mx-auto p-4 space-y-6">
-        <div className="flex items-center justify-between">
+        <div className="text-center">
           <Header>
             <HeaderTitle>Mood App</HeaderTitle>
             <HeaderDescription>
@@ -71,13 +65,6 @@ export default function Home() {
               })()}
             </HeaderDescription>
           </Header>
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={signOut}
-          >
-            Sign Out
-          </Button>
         </div>
 
         <Tabs defaultValue="today" className="w-full">
