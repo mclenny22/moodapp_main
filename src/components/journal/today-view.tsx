@@ -81,14 +81,7 @@ export function TodayView() {
 
       const analysis = await sentimentResponse.json()
       
-      // Update the entry in database
-      const updatedEntry = await updateJournalEntry(todaysEntry.id, user.id, editContent, analysis)
-      
-      if (!updatedEntry) {
-        throw new Error('Failed to update entry')
-      }
-      
-      // Generate new reflection prompt
+      // Generate new reflection prompt first
       const reflectionResponse = await fetch('/api/reflection-prompt', {
         method: 'POST',
         headers: {
@@ -103,6 +96,13 @@ export function TodayView() {
         analysis.reflection_prompt = prompt
         console.log('Generated reflection prompt for edit:', prompt)
         console.log('Analysis object with reflection prompt:', analysis)
+      }
+      
+      // Update the entry in database with complete analysis
+      const updatedEntry = await updateJournalEntry(todaysEntry.id, user.id, editContent, analysis)
+      
+      if (!updatedEntry) {
+        throw new Error('Failed to update entry')
       }
       
       // Update local state
