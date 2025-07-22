@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState } from 'react'
 import { User } from '@supabase/supabase-js'
-// import { createClient } from './supabase'
+import { createClient } from './supabase'
 
 interface AuthContextType {
   user: User | null
@@ -15,7 +15,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
-  // const supabase = createClient()
+  const supabase = createClient()
 
   useEffect(() => {
     // Check for demo user first
@@ -31,29 +31,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return
     }
 
-    // For deployment without Supabase, just set loading to false
-    // TODO: Uncomment when Supabase is connected
-    setLoading(false)
-    
     // Get initial session
-    // const getSession = async () => {
-    //   const { data: { session } } = await supabase.auth.getSession()
-    //   setUser(session?.user ?? null)
-    //   setLoading(false)
-    // }
+    const getSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      setUser(session?.user ?? null)
+      setLoading(false)
+    }
 
-    // getSession()
+    getSession()
 
     // Listen for auth changes
-    // const { data: { subscription } } = supabase.auth.onAuthStateChange(
-    //   async (event, session) => {
-    //     setUser(session?.user ?? null)
-    //     setLoading(false)
-    //   }
-    // )
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        setUser(session?.user ?? null)
+        setLoading(false)
+      }
+    )
 
-    // return () => subscription.unsubscribe()
-  }, [])
+    return () => subscription.unsubscribe()
+  }, [supabase.auth])
 
   const signOut = async () => {
     // Check if it's a demo user
@@ -63,8 +59,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return
     }
     
-    // TODO: Uncomment when Supabase is connected
-    // await supabase.auth.signOut()
+    await supabase.auth.signOut()
   }
 
   return (
