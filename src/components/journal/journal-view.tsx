@@ -7,20 +7,21 @@ import { getSentimentGradientColor } from '@/lib/sentiment-utils'
 import { useAuth } from '@/lib/auth-context'
 import { getJournalEntries, getDemoJournalEntries, JournalEntry } from '@/lib/database'
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+  Timeline,
+  TimelineContent,
+  TimelineDate,
+  TimelineHeader,
+  TimelineIndicator,
+  TimelineItem,
+  TimelineSeparator,
+  TimelineTitle,
+} from '@/components/ui/timeline'
 
 export function JournalView() {
   const { user } = useAuth()
   const [entries, setEntries] = useState<JournalEntry[]>([])
-  const [selectedEntry, setSelectedEntry] = useState<JournalEntry | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [dialogOpen, setDialogOpen] = useState(false)
 
   const loadEntries = useCallback(async () => {
     if (!user) return
@@ -35,7 +36,6 @@ export function JournalView() {
       setEntries(userEntries)
     } catch (err) {
       console.error('Error loading entries:', err)
-      setError('Failed to load journal entries')
     } finally {
       setLoading(false)
     }
@@ -93,30 +93,38 @@ export function JournalView() {
           <p className="text-xs text-muted-foreground">Start writing in the Today tab to see your entries here</p>
         </div>
       ) : (
-        <div className="space-y-4">
-          {entries.slice().reverse().map(entry => (
-            <Card key={entry.id}>
-              <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle className="text-base">
+        <Timeline defaultValue={entries.length}>
+          {entries.slice().reverse().map((entry, index) => (
+            <TimelineItem key={entry.id} step={index + 1}>
+              <TimelineHeader>
+                <TimelineSeparator />
+                <TimelineDate>
                   {new Date(entry.date).toLocaleDateString('en-US', {
-                    weekday: 'short',
                     month: 'short',
                     day: 'numeric',
                     year: 'numeric',
                   })}
-                </CardTitle>
-                <Badge
-                  variant="secondary"
-                  className="border-current"
-                  style={{
-                    background: getSentimentGradientColor(entry.sentiment_score),
-                    color: '#fff',
-                  }}
-                >
-                  {entry.sentiment_score}
-                </Badge>
-              </CardHeader>
-              <CardContent>
+                </TimelineDate>
+                <div className="flex items-center gap-2">
+                  <TimelineTitle>
+                    {new Date(entry.date).toLocaleDateString('en-US', {
+                      weekday: 'long',
+                    })} Journal Entry
+                  </TimelineTitle>
+                  <Badge
+                    variant="secondary"
+                    className="border-current"
+                    style={{
+                      background: getSentimentGradientColor(entry.sentiment_score),
+                      color: '#fff',
+                    }}
+                  >
+                    {entry.sentiment_score}
+                  </Badge>
+                </div>
+                <TimelineIndicator />
+              </TimelineHeader>
+              <TimelineContent>
                 <p className="text-base text-muted-foreground mb-3">
                   {entry.content}
                 </p>
@@ -127,10 +135,10 @@ export function JournalView() {
                     </Badge>
                   ))}
                 </div>
-              </CardContent>
-            </Card>
+              </TimelineContent>
+            </TimelineItem>
           ))}
-        </div>
+        </Timeline>
       )}
     </div>
   )
