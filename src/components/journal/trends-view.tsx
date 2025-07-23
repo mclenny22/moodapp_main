@@ -177,18 +177,30 @@ export function TrendsView() {
     // Always 7 columns for days of the week, fill card width
     const cols = 7;
     const total = data.dayData.length;
-    const rows = Math.ceil(total / cols);
-    // Fill grid with empty cells if needed
-    const filledDayData = Array(rows * cols - total).fill(null).concat(data.dayData);
-    // Split into rows
-    const gridRows: (typeof data.dayData)[] = [];
-    for (let i = 0; i < rows; i++) {
-      gridRows.push(filledDayData.slice(i * cols, (i + 1) * cols));
+    if (total === 0) return null;
+    // Find the weekday of the most recent day (0=Sunday, 1=Monday, ... 6=Saturday)
+    const mostRecentDate = new Date(data.dayData[total - 1].date);
+    let mostRecentWeekday = mostRecentDate.getDay();
+    // Convert to Monday=0, Sunday=6
+    mostRecentWeekday = (mostRecentWeekday + 6) % 7;
+    // Pad the top row with empty tiles if the week is incomplete
+    const padTop = cols - (mostRecentWeekday + 1);
+    const paddedDayData: (DayData | null)[] = [...data.dayData];
+    for (let i = 0; i < padTop; i++) {
+      paddedDayData.push(null);
     }
-    // Render from bottom to top
+    // Calculate number of rows
+    const rows = Math.ceil(paddedDayData.length / cols);
+    // Fill the grid from the end, bottom up, left to right
+    const grid: (DayData | null)[][] = [];
+    for (let r = 0; r < rows; r++) {
+      const start = paddedDayData.length - (r + 1) * cols;
+      const end = paddedDayData.length - r * cols;
+      grid.unshift(paddedDayData.slice(Math.max(0, start), end));
+    }
     return (
       <div className="grid grid-cols-7 gap-5 w-full">
-        {gridRows.reverse().flat().map((day, idx) => (
+        {grid.flat().map((day, idx) => (
           day ? (
             <Tooltip key={day.date}>
               <TooltipTrigger asChild>
@@ -210,7 +222,7 @@ export function TrendsView() {
               </TooltipContent>
             </Tooltip>
           ) : (
-            <div key={idx} />
+            <div key={idx} className="aspect-square w-full rounded-sm border border-gray-200 bg-white" />
           )
         ))}
       </div>
