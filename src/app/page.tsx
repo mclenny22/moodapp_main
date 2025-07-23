@@ -72,7 +72,7 @@ export default function Home() {
             <TabsTrigger value="today">Today</TabsTrigger>
             <TabsTrigger value="journal">Journal</TabsTrigger>
             <TabsTrigger value="trends">Trends</TabsTrigger>
-            <TabsTrigger value="profile">Settings</TabsTrigger>
+            <TabsTrigger value="settings">Settings</TabsTrigger>
           </TabsList>
           
           <TabsContent value="today" className="mt-6">
@@ -87,7 +87,7 @@ export default function Home() {
             <TrendsView />
           </TabsContent>
           
-          <TabsContent value="profile" className="mt-6">
+          <TabsContent value="settings" className="mt-6">
             <Settings />
           </TabsContent>
         </Tabs>
