@@ -12,7 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { JournalGrid } from './JournalGrid';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 
 export function JournalView() {
   const { user } = useAuth()
@@ -93,54 +93,44 @@ export function JournalView() {
           <p className="text-xs text-muted-foreground">Start writing in the Today tab to see your entries here</p>
         </div>
       ) : (
-        <JournalGrid
-          entries={entries}
-          onEntryClick={entry => {
-            setSelectedEntry(entry);
-            setDialogOpen(true);
-          }}
-        />
-      )}
-      {/* Dialog logic remains unchanged */}
-      {selectedEntry && (
-        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>
-                {new Date(selectedEntry.date).toLocaleDateString('en-US', {
-                  weekday: 'short',
-                  month: 'short',
-                  day: 'numeric',
-                  year: 'numeric',
-                })}
-              </DialogTitle>
-            </DialogHeader>
-            <div className="mb-4">
-              <p className="text-base text-muted-foreground mb-3">
-                {selectedEntry.content}
-              </p>
-              <div className="flex flex-wrap gap-1">
-                {selectedEntry.tags.map((tag) => (
-                  <Badge key={tag} variant="outline" className="text-sm">
-                    {tag}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <Badge
-                variant="secondary"
-                className={`border-current`}
-                style={{
-                  background: getSentimentGradientColor(selectedEntry.sentiment_score),
-                  color: '#fff',
-                }}
-              >
-                {selectedEntry.sentiment_score}
-              </Badge>
-            </div>
-          </DialogContent>
-        </Dialog>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {entries.slice().reverse().map(entry => (
+            <Card key={entry.id}>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <CardTitle className="text-base">
+                  {new Date(entry.date).toLocaleDateString('en-US', {
+                    weekday: 'short',
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric',
+                  })}
+                </CardTitle>
+                <Badge
+                  variant="secondary"
+                  className="border-current"
+                  style={{
+                    background: getSentimentGradientColor(entry.sentiment_score),
+                    color: '#fff',
+                  }}
+                >
+                  {entry.sentiment_score}
+                </Badge>
+              </CardHeader>
+              <CardContent>
+                <p className="text-base text-muted-foreground mb-3">
+                  {entry.content}
+                </p>
+                <div className="flex flex-wrap gap-1">
+                  {entry.tags.map((tag) => (
+                    <Badge key={tag} variant="outline" className="text-sm">
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       )}
     </div>
   )

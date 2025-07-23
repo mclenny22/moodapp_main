@@ -68,26 +68,19 @@ export function JournalGrid({ entries, onEntryClick }: JournalGridProps) {
     });
   }
 
-  // Split into weeks (arrays of 7 days, Monday-Sunday)
+  // Reverse dayData so most recent day is first
+  const reversedDayData = dayData.slice().reverse();
+  // Split into weeks (arrays of 7 days, Monday-Sunday), starting from the most recent
   const weeks: DayData[][] = [];
-  let i = 0;
-  // Handle first (oldest) week, which may be partial
-  const firstWeekLen = 7 - (new Date(startDate).getDay() === 0 ? 6 : new Date(startDate).getDay() - 1);
-  const firstWeek = dayData.slice(0, firstWeekLen);
-  while (firstWeek.length < 7) firstWeek.unshift({ date: '', sentiment: null, hasEntry: false, isFuture: false });
-  weeks.push(firstWeek);
-  i = firstWeekLen;
-  // Handle all full weeks in between
-  for (; i + 7 <= dayData.length; i += 7) {
-    weeks.push(dayData.slice(i, i + 7));
+  for (let i = 0; i < reversedDayData.length; i += 7) {
+    weeks.push(reversedDayData.slice(i, i + 7));
   }
-  // Handle last (most recent) week, which may be partial
-  if (i < dayData.length) {
-    const lastWeek = dayData.slice(i);
-    while (lastWeek.length < 7) lastWeek.push({ date: '', sentiment: null, hasEntry: false, isFuture: false });
-    weeks.push(lastWeek);
+  // Pad the last (oldest) week at the start if needed
+  const lastWeek = weeks[weeks.length - 1];
+  if (lastWeek.length < 7) {
+    while (lastWeek.length < 7) lastWeek.unshift({ date: '', sentiment: null, hasEntry: false, isFuture: false });
   }
-  // Most recent week at the top
+  // Now reverse weeks so most recent is at the top
   weeks.reverse();
   // Shift each week left by 1 (so Monday aligns with first column)
   const shiftedWeeks = weeks.map(week => week.slice(1).concat(week[0]));
