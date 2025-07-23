@@ -160,7 +160,7 @@ export function JournalView() {
 
       {/* Entry Detail Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={handleDialogClose}>
-        <DialogContent className="w-full max-w-none sm:max-w-md">
+        <DialogContent className="w-[95%] max-w-sm mx-auto">
           {selectedEntry && (
             <div>
               {/* Header - matching CardHeader structure */}
