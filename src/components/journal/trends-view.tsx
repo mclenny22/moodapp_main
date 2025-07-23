@@ -5,6 +5,7 @@ import { TrendingUp, TrendingDown, AlertCircle } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, CardAction } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Skeleton } from '@/components/ui/skeleton'
 import { getSentimentGradientColor } from '@/lib/sentiment-utils'
 import { useAuth } from '@/lib/auth-context'
 import { getJournalEntries, getDemoJournalEntries, JournalEntry } from '@/lib/database'
@@ -291,53 +292,71 @@ export function TrendsView() {
       </div>
 
       {/* Emotional Balance Sheet Card */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Emotional Balance Sheet</CardTitle>
-          <CardDescription>
-            How do you feel about the parts of your life that matter most?
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {lifeAreaAnalysis.length > 0 ? (
-            <div className="space-y-4">
-              {lifeAreaAnalysis.map((item) => (
-                <div key={item.tag} className="flex items-center justify-between p-4 rounded-lg border">
-                  <div className="font-semibold text-lg">{item.tag}</div>
+              <Card>
+          <CardHeader>
+            <CardTitle>Emotional Balance Sheet</CardTitle>
+            <CardDescription>
+              You&apos;ll get emotional balance insights after 3 days of journaling
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {lifeAreaAnalysis.length > 0 ? (
+              <div className="space-y-4">
+                {lifeAreaAnalysis.map((item) => (
+                  <div key={item.tag} className="flex items-center justify-between p-4 rounded-lg border">
+                    <div className="font-semibold text-lg">{item.tag}</div>
+                    <div className="flex items-center gap-2">
+                      <Badge variant="outline" className="h-5 min-w-5">
+                        {item.percentageOfEntries}% of entries
+                      </Badge>
+                      <Badge variant="outline" className="h-5 min-w-5">
+                        {item.trend === 'up' ? <TrendingUp className="h-3 w-3" /> : item.trend === 'down' ? <TrendingDown className="h-3 w-3" /> : <span>↔️</span>}
+                        {item.trend === 'up' ? '+' : item.trend === 'down' ? '-' : ''}{item.trendPercentage.toFixed(1)}%
+                      </Badge>
+                      <Badge 
+                        variant="outline" 
+                        className="h-5 min-w-5 tabular-nums"
+                        style={{ 
+                          color: getSentimentGradientColor(item.avgMood),
+                          borderColor: getSentimentGradientColor(item.avgMood)
+                        }}
+                      >
+                        {item.avgMood > 0 ? '+' : ''}{item.avgMood.toFixed(1)}
+                      </Badge>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between p-4 rounded-lg border">
+                  <Skeleton className="h-6 w-24" />
                   <div className="flex items-center gap-2">
-                    <Badge variant="outline" className="h-5 min-w-5">
-                      {item.percentageOfEntries}% of entries
-                    </Badge>
-                    <Badge variant="outline" className="h-5 min-w-5">
-                      {item.trend === 'up' ? <TrendingUp className="h-3 w-3" /> : item.trend === 'down' ? <TrendingDown className="h-3 w-3" /> : <span>↔️</span>}
-                      {item.trend === 'up' ? '+' : item.trend === 'down' ? '-' : ''}{item.trendPercentage.toFixed(1)}%
-                    </Badge>
-                    <Badge 
-                      variant="outline" 
-                      className="h-5 min-w-5 tabular-nums"
-                      style={{ 
-                        color: getSentimentGradientColor(item.avgMood),
-                        borderColor: getSentimentGradientColor(item.avgMood)
-                      }}
-                    >
-                      {item.avgMood > 0 ? '+' : ''}{item.avgMood.toFixed(1)}
-                    </Badge>
+                    <Skeleton className="h-5 w-20" />
+                    <Skeleton className="h-5 w-16" />
+                    <Skeleton className="h-5 w-12" />
                   </div>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-8">
-              <p className="text-sm text-muted-foreground mb-2">
-                Start tagging your journal entries to see insights about different areas of your life
-              </p>
-              <p className="text-xs text-muted-foreground">
-                You&apos;ll get emotional balance insights after adding tags to at least 3 entries
-              </p>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+                <div className="flex items-center justify-between p-4 rounded-lg border">
+                  <Skeleton className="h-6 w-20" />
+                  <div className="flex items-center gap-2">
+                    <Skeleton className="h-5 w-16" />
+                    <Skeleton className="h-5 w-14" />
+                    <Skeleton className="h-5 w-10" />
+                  </div>
+                </div>
+                <div className="flex items-center justify-between p-4 rounded-lg border">
+                  <Skeleton className="h-6 w-28" />
+                  <div className="flex items-center gap-2">
+                    <Skeleton className="h-5 w-18" />
+                    <Skeleton className="h-5 w-12" />
+                    <Skeleton className="h-5 w-11" />
+                  </div>
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
 
 
     </div>

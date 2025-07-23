@@ -35,8 +35,8 @@ export function MoodBackground() {
       uniform float u_time;
       uniform vec2 u_resolution;
 
-      vec3 moodColor1 = vec3(0.2, 0.4, 0.8); // Deeper blue
-      vec3 moodColor2 = vec3(0.8, 0.5, 0.2); // Warmer orange
+      vec3 moodColor1 = vec3(0.9, 0.6, 0.3); // Warm orange (starting color)
+      vec3 moodColor2 = vec3(0.2, 0.4, 0.8); // Deeper blue
       vec3 moodColor3 = vec3(0.4, 0.7, 0.4); // Richer green
       vec3 moodColor4 = vec3(0.6, 0.3, 0.7); // Deeper purple
 
@@ -69,7 +69,7 @@ export function MoodBackground() {
         float blend3 = gradient3 * 0.4 + gradient1 * 0.4 + gradient2 * 0.2;
         
         // Create smooth transitions between mood colors
-        float transition1 = 0.5 + 0.5 * sin(u_time * 0.1);
+        float transition1 = 0.7 + 0.3 * sin(u_time * 0.08); // Start more orange
         float transition2 = 0.5 + 0.5 * sin(u_time * 0.15 + 1.0);
         float transition3 = 0.5 + 0.5 * sin(u_time * 0.12 + 2.0);
         
