@@ -160,41 +160,54 @@ export function JournalView() {
 
       {/* Entry Detail Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={handleDialogClose}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="w-full max-w-none sm:max-w-md">
           {selectedEntry && (
-            <div className="space-y-2">
-              {/* Date */}
-              <p className="text-sm text-muted-foreground">
-                {formatDate(selectedEntry.date)}
-              </p>
-              
-              {/* Headline */}
-              <DialogTitle className="text-2xl font-bold">
-                {formatWeekday(selectedEntry.date)}&apos;s Journal Entry
-              </DialogTitle>
-              
-              {/* Badges Row */}
-              <div className="flex gap-2">
-                <Badge 
-                  variant="outline"
-                  className="h-5 min-w-5 tabular-nums"
-                  style={{ 
-                    color: getSentimentGradientColor(selectedEntry.sentiment_score),
-                    borderColor: getSentimentGradientColor(selectedEntry.sentiment_score)
-                  }}
-                >
-                  {selectedEntry.sentiment_score > 0 ? '+' : ''}{selectedEntry.sentiment_score.toFixed(1)}
-                </Badge>
-                  {selectedEntry.tags.map((tag, index) => (
-                    <Badge key={index} variant="outline" className="h-5 min-w-5">
-                      {tag}
-                    </Badge>
-                  ))}
+            <div>
+              {/* Header - matching CardHeader structure */}
+              <div className="pb-3">
+                <div className="flex items-start justify-between">
+                  <div className="space-y-1">
+                    <p className="text-sm text-muted-foreground">
+                      {formatDate(selectedEntry.date)}
+                    </p>
+                    <DialogTitle className="text-lg">
+                      {formatWeekday(selectedEntry.date)}
+                    </DialogTitle>
+                  </div>
+                  <Badge 
+                    variant="outline"
+                    className="h-5 min-w-5 tabular-nums"
+                    style={{ 
+                      color: getSentimentGradientColor(selectedEntry.sentiment_score),
+                      borderColor: getSentimentGradientColor(selectedEntry.sentiment_score)
+                    }}
+                  >
+                    {selectedEntry.sentiment_score > 0 ? '+' : ''}{selectedEntry.sentiment_score.toFixed(1)}
+                  </Badge>
+                </div>
               </div>
               
-              {/* Content Area */}
-              <div className="whitespace-pre-wrap leading-relaxed text-base">
-                {selectedEntry.content}
+              {/* Content - matching CardContent structure */}
+              <div className="pt-0">
+                <div className="text-sm text-muted-foreground mb-4">
+                  {selectedEntry.summary}
+                </div>
+                
+                {/* Tags */}
+                {selectedEntry.tags.length > 0 && (
+                  <div className="flex gap-2 mb-4">
+                    {selectedEntry.tags.map((tag, index) => (
+                      <Badge key={index} variant="outline" className="h-5 min-w-5">
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+                
+                {/* Full Content */}
+                <div className="whitespace-pre-wrap leading-relaxed text-sm text-muted-foreground">
+                  {selectedEntry.content}
+                </div>
               </div>
             </div>
           )}

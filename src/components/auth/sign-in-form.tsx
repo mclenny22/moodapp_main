@@ -96,9 +96,9 @@ export function SignInForm() {
       <MoodBackground />
       <Card className="w-full max-w-md relative z-10">
         <CardHeader className="text-center">
-          <CardTitle>Welcome to Mood App</CardTitle>
+          <CardTitle>Welcome</CardTitle>
           <CardDescription>
-            Track your emotional journey with AI-powered insights
+            Track your emotions with AI-powered insights
           </CardDescription>
         </CardHeader>
         <CardContent>
