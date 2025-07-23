@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Spinner } from '@/components/ui/spinner'
@@ -23,13 +23,7 @@ export function TodayView() {
   const [editContent, setEditContent] = useState('')
   const [isUpdating, setIsUpdating] = useState(false)
 
-  useEffect(() => {
-    if (user) {
-      checkTodaysEntry()
-    }
-  }, [user])
-
-  const checkTodaysEntry = async () => {
+  const checkTodaysEntry = useCallback(async () => {
     if (!user) return
     
     setIsLoading(true)
@@ -50,7 +44,13 @@ export function TodayView() {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [user])
+
+  useEffect(() => {
+    if (user) {
+      checkTodaysEntry()
+    }
+  }, [user, checkTodaysEntry])
 
   const handleEditClick = () => {
     if (todaysEntry) {

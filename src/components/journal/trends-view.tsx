@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
@@ -44,6 +44,59 @@ export function TrendsView() {
     commonTags: [],
     dayData: []
   })
+
+  const loadTrendsData = useCallback(async () => {
+    if (!user) return
+    
+    setLoading(true)
+    setError(null)
+    
+    try {
+      const days = selectedPeriod === '7d' ? 7 : selectedPeriod === '30d' ? 30 : 365
+      const averageSentiment = await getAverageSentiment(user.id, days)
+      const commonTags = await getCommonTags(user.id)
+      
+      // Get entries for the selected period
+      const endDate = new Date().toISOString().split('T')[0]
+      const startDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+      const entries = await getJournalEntriesByDateRange(user.id, startDate, endDate)
+      
+      // Create a map of entries by date
+      const entriesByDate = new Map<string, JournalEntry>()
+      entries.forEach(entry => {
+        entriesByDate.set(entry.date, entry)
+      })
+      
+      // Generate day data for the entire period
+      const dayData: DayData[] = []
+      const start = new Date(startDate)
+      const end = new Date(endDate)
+      
+      for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+        const dateStr = d.toISOString().split('T')[0]
+        const entry = entriesByDate.get(dateStr)
+        
+        dayData.push({
+          date: dateStr,
+          sentiment: entry ? entry.sentiment_score : null,
+          hasEntry: !!entry
+        })
+      }
+      
+      setData({
+        averageSentiment,
+        totalEntries: entries.length,
+        commonTags,
+        dayData
+      })
+      
+    } catch (err) {
+      console.error('Error loading trends data:', err)
+      setError('Failed to load trends data')
+    } finally {
+      setLoading(false)
+    }
+  }, [user, selectedPeriod])
 
   useEffect(() => {
     if (user) {
@@ -110,60 +163,7 @@ export function TrendsView() {
       }
       loadTrendsData()
     }
-  }, [user, selectedPeriod])
-
-  const loadTrendsData = async () => {
-    if (!user) return
-    
-    setLoading(true)
-    setError(null)
-    
-    try {
-      const days = selectedPeriod === '7d' ? 7 : selectedPeriod === '30d' ? 30 : 365
-      const averageSentiment = await getAverageSentiment(user.id, days)
-      const commonTags = await getCommonTags(user.id)
-      
-      // Get entries for the selected period
-      const endDate = new Date().toISOString().split('T')[0]
-      const startDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
-      const entries = await getJournalEntriesByDateRange(user.id, startDate, endDate)
-      
-      // Create a map of entries by date
-      const entriesByDate = new Map<string, JournalEntry>()
-      entries.forEach(entry => {
-        entriesByDate.set(entry.date, entry)
-      })
-      
-      // Generate day data for the entire period
-      const dayData: DayData[] = []
-      const start = new Date(startDate)
-      const end = new Date(endDate)
-      
-      for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
-        const dateStr = d.toISOString().split('T')[0]
-        const entry = entriesByDate.get(dateStr)
-        
-        dayData.push({
-          date: dateStr,
-          sentiment: entry ? entry.sentiment_score : null,
-          hasEntry: !!entry
-        })
-      }
-      
-      setData({
-        averageSentiment,
-        totalEntries: entries.length,
-        commonTags,
-        dayData
-      })
-      
-    } catch (err) {
-      console.error('Error loading trends data:', err)
-      setError('Failed to load trends data')
-    } finally {
-      setLoading(false)
-    }
-  }
+  }, [user, selectedPeriod, loadTrendsData])
 
   const getPeriodLabel = (period: TimePeriod) => {
     switch (period) {
@@ -171,22 +171,6 @@ export function TrendsView() {
       case '30d': return 'Last 30 days'
       case '1y': return 'Last year'
     }
-  }
-
-  const getSquareColor = (day: DayData) => {
-    if (!day.hasEntry) return 'bg-gray-100 dark:bg-gray-800'
-    
-    const sentiment = day.sentiment!
-    if (sentiment >= 3) return 'bg-green-500'
-    if (sentiment >= 1) return 'bg-green-400'
-    if (sentiment >= -1) return 'bg-green-300'
-    if (sentiment >= -3) return 'bg-green-200'
-    return 'bg-green-100'
-  }
-
-  const getSquareTooltip = (day: DayData) => {
-    if (!day.hasEntry) return `${day.date}: No entry`
-    return `${day.date}: Sentiment ${day.sentiment}`
   }
 
   const renderContributionGrid = () => {

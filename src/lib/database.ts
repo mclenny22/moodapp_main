@@ -241,12 +241,32 @@ export async function updateJournalEntry(
 
 export function getDemoJournalEntries() {
   // Fill missing fields for JournalEntry type
-  return (demoJournal as any[]).map((entry, i) => ({
-    ...entry,
-    summary: entry.summary || entry.content.slice(0, 60) + '...',
-    memory_weight: entry.memory_weight ?? 5,
-    created_at: entry.created_at || new Date(entry.date + 'T12:00:00Z').toISOString(),
-    updated_at: entry.updated_at || new Date(entry.date + 'T12:00:00Z').toISOString(),
-    reflection_prompt: entry.reflection_prompt || '',
-  }))
+  return (demoJournal as Array<Partial<JournalEntry>>).map((entry) => {
+    const {
+      id = '',
+      user_id = '',
+      date = '',
+      content = '',
+      sentiment_score = 0,
+      tags = [],
+      summary,
+      memory_weight,
+      created_at,
+      updated_at,
+      reflection_prompt,
+    } = entry;
+    return {
+      id,
+      user_id,
+      date,
+      content,
+      sentiment_score,
+      tags,
+      summary: summary || content.slice(0, 60) + '...',
+      memory_weight: memory_weight ?? 5,
+      created_at: created_at || new Date(date + 'T12:00:00Z').toISOString(),
+      updated_at: updated_at || new Date(date + 'T12:00:00Z').toISOString(),
+      reflection_prompt: reflection_prompt || '',
+    } as JournalEntry;
+  });
 } 

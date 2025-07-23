@@ -1,10 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { getSentimentColor, getSentimentBackgroundColor, formatSentimentScore, getSentimentGradientColor } from '@/lib/sentiment-utils'
+import { getSentimentColor, formatSentimentScore, getSentimentGradientColor } from '@/lib/sentiment-utils'
 import { useAuth } from '@/lib/auth-context'
 import { getJournalEntries, getDemoJournalEntries, JournalEntry } from '@/lib/database'
 import {
@@ -12,9 +12,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
-  DialogFooter,
-  DialogClose,
 } from '@/components/ui/dialog'
 
 export function JournalView() {
@@ -25,13 +22,7 @@ export function JournalView() {
   const [error, setError] = useState<string | null>(null)
   const [dialogOpen, setDialogOpen] = useState(false)
 
-  useEffect(() => {
-    if (user) {
-      loadEntries()
-    }
-  }, [user])
-
-  const loadEntries = async () => {
+  const loadEntries = useCallback(async () => {
     if (!user) return
     
     setLoading(true)
@@ -51,7 +42,13 @@ export function JournalView() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [user])
+
+  useEffect(() => {
+    if (user) {
+      loadEntries()
+    }
+  }, [user, loadEntries])
 
   if (loading) {
     return (
