@@ -220,6 +220,7 @@ export function TrendsView() {
                     tickLine={false}
                     axisLine={false}
                     tickMargin={8}
+                    tick={false}
                   />
                   <Tooltip
                     content={({ active, payload }) =>
