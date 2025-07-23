@@ -70,18 +70,22 @@ export function JournalGrid({ entries, onEntryClick }: JournalGridProps) {
 
   // Split into weeks (arrays of 7 days, Monday-Sunday)
   const weeks: DayData[][] = [];
-  for (let i = 0; i < dayData.length; i += 7) {
-    // Shift the week array left by 1 (so Monday aligns with first column)
-    const week = dayData.slice(i, i + 7);
-    if (week.length === 7) {
-      weeks.push(week);
-    } else {
-      // Pad incomplete weeks at the start with nulls to always have 7 columns
-      while (week.length < 7) week.push({
-        date: '', sentiment: null, hasEntry: false, isFuture: false
-      });
-      weeks.push(week);
-    }
+  let i = 0;
+  // Handle first (oldest) week, which may be partial
+  const firstWeekLen = 7 - (new Date(startDate).getDay() === 0 ? 6 : new Date(startDate).getDay() - 1);
+  const firstWeek = dayData.slice(0, firstWeekLen);
+  while (firstWeek.length < 7) firstWeek.unshift({ date: '', sentiment: null, hasEntry: false, isFuture: false });
+  weeks.push(firstWeek);
+  i = firstWeekLen;
+  // Handle all full weeks in between
+  for (; i + 7 <= dayData.length; i += 7) {
+    weeks.push(dayData.slice(i, i + 7));
+  }
+  // Handle last (most recent) week, which may be partial
+  if (i < dayData.length) {
+    const lastWeek = dayData.slice(i);
+    while (lastWeek.length < 7) lastWeek.push({ date: '', sentiment: null, hasEntry: false, isFuture: false });
+    weeks.push(lastWeek);
   }
   // Most recent week at the top
   weeks.reverse();
