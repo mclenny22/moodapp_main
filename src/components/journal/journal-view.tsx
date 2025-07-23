@@ -93,7 +93,7 @@ export function JournalView() {
           <p className="text-xs text-muted-foreground">Start writing in the Today tab to see your entries here</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="space-y-4">
           {entries.slice().reverse().map(entry => (
             <Card key={entry.id}>
               <CardHeader className="flex flex-row items-center justify-between">
