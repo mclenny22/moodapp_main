@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { getSentimentGradientColor } from '@/lib/sentiment-utils'
 import { useAuth } from '@/lib/auth-context'
 import { getJournalEntries, getDemoJournalEntries, JournalEntry } from '@/lib/database'
@@ -170,7 +170,7 @@ export function JournalView() {
               
               {/* Headline */}
               <DialogTitle className="text-2xl font-bold">
-                {formatWeekday(selectedEntry.date)}'s Journal Entry
+                {formatWeekday(selectedEntry.date)}&apos;s Journal Entry
               </DialogTitle>
               
               {/* Badges Row */}

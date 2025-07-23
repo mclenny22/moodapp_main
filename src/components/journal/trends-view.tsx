@@ -1,20 +1,13 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { TrendingUp, TrendingDown, Activity, AlertCircle } from 'lucide-react'
-import { CartesianGrid, Line, LineChart, XAxis } from 'recharts'
+import { TrendingUp, TrendingDown, AlertCircle } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, CardAction } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { getSentimentGradientColor } from '@/lib/sentiment-utils'
 import { useAuth } from '@/lib/auth-context'
 import { getJournalEntries, getDemoJournalEntries, JournalEntry } from '@/lib/database'
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from '@/components/ui/chart'
 import { Button } from '@/components/ui/button'
 
 interface ChartDataPoint {
@@ -36,7 +29,6 @@ export function TrendsView() {
   const { user } = useAuth()
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [chartData, setChartData] = useState<ChartDataPoint[]>([])
   const [averageSentiment, setAverageSentiment] = useState(0)
   const [totalEntries, setTotalEntries] = useState(0)
   const [trendDirection, setTrendDirection] = useState<'up' | 'down' | 'stable'>('stable')
@@ -185,7 +177,6 @@ export function TrendsView() {
         .filter(item => item.count >= 2) // Only show life areas that appear at least twice
         .sort((a, b) => b.count - a.count) // Sort by frequency
 
-      setChartData(data)
       setAverageSentiment(Math.round(avgMood * 10) / 10)
       setVolatility(Math.round(volatilityValue * 10) / 10)
       setLifeAreaAnalysis(lifeAreaAnalysisData)
@@ -204,13 +195,6 @@ export function TrendsView() {
       loadTrendsData()
     }
   }, [user, loadTrendsData])
-
-  const chartConfig = {
-    mood: {
-      label: "Mood",
-      color: "var(--chart-1)",
-    },
-  } satisfies ChartConfig
 
   if (loading) {
     return (

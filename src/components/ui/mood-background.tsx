@@ -149,7 +149,7 @@ export function MoodBackground() {
     const resolutionLocation = gl.getUniformLocation(program, 'u_resolution')
 
     // Animation loop
-    let startTime = Date.now()
+    const startTime = Date.now()
     const animate = () => {
       const time = (Date.now() - startTime) * 0.001 // Convert to seconds
       
