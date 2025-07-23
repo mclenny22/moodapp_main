@@ -25,28 +25,29 @@ export function JournalGrid({ entries, onEntryClick }: JournalGridProps) {
   const cols = 7;
   const total = dayData.length;
   if (total === 0) return null;
+  // Reverse the data so the most recent day is first
+  const reversedDayData = dayData.slice().reverse();
   // Find the weekday of the most recent day (0=Sunday, 1=Monday, ... 6=Saturday)
-  const mostRecentDate = new Date(dayData[total - 1].date);
+  const mostRecentDate = new Date(reversedDayData[0].date);
   const mostRecentWeekday = mostRecentDate.getDay();
   // Convert to Monday=0, Sunday=6
   const mostRecentCol = (mostRecentWeekday + 6) % 7;
   // Pad the start (top row, right side) so the most recent day lands in its correct column
   const padStart = cols - 1 - mostRecentCol;
-  let paddedDayData: (DayData | null)[] = [];
-  paddedDayData = [...Array(padStart).fill(null), ...dayData.slice().reverse()];
+  let paddedDayData: (DayData | null)[] = [...reversedDayData, ...Array(padStart).fill(null)];
   // Find the weekday of the oldest day
-  const oldestDate = new Date(dayData[0].date);
+  const oldestDate = new Date(reversedDayData[reversedDayData.length - 1].date);
   const oldestWeekday = oldestDate.getDay();
   const oldestCol = (oldestWeekday + 6) % 7;
   // Pad the end (bottom row, left side) so the oldest day lands in its correct column
   const padEnd = oldestCol;
-  paddedDayData = [...paddedDayData, ...Array(padEnd).fill(null)];
+  paddedDayData = [...Array(padEnd).fill(null), ...paddedDayData];
   // Calculate number of rows
   const rows = Math.ceil(paddedDayData.length / cols);
-  // Fill the grid top-down, left to right, then reverse each row for correct weekday order
+  // Fill the grid top-down, left to right
   const grid: (DayData | null)[][] = [];
   for (let r = 0; r < rows; r++) {
-    grid.push(paddedDayData.slice(r * cols, (r + 1) * cols).reverse());
+    grid.push(paddedDayData.slice(r * cols, (r + 1) * cols));
   }
   return (
     <div className="grid grid-cols-7 gap-5 w-full">
