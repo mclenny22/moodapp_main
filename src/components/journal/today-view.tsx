@@ -243,7 +243,7 @@ export function TodayView() {
         <div className="space-y-6">
           <Alert className="border-green-500 bg-green-50 text-green-900">
             <CheckCircle2Icon className="h-4 w-4 text-green-600" />
-            <AlertTitle>Success! Here's something to think about:</AlertTitle>
+            <AlertTitle>Success! Here&apos;s something to think about:</AlertTitle>
             <AlertDescription>
               {reflectionPrompt}
             </AlertDescription>
