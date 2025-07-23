@@ -9,7 +9,7 @@ import { TodayView } from '@/components/journal/today-view'
 import { JournalView } from '@/components/journal/journal-view'
 import { TrendsView } from '@/components/journal/trends-view'
 
-import { UserProfile } from '@/components/auth/user-profile'
+import { Settings } from '@/components/auth/settings'
 
 export default function Home() {
   const { user, loading } = useAuth()
@@ -72,7 +72,7 @@ export default function Home() {
             <TabsTrigger value="today">Today</TabsTrigger>
             <TabsTrigger value="journal">Journal</TabsTrigger>
             <TabsTrigger value="trends">Trends</TabsTrigger>
-            <TabsTrigger value="profile">Profile</TabsTrigger>
+            <TabsTrigger value="profile">Settings</TabsTrigger>
           </TabsList>
           
           <TabsContent value="today" className="mt-6">
@@ -88,7 +88,7 @@ export default function Home() {
           </TabsContent>
           
           <TabsContent value="profile" className="mt-6">
-            <UserProfile />
+            <Settings />
           </TabsContent>
         </Tabs>
       </div>

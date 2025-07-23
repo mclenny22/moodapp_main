@@ -6,8 +6,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
+import { ModeToggle } from '@/components/mode-toggle'
 
-export function UserProfile() {
+export function Settings() {
   const { user, signOut } = useAuth()
 
   if (!user) {
@@ -25,8 +26,8 @@ export function UserProfile() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Profile</CardTitle>
-        <CardDescription>Your account information</CardDescription>
+        <CardTitle>Settings</CardTitle>
+        <CardDescription>Manage your account and preferences</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex items-center space-x-4">
@@ -55,6 +56,15 @@ export function UserProfile() {
             <span className="text-sm text-muted-foreground">
               {new Date(user.created_at).toLocaleDateString()}
             </span>
+          </div>
+        </div>
+
+        <Separator />
+
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium">Theme</span>
+            <ModeToggle />
           </div>
         </div>
 
