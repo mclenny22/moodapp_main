@@ -162,18 +162,18 @@ export function JournalView() {
       <Dialog open={isDialogOpen} onOpenChange={handleDialogClose}>
         <DialogContent className="w-[95%] max-w-sm mx-auto">
           {selectedEntry && (
-            <div>
-              {/* Header - matching CardHeader structure */}
-              <div className="pb-3">
-                <div className="flex items-start justify-between">
-                  <div className="space-y-1">
-                    <p className="text-sm text-muted-foreground">
-                      {formatDate(selectedEntry.date)}
-                    </p>
-                    <DialogTitle className="text-lg">
-                      {formatWeekday(selectedEntry.date)}
-                    </DialogTitle>
-                  </div>
+            <div className="space-y-6">
+              {/* Header Section */}
+              <div>
+                <DialogTitle className="text-xl font-semibold mb-2">
+                  {formatWeekday(selectedEntry.date)}&apos;s Journal Entry
+                </DialogTitle>
+                <p className="text-sm text-muted-foreground mb-4">
+                  {formatDate(selectedEntry.date)}
+                </p>
+                
+                {/* Badges Row */}
+                <div className="flex gap-2">
                   <Badge 
                     variant="outline"
                     className="h-5 min-w-5 tabular-nums"
@@ -184,27 +184,25 @@ export function JournalView() {
                   >
                     {selectedEntry.sentiment_score > 0 ? '+' : ''}{selectedEntry.sentiment_score.toFixed(1)}
                   </Badge>
+                  {selectedEntry.tags.map((tag, index) => (
+                    <Badge key={index} variant="outline" className="h-5 min-w-5">
+                      {tag}
+                    </Badge>
+                  ))}
                 </div>
               </div>
               
-              {/* Content - matching CardContent structure */}
-              <div className="pt-0">
-                <div className="text-sm text-muted-foreground mb-4">
+              {/* Summary Section */}
+              <div>
+                <h3 className="font-semibold text-base mb-2">Summary</h3>
+                <p className="text-sm text-muted-foreground">
                   {selectedEntry.summary}
-                </div>
-                
-                {/* Tags */}
-                {selectedEntry.tags.length > 0 && (
-                  <div className="flex gap-2 mb-4">
-                    {selectedEntry.tags.map((tag, index) => (
-                      <Badge key={index} variant="outline" className="h-5 min-w-5">
-                        {tag}
-                      </Badge>
-                    ))}
-                  </div>
-                )}
-                
-                {/* Full Content */}
+                </p>
+              </div>
+              
+              {/* Original Entry Section */}
+              <div>
+                <h3 className="font-semibold text-base mb-2">Original Entry</h3>
                 <div className="whitespace-pre-wrap leading-relaxed text-sm text-muted-foreground">
                   {selectedEntry.content}
                 </div>
