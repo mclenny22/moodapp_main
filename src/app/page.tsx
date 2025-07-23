@@ -27,26 +27,26 @@ export default function Home() {
 
   if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <div className="w-full max-w-md space-y-6">
+      <div className="min-h-screen flex flex-col items-center justify-center p-4">
+        <div className="w-full max-w-md">
           <SignInForm />
-          
-          {/* Demo Login for Testing */}
-          <div className="text-center">
-            <div className="text-sm text-muted-foreground mb-2">
-              For testing without Supabase setup:
-            </div>
-            <Button 
-              variant="outline" 
-              onClick={() => {
-                // Mock login for demo purposes
-                localStorage.setItem('demo-user', 'true')
-                window.location.reload()
-              }}
-            >
-              Demo Login
-            </Button>
+        </div>
+        
+        {/* Demo Login for Testing */}
+        <div className="text-center mt-8">
+          <div className="text-sm text-muted-foreground mb-2">
+            For testing without Supabase setup:
           </div>
+          <Button 
+            variant="outline" 
+            onClick={() => {
+              // Mock login for demo purposes
+              localStorage.setItem('demo-user', 'true')
+              window.location.reload()
+            }}
+          >
+            Demo Login
+          </Button>
         </div>
       </div>
     )

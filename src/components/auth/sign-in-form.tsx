@@ -92,7 +92,7 @@ export function SignInForm() {
   }
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center p-4">
+    <div className="relative flex items-center justify-center p-4">
       <MoodBackground />
       <Card className="w-full max-w-md relative z-10">
         <CardHeader className="text-center">

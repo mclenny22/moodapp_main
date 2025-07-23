@@ -16,7 +16,13 @@ export function Settings() {
   }
 
   const handleSignOut = async () => {
-    await signOut()
+    try {
+      console.log('Signing out...')
+      await signOut()
+      console.log('Sign out completed')
+    } catch (error) {
+      console.error('Sign out error:', error)
+    }
   }
 
   // Get user's name from metadata or fallback to email
