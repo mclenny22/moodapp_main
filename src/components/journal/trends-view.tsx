@@ -180,7 +180,7 @@ export function TrendsView() {
     if (total === 0) return null;
     // Find the weekday of the most recent day (0=Sunday, 1=Monday, ... 6=Saturday)
     const mostRecentDate = new Date(data.dayData[total - 1].date);
-    let mostRecentWeekday = mostRecentDate.getDay();
+    const mostRecentWeekday = mostRecentDate.getDay();
     // Convert to Monday=0, Sunday=6
     const mostRecentCol = (mostRecentWeekday + 6) % 7;
     // Pad the start (top row, right side) so the most recent day lands in its correct column
@@ -189,7 +189,7 @@ export function TrendsView() {
     paddedDayData = [...Array(padStart).fill(null), ...data.dayData.slice().reverse()];
     // Find the weekday of the oldest day
     const oldestDate = new Date(data.dayData[0].date);
-    let oldestWeekday = oldestDate.getDay();
+    const oldestWeekday = oldestDate.getDay();
     const oldestCol = (oldestWeekday + 6) % 7;
     // Pad the end (bottom row, left side) so the oldest day lands in its correct column
     const padEnd = oldestCol;

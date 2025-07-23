@@ -1,10 +1,9 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { getSentimentColor, formatSentimentScore, getSentimentGradientColor } from '@/lib/sentiment-utils'
+import { getSentimentGradientColor } from '@/lib/sentiment-utils'
 import { useAuth } from '@/lib/auth-context'
 import { getJournalEntries, getDemoJournalEntries, JournalEntry } from '@/lib/database'
 import {
