@@ -291,15 +291,15 @@ export function TrendsView() {
       </div>
 
       {/* Emotional Balance Sheet Card */}
-      {lifeAreaAnalysis.length > 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Emotional Balance Sheet</CardTitle>
-            <CardDescription>
-              How do you feel about the parts of your life that matter most?
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
+      <Card>
+        <CardHeader>
+          <CardTitle>Emotional Balance Sheet</CardTitle>
+          <CardDescription>
+            How do you feel about the parts of your life that matter most?
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {lifeAreaAnalysis.length > 0 ? (
             <div className="space-y-4">
               {lifeAreaAnalysis.map((item) => (
                 <div key={item.tag} className="flex items-center justify-between p-4 rounded-lg border">
@@ -326,9 +326,18 @@ export function TrendsView() {
                 </div>
               ))}
             </div>
-          </CardContent>
-        </Card>
-      )}
+          ) : (
+            <div className="text-center py-8">
+              <p className="text-sm text-muted-foreground mb-2">
+                Start tagging your journal entries to see insights about different areas of your life
+              </p>
+              <p className="text-xs text-muted-foreground">
+                You&apos;ll get emotional balance insights after adding tags to at least 3 entries
+              </p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
 
     </div>
