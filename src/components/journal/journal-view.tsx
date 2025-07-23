@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { getSentimentColor, getSentimentBackgroundColor, formatSentimentScore, getSentimentGradientColor } from '@/lib/sentiment-utils'
 import { useAuth } from '@/lib/auth-context'
-import { getJournalEntries, JournalEntry } from '@/lib/database'
+import { getJournalEntries, getDemoJournalEntries, JournalEntry } from '@/lib/database'
 import {
   Dialog,
   DialogContent,
@@ -38,7 +38,12 @@ export function JournalView() {
     setError(null)
     
     try {
-      const userEntries = await getJournalEntries(user.id)
+      let userEntries: JournalEntry[]
+      if (user.id === 'demo-user') {
+        userEntries = getDemoJournalEntries()
+      } else {
+        userEntries = await getJournalEntries(user.id)
+      }
       setEntries(userEntries)
     } catch (err) {
       console.error('Error loading entries:', err)

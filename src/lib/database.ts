@@ -1,4 +1,5 @@
 import { createClient } from './supabase'
+import demoJournal from '../data/demo-journal.json'
 
 export interface JournalEntry {
   id: string
@@ -236,4 +237,16 @@ export async function updateJournalEntry(
     console.error('Exception updating journal entry:', error)
     return null
   }
+} 
+
+export function getDemoJournalEntries() {
+  // Fill missing fields for JournalEntry type
+  return (demoJournal as any[]).map((entry, i) => ({
+    ...entry,
+    summary: entry.summary || entry.content.slice(0, 60) + '...',
+    memory_weight: entry.memory_weight ?? 5,
+    created_at: entry.created_at || new Date(entry.date + 'T12:00:00Z').toISOString(),
+    updated_at: entry.updated_at || new Date(entry.date + 'T12:00:00Z').toISOString(),
+    reflection_prompt: entry.reflection_prompt || '',
+  }))
 } 

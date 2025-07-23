@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { getSentimentColor } from '@/lib/sentiment-utils'
+import { getSentimentColor, getSentimentGradientColor } from '@/lib/sentiment-utils'
 import { useAuth } from '@/lib/auth-context'
 import { 
   getAverageSentiment, 
@@ -14,9 +14,19 @@ import {
   getJournalEntriesByDateRange,
   JournalEntry 
 } from '@/lib/database'
-import { LineChart, Line, XAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList } from 'recharts'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 type TimePeriod = '7d' | '30d' | '1y'
+
+interface DayData {
+  date: string
+  sentiment: number | null
+  hasEntry: boolean
+}
 
 export function TrendsView() {
   const { user } = useAuth()
@@ -27,18 +37,77 @@ export function TrendsView() {
     averageSentiment: number
     totalEntries: number
     commonTags: { tag: string; count: number }[]
-    recentSentiments: number[]
-    labels: string[]
+    dayData: DayData[]
   }>({
     averageSentiment: 0,
     totalEntries: 0,
     commonTags: [],
-    recentSentiments: [],
-    labels: []
+    dayData: []
   })
 
   useEffect(() => {
     if (user) {
+      if (user.id === 'demo-user') {
+        // Demo/test data for trends
+        let demoDayData: DayData[]
+        
+        if (selectedPeriod === '7d') {
+          demoDayData = [
+            { date: '2024-01-01', sentiment: 3, hasEntry: true },
+            { date: '2024-01-02', sentiment: 5, hasEntry: true },
+            { date: '2024-01-03', sentiment: 2, hasEntry: true },
+            { date: '2024-01-04', sentiment: 4, hasEntry: true },
+            { date: '2024-01-05', sentiment: 1, hasEntry: true },
+            { date: '2024-01-06', sentiment: null, hasEntry: false },
+            { date: '2024-01-07', sentiment: 5, hasEntry: true },
+          ]
+        } else if (selectedPeriod === '30d') {
+          demoDayData = Array.from({ length: 30 }, (_, i) => {
+            const date = new Date()
+            date.setDate(date.getDate() - (29 - i))
+            const dateStr = date.toISOString().split('T')[0]
+            const hasEntry = Math.random() > 0.3 // 70% chance of having an entry
+            return {
+              date: dateStr,
+              sentiment: hasEntry ? Math.floor(Math.random() * 11) - 5 : null,
+              hasEntry
+            }
+          })
+        } else {
+          // 1y - generate data for the past year
+          demoDayData = []
+          const today = new Date()
+          for (let i = 364; i >= 0; i--) {
+            const date = new Date(today)
+            date.setDate(date.getDate() - i)
+            const dateStr = date.toISOString().split('T')[0]
+            const hasEntry = Math.random() > 0.4 // 60% chance of having an entry
+            demoDayData.push({
+              date: dateStr,
+              sentiment: hasEntry ? Math.floor(Math.random() * 11) - 5 : null,
+              hasEntry
+            })
+          }
+        }
+        
+        const sentiments = demoDayData.filter(day => day.hasEntry).map(day => day.sentiment!)
+        
+        setData({
+          averageSentiment: sentiments.length > 0 ? sentiments.reduce((a, b) => a + b, 0) / sentiments.length : 0,
+          totalEntries: sentiments.length,
+          commonTags: [
+            { tag: 'work', count: 12 },
+            { tag: 'family', count: 8 },
+            { tag: 'health', count: 5 },
+            { tag: 'gratitude', count: 4 },
+            { tag: 'stress', count: 3 },
+          ],
+          dayData: demoDayData,
+        })
+        setLoading(false)
+        setError(null)
+        return
+      }
       loadTrendsData()
     }
   }, [user, selectedPeriod])
@@ -59,49 +128,33 @@ export function TrendsView() {
       const startDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
       const entries = await getJournalEntriesByDateRange(user.id, startDate, endDate)
       
-      // Prepare chart data
-      let recentSentiments: number[] = []
-      let labels: string[] = []
+      // Create a map of entries by date
+      const entriesByDate = new Map<string, JournalEntry>()
+      entries.forEach(entry => {
+        entriesByDate.set(entry.date, entry)
+      })
       
-      if (selectedPeriod === '7d') {
-        // Last 7 days
-        recentSentiments = entries.slice(-7).map(entry => entry.sentiment_score)
-        labels = entries.slice(-7).map(entry => 
-          new Date(entry.date).toLocaleDateString('en-US', { weekday: 'short' })
-        )
-      } else if (selectedPeriod === '30d') {
-        // Last 30 days
-        recentSentiments = entries.slice(-30).map(entry => entry.sentiment_score)
-        labels = entries.slice(-30).map(entry => 
-          new Date(entry.date).getDate().toString()
-        )
-      } else {
-        // Last year - group by month
-        const monthlyData = new Map<string, number[]>()
-        entries.forEach(entry => {
-          const month = new Date(entry.date).toLocaleDateString('en-US', { month: 'short' })
-          if (!monthlyData.has(month)) {
-            monthlyData.set(month, [])
-          }
-          monthlyData.get(month)!.push(entry.sentiment_score)
-        })
+      // Generate day data for the entire period
+      const dayData: DayData[] = []
+      const start = new Date(startDate)
+      const end = new Date(endDate)
+      
+      for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+        const dateStr = d.toISOString().split('T')[0]
+        const entry = entriesByDate.get(dateStr)
         
-        const monthOrder = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-        recentSentiments = monthOrder
-          .filter(month => monthlyData.has(month))
-          .map(month => {
-            const scores = monthlyData.get(month)!
-            return scores.reduce((sum, score) => sum + score, 0) / scores.length
-          })
-        labels = monthOrder.filter(month => monthlyData.has(month))
+        dayData.push({
+          date: dateStr,
+          sentiment: entry ? entry.sentiment_score : null,
+          hasEntry: !!entry
+        })
       }
       
       setData({
         averageSentiment,
         totalEntries: entries.length,
         commonTags,
-        recentSentiments,
-        labels
+        dayData
       })
       
     } catch (err) {
@@ -118,6 +171,51 @@ export function TrendsView() {
       case '30d': return 'Last 30 days'
       case '1y': return 'Last year'
     }
+  }
+
+  const getSquareColor = (day: DayData) => {
+    if (!day.hasEntry) return 'bg-gray-100 dark:bg-gray-800'
+    
+    const sentiment = day.sentiment!
+    if (sentiment >= 3) return 'bg-green-500'
+    if (sentiment >= 1) return 'bg-green-400'
+    if (sentiment >= -1) return 'bg-green-300'
+    if (sentiment >= -3) return 'bg-green-200'
+    return 'bg-green-100'
+  }
+
+  const getSquareTooltip = (day: DayData) => {
+    if (!day.hasEntry) return `${day.date}: No entry`
+    return `${day.date}: Sentiment ${day.sentiment}`
+  }
+
+  const renderContributionGrid = () => {
+    // Always 7 columns for days of the week, fill card width
+    return (
+      <div className="grid grid-cols-7 gap-5 w-full">
+        {data.dayData.map((day, index) => (
+          <Tooltip key={day.date}>
+            <TooltipTrigger asChild>
+              <div
+                className={`aspect-square w-full rounded-sm border border-gray-200 dark:border-gray-700 flex items-center justify-center cursor-pointer`}
+                style={{ background: day.hasEntry ? getSentimentGradientColor(day.sentiment!) : '#ededed' }}
+              >
+                {day.hasEntry && (
+                  <span className="text-xs font-medium text-foreground">
+                    {day.sentiment}
+                  </span>
+                )}
+              </div>
+            </TooltipTrigger>
+            <TooltipContent>
+              <span>
+                {new Date(day.date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' })}
+              </span>
+            </TooltipContent>
+          </Tooltip>
+        ))}
+      </div>
+    )
   }
 
   if (loading) {
@@ -161,7 +259,7 @@ export function TrendsView() {
         <Badge variant="secondary">{data.totalEntries} entries</Badge>
       </div>
 
-      {/* Combined Average Sentiment and Mood Trend */}
+      {/* Combined Average Sentiment and Contribution Grid */}
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
@@ -206,61 +304,32 @@ export function TrendsView() {
             </div>
           </div>
 
-          {/* Mood Trend Chart */}
-          {data.recentSentiments.length > 0 ? (
-            <div style={{ width: '100%', height: 220 }}>
-              <ResponsiveContainer width="100%" height={200}>
-                <LineChart
-                  data={data.labels.map((label, i) => ({ label, sentiment: data.recentSentiments[i] }))}
-                  margin={{ top: 20, left: 12, right: 12 }}
-                >
-                  <CartesianGrid vertical={false} strokeDasharray="3 3" />
-                  <XAxis
-                    dataKey="label"
-                    tickLine={false}
-                    axisLine={false}
-                    tickMargin={8}
-                    tick={false}
-                  />
-                  <Tooltip
-                    content={({ active, payload }) =>
-                      active && payload && payload.length ? (
-                        <div className="rounded-md border bg-background p-2 text-xs shadow-md">
-                          <div className="font-medium">{payload[0].payload.label}</div>
-                          <div>Sentiment: <span className="font-bold">{payload[0].payload.sentiment.toFixed(1)}</span></div>
-                        </div>
-                      ) : null
-                    }
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="sentiment"
-                    stroke="#222"
-                    strokeWidth={2}
-                    dot={{ r: 5, fill: '#000' }}
-                    activeDot={{ r: 7, fill: '#000' }}
-                  >
-                    <LabelList
-                      dataKey="sentiment"
-                      position="top"
-                      className="fill-foreground"
-                      fontSize={12}
-                      formatter={(value) =>
-                        typeof value === 'number' ? value.toFixed(1) : value
-                      }
-                    />
-                  </Line>
-                </LineChart>
-              </ResponsiveContainer>
-              <div className="text-xs text-muted-foreground text-center">
-                {getPeriodLabel(selectedPeriod)}
+          {/* Contribution Grid */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-medium">Mood Activity</h3>
+              <div className="flex items-center space-x-2 text-xs text-muted-foreground">
+                <span>Less</span>
+                <div className="flex space-x-1">
+                  <div className="w-3 h-3 bg-gray-100 dark:bg-gray-800 rounded-sm"></div>
+                  <div className="w-3 h-3 bg-green-100 rounded-sm"></div>
+                  <div className="w-3 h-3 bg-green-200 rounded-sm"></div>
+                  <div className="w-3 h-3 bg-green-300 rounded-sm"></div>
+                  <div className="w-3 h-3 bg-green-400 rounded-sm"></div>
+                  <div className="w-3 h-3 bg-green-500 rounded-sm"></div>
+                </div>
+                <span>More</span>
               </div>
             </div>
-          ) : (
-            <div className="text-center py-8">
-              <p className="text-sm text-muted-foreground">No data available for this period</p>
+            
+            <div className="flex justify-center">
+              {renderContributionGrid()}
             </div>
-          )}
+            
+            <div className="text-xs text-muted-foreground text-center">
+              {getPeriodLabel(selectedPeriod)}
+            </div>
+          </div>
         </CardContent>
       </Card>
 
@@ -290,18 +359,6 @@ export function TrendsView() {
           </CardContent>
         </Card>
       )}
-
-      {/* Sentiment Distribution */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Sentiment Distribution</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-center py-8">
-            <p className="text-sm text-muted-foreground">Coming soon...</p>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   )
 } 

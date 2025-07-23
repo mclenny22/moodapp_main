@@ -1,0 +1,58 @@
+[
+  {
+    "id": "1",
+    "user_id": "demo-user",
+    "date": "2024-07-01",
+    "sentiment_score": 3,
+    "content": "Had a productive day at work and enjoyed a nice walk in the evening.",
+    "tags": ["work", "health"]
+  },
+  {
+    "id": "2",
+    "user_id": "demo-user",
+    "date": "2024-07-02",
+    "sentiment_score": 5,
+    "content": "Spent quality time with family. Felt very grateful.",
+    "tags": ["family", "gratitude"]
+  },
+  {
+    "id": "3",
+    "user_id": "demo-user",
+    "date": "2024-07-03",
+    "sentiment_score": 2,
+    "content": "A bit tired, but managed to finish my tasks.",
+    "tags": ["work"]
+  },
+  {
+    "id": "4",
+    "user_id": "demo-user",
+    "date": "2024-07-04",
+    "sentiment_score": 4,
+    "content": "Went for a run and felt energized.",
+    "tags": ["health"]
+  },
+  {
+    "id": "5",
+    "user_id": "demo-user",
+    "date": "2024-07-05",
+    "sentiment_score": 1,
+    "content": "A little stressed about upcoming deadlines.",
+    "tags": ["stress", "work"]
+  },
+  {
+    "id": "6",
+    "user_id": "demo-user",
+    "date": "2024-07-06",
+    "sentiment_score": 0,
+    "content": "Relaxed at home and watched a movie.",
+    "tags": ["relax"]
+  },
+  {
+    "id": "7",
+    "user_id": "demo-user",
+    "date": "2024-07-07",
+    "sentiment_score": 5,
+    "content": "Had a great day outdoors with friends.",
+    "tags": ["friends", "outdoors"]
+  }
+] 
