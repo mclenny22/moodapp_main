@@ -175,9 +175,10 @@ export function TrendsView() {
 
   const renderContributionGrid = () => {
     // Always 7 columns for days of the week, fill card width
+    const reversedDayData = [...data.dayData].reverse();
     return (
       <div className="grid grid-cols-7 gap-5 w-full">
-        {data.dayData.map((day, index) => (
+        {reversedDayData.map((day) => (
           <Tooltip key={day.date}>
             <TooltipTrigger asChild>
               <div
