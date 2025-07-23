@@ -40,7 +40,7 @@ export async function createJournalEntry(
         sentiment_score: analysis.sentiment_score,
         tags: analysis.tags,
         memory_weight: analysis.memory_weight,
-        reflection_prompt: analysis.reflection_prompt
+        reflection_prompt: analysis.reflection_prompt ?? ''
       })
       .select()
       .single()
@@ -211,7 +211,7 @@ export async function updateJournalEntry(
       sentiment_score: analysis.sentiment_score,
       tags: analysis.tags,
       memory_weight: analysis.memory_weight,
-      reflection_prompt: analysis.reflection_prompt,
+      reflection_prompt: analysis.reflection_prompt ?? '',
       updated_at: new Date().toISOString()
     }
     
