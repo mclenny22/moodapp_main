@@ -7,6 +7,15 @@ import { Button } from '@/components/ui/button'
 import { getSentimentColor, getSentimentBackgroundColor, formatSentimentScore, getSentimentGradientColor } from '@/lib/sentiment-utils'
 import { useAuth } from '@/lib/auth-context'
 import { getJournalEntries, JournalEntry } from '@/lib/database'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogClose,
+} from '@/components/ui/dialog'
 
 export function JournalView() {
   const { user } = useAuth()
@@ -14,6 +23,7 @@ export function JournalView() {
   const [selectedEntry, setSelectedEntry] = useState<JournalEntry | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [dialogOpen, setDialogOpen] = useState(false)
 
   useEffect(() => {
     if (user) {
@@ -90,7 +100,7 @@ export function JournalView() {
             <Card 
               key={entry.id}
               className={"cursor-pointer transition-colors hover:bg-muted/50 bg-transparent border"}
-              onClick={() => setSelectedEntry(entry)}
+              onClick={() => { setSelectedEntry(entry); setDialogOpen(true); }}
             >
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between">
@@ -137,66 +147,59 @@ export function JournalView() {
         </div>
       )}
 
-      {/* Entry Detail Modal */}
-      {selectedEntry && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <Card className="w-full max-w-md max-h-[80vh] overflow-y-auto">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle>
+      {/* Entry Detail Dialog */}
+      <Dialog open={dialogOpen} onOpenChange={(open) => {
+        setDialogOpen(open);
+        if (!open) setSelectedEntry(null);
+      }}>
+        <DialogContent className="max-w-md">
+          {selectedEntry && (
+            <>
+              <DialogHeader>
+                <DialogTitle>
                   {new Date(selectedEntry.date).toLocaleDateString('en-US', {
                     weekday: 'long',
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric'
                   })}
-                </CardTitle>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setSelectedEntry(null)}
-                >
-                  ✕
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className={`text-2xl font-bold ${getSentimentColor(selectedEntry.sentiment_score)}`}>
-                  {formatSentimentScore(selectedEntry.sentiment_score)}
-                </span>
-                <div className="flex items-center gap-2">
-                  <Badge variant="outline" className={selectedEntry.memory_weight >= 7 ? "bg-yellow-50 text-yellow-700 border-yellow-200" : ""}>
-                    Memory: {selectedEntry.memory_weight}/10
-                    {selectedEntry.memory_weight >= 7 && " ⭐"}
-                  </Badge>
-                </div>
-              </div>
-              
-              <div>
-                <h4 className="font-medium mb-2">Summary</h4>
-                <p className="text-sm text-muted-foreground">{selectedEntry.summary}</p>
-              </div>
-              
-              <div>
-                <h4 className="font-medium mb-2">Entry</h4>
-                <p className="text-sm whitespace-pre-wrap">{selectedEntry.content}</p>
-              </div>
-              
-              <div>
-                <h4 className="font-medium mb-2">Tags</h4>
-                <div className="flex flex-wrap gap-1">
-                  {selectedEntry.tags.map((tag) => (
-                    <Badge key={tag} variant="secondary">
-                      {tag}
+                </DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className={`text-2xl font-bold ${getSentimentColor(selectedEntry.sentiment_score)}`}>
+                    {formatSentimentScore(selectedEntry.sentiment_score)}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline" className={selectedEntry.memory_weight >= 7 ? "bg-yellow-50 text-yellow-700 border-yellow-200" : ""}>
+                      Memory: {selectedEntry.memory_weight}/10
+                      {selectedEntry.memory_weight >= 7 && " ⭐"}
                     </Badge>
-                  ))}
+                  </div>
+                </div>
+                <div>
+                  <h4 className="font-medium mb-2">Summary</h4>
+                  <p className="text-sm text-muted-foreground">{selectedEntry.summary}</p>
+                </div>
+                <div>
+                  <h4 className="font-medium mb-2">Entry</h4>
+                  <p className="text-sm whitespace-pre-wrap">{selectedEntry.content}</p>
+                </div>
+                <div>
+                  <h4 className="font-medium mb-2">Tags</h4>
+                  <div className="flex flex-wrap gap-1">
+                    {selectedEntry.tags.map((tag) => (
+                      <Badge key={tag} variant="secondary">
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   )
 } 
