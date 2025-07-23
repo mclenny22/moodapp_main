@@ -175,29 +175,43 @@ export function TrendsView() {
 
   const renderContributionGrid = () => {
     // Always 7 columns for days of the week, fill card width
-    const reversedDayData = [...data.dayData].reverse();
+    const cols = 7;
+    const total = data.dayData.length;
+    const rows = Math.ceil(total / cols);
+    // Fill grid with empty cells if needed
+    const filledDayData = Array(rows * cols - total).fill(null).concat(data.dayData);
+    // Split into rows
+    const gridRows: (typeof data.dayData)[] = [];
+    for (let i = 0; i < rows; i++) {
+      gridRows.push(filledDayData.slice(i * cols, (i + 1) * cols));
+    }
+    // Render from bottom to top
     return (
       <div className="grid grid-cols-7 gap-5 w-full">
-        {reversedDayData.map((day) => (
-          <Tooltip key={day.date}>
-            <TooltipTrigger asChild>
-              <div
-                className={`aspect-square w-full rounded-sm border border-gray-200 dark:border-gray-700 flex items-center justify-center cursor-pointer`}
-                style={{ background: day.hasEntry ? getSentimentGradientColor(day.sentiment!) : '#ededed' }}
-              >
-                {day.hasEntry && (
-                  <span className="text-xs font-medium text-foreground">
-                    {day.sentiment}
-                  </span>
-                )}
-              </div>
-            </TooltipTrigger>
-            <TooltipContent>
-              <span>
-                {new Date(day.date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' })}
-              </span>
-            </TooltipContent>
-          </Tooltip>
+        {gridRows.reverse().flat().map((day, idx) => (
+          day ? (
+            <Tooltip key={day.date}>
+              <TooltipTrigger asChild>
+                <div
+                  className={`aspect-square w-full rounded-sm border border-gray-200 dark:border-gray-700 flex items-center justify-center cursor-pointer`}
+                  style={{ background: day.hasEntry ? getSentimentGradientColor(day.sentiment!) : '#ededed' }}
+                >
+                  {day.hasEntry && (
+                    <span className="text-xs font-medium text-foreground">
+                      {day.sentiment}
+                    </span>
+                  )}
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <span>
+                  {new Date(day.date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' })}
+                </span>
+              </TooltipContent>
+            </Tooltip>
+          ) : (
+            <div key={idx} />
+          )
         ))}
       </div>
     )
