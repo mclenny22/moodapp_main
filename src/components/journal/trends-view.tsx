@@ -14,6 +14,7 @@ import {
   getJournalEntriesByDateRange,
   JournalEntry 
 } from '@/lib/database'
+import { LineChart, Line, XAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList } from 'recharts'
 
 type TimePeriod = '7d' | '30d' | '1y'
 
@@ -207,20 +208,46 @@ export function TrendsView() {
 
           {/* Mood Trend Chart */}
           {data.recentSentiments.length > 0 ? (
-            <div>
-              <div className="flex items-end justify-between h-20 mb-2">
-                {data.recentSentiments.map((sentiment, index) => (
-                  <div
-                    key={index}
-                    className="flex-1 mx-0.5 bg-muted rounded-t"
-                    style={{
-                      height: `${((sentiment + 5) / 10) * 100}%`,
-                      backgroundColor: sentiment < -1 ? '#3b82f6' : sentiment > 1 ? '#22c55e' : '#6b7280'
-                    }}
-                    title={`${data.labels[index]}: ${sentiment.toFixed(1)}`}
+            <div style={{ width: '100%', height: 220 }}>
+              <ResponsiveContainer width="100%" height={200}>
+                <LineChart
+                  data={data.labels.map((label, i) => ({ label, sentiment: data.recentSentiments[i] }))}
+                  margin={{ top: 20, left: 12, right: 12 }}
+                >
+                  <CartesianGrid vertical={false} strokeDasharray="3 3" />
+                  <XAxis
+                    dataKey="label"
+                    tickLine={false}
+                    axisLine={false}
+                    tickMargin={8}
                   />
-                ))}
-              </div>
+                  <Tooltip
+                    content={({ active, payload }) =>
+                      active && payload && payload.length ? (
+                        <div className="rounded-md border bg-background p-2 text-xs shadow-md">
+                          <div className="font-medium">{payload[0].payload.label}</div>
+                          <div>Sentiment: <span className="font-bold">{payload[0].payload.sentiment.toFixed(1)}</span></div>
+                        </div>
+                      ) : null
+                    }
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="sentiment"
+                    stroke="#22c55e"
+                    strokeWidth={2}
+                    dot={{ r: 4, fill: '#22c55e' }}
+                    activeDot={{ r: 6 }}
+                  >
+                    <LabelList
+                      dataKey="sentiment"
+                      position="top"
+                      className="fill-foreground"
+                      fontSize={12}
+                    />
+                  </Line>
+                </LineChart>
+              </ResponsiveContainer>
               <div className="text-xs text-muted-foreground text-center">
                 {getPeriodLabel(selectedPeriod)}
               </div>
