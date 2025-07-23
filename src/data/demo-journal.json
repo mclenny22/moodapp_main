@@ -5,7 +5,12 @@
     "date": "2025-04-15",
     "sentiment_score": 2,
     "content": "Started a new project today. Feeling a bit overwhelmed but excited.",
-    "tags": ["Career", "Energy"]
+    "summary": "Excited about starting a new project but feeling overwhelmed by the scope.",
+    "tags": ["Career", "Energy"],
+    "memory_weight": 6,
+    "reflection_prompt": "What aspects of this new project are most exciting to you? How can you break down the overwhelming parts into manageable steps?",
+    "created_at": "2025-04-15T09:00:00Z",
+    "updated_at": "2025-04-15T09:00:00Z"
   },
   {
     "id": "2",
@@ -13,7 +18,12 @@
     "date": "2025-04-20",
     "sentiment_score": 4,
     "content": "Had a great weekend with family. Feeling refreshed.",
-    "tags": ["Family", "Energy"]
+    "summary": "Enjoyed quality time with family over the weekend, feeling rejuvenated.",
+    "tags": ["Family", "Energy"],
+    "memory_weight": 5,
+    "reflection_prompt": "What made this family time so special? How does spending time with loved ones affect your energy levels?",
+    "created_at": "2025-04-20T14:30:00Z",
+    "updated_at": "2025-04-20T14:30:00Z"
   },
   {
     "id": "3",
@@ -21,7 +31,12 @@
     "date": "2025-04-25",
     "sentiment_score": 1,
     "content": "Stressed about deadlines. Need to focus better.",
-    "tags": ["Career", "Self"]
+    "summary": "Feeling stressed due to upcoming deadlines and struggling with focus.",
+    "tags": ["Career", "Self"],
+    "memory_weight": 4,
+    "reflection_prompt": "What specific deadlines are causing the most stress? What strategies help you focus when under pressure?",
+    "created_at": "2025-04-25T11:15:00Z",
+    "updated_at": "2025-04-25T11:15:00Z"
   },
   {
     "id": "4",
@@ -29,7 +44,12 @@
     "date": "2025-05-01",
     "sentiment_score": 3,
     "content": "May started well. Got some good news about the project.",
-    "tags": ["Career", "Purpose"]
+    "summary": "Positive start to May with encouraging project updates.",
+    "tags": ["Career", "Purpose"],
+    "memory_weight": 5,
+    "reflection_prompt": "What was the good news about the project? How does this positive feedback impact your sense of purpose?",
+    "created_at": "2025-05-01T08:45:00Z",
+    "updated_at": "2025-05-01T08:45:00Z"
   },
   {
     "id": "5",
@@ -37,7 +57,12 @@
     "date": "2025-05-08",
     "sentiment_score": 5,
     "content": "Amazing day! Everything went perfectly.",
-    "tags": ["Self", "Purpose"]
+    "summary": "Exceptional day where everything aligned perfectly.",
+    "tags": ["Self", "Purpose"],
+    "memory_weight": 8,
+    "reflection_prompt": "What made this day so amazing? What can you learn from this perfect alignment of circumstances?",
+    "created_at": "2025-05-08T19:00:00Z",
+    "updated_at": "2025-05-08T19:00:00Z"
   },
   {
     "id": "6",
@@ -45,7 +70,12 @@
     "date": "2025-05-15",
     "sentiment_score": 2,
     "content": "Regular day, nothing special but feeling okay.",
-    "tags": ["Self"]
+    "summary": "Standard day with neutral emotions and routine activities.",
+    "tags": ["Self"],
+    "memory_weight": 3,
+    "reflection_prompt": "What does a 'regular day' look like for you? How do you feel about days that are neither great nor terrible?",
+    "created_at": "2025-05-15T16:20:00Z",
+    "updated_at": "2025-05-15T16:20:00Z"
   },
   {
     "id": "7",
@@ -53,7 +83,12 @@
     "date": "2025-05-22",
     "sentiment_score": -1,
     "content": "Minor setback today, but keeping perspective.",
-    "tags": ["Self", "Career"]
+    "summary": "Experienced a setback but maintaining positive perspective.",
+    "tags": ["Self", "Career"],
+    "memory_weight": 4,
+    "reflection_prompt": "What was the setback and how are you maintaining perspective? What coping strategies are you using?",
+    "created_at": "2025-05-22T13:10:00Z",
+    "updated_at": "2025-05-22T13:10:00Z"
   },
   {
     "id": "8",
@@ -61,7 +96,12 @@
     "date": "2025-05-29",
     "sentiment_score": 4,
     "content": "Great conversation with an old friend today.",
-    "tags": ["Social Life", "Energy"]
+    "summary": "Meaningful conversation with a long-time friend, feeling connected.",
+    "tags": ["Social Life", "Energy"],
+    "memory_weight": 6,
+    "reflection_prompt": "What made this conversation so great? How do conversations with old friends energize you?",
+    "created_at": "2025-05-29T15:45:00Z",
+    "updated_at": "2025-05-29T15:45:00Z"
   },
   {
     "id": "9",
@@ -69,7 +109,12 @@
     "date": "2025-06-05",
     "sentiment_score": 3,
     "content": "Had a productive day at work and enjoyed a nice walk in the evening.",
-    "tags": ["Career", "Self", "Environment"]
+    "summary": "Balanced day with productive work and refreshing evening walk.",
+    "tags": ["Career", "Self", "Environment"],
+    "memory_weight": 5,
+    "reflection_prompt": "What made your work day productive? How did the evening walk contribute to your overall satisfaction?",
+    "created_at": "2025-06-05T10:30:00Z",
+    "updated_at": "2025-06-05T10:30:00Z"
   },
   {
     "id": "10",
@@ -77,7 +122,12 @@
     "date": "2025-06-12",
     "sentiment_score": 5,
     "content": "Spent quality time with family. Felt very grateful.",
-    "tags": ["Family", "Purpose"]
+    "summary": "Deep gratitude after meaningful family time.",
+    "tags": ["Family", "Purpose"],
+    "memory_weight": 7,
+    "reflection_prompt": "What specific moments with family made you feel grateful? How does family time connect to your sense of purpose?",
+    "created_at": "2025-06-12T18:15:00Z",
+    "updated_at": "2025-06-12T18:15:00Z"
   },
   {
     "id": "11",
@@ -85,7 +135,12 @@
     "date": "2025-06-19",
     "sentiment_score": 2,
     "content": "A bit tired, but managed to finish my tasks.",
-    "tags": ["Career", "Energy"]
+    "summary": "Accomplished tasks despite feeling tired and low energy.",
+    "tags": ["Career", "Energy"],
+    "memory_weight": 4,
+    "reflection_prompt": "What helped you push through the tiredness to complete your tasks? How do you manage energy levels when feeling fatigued?",
+    "created_at": "2025-06-19T12:00:00Z",
+    "updated_at": "2025-06-19T12:00:00Z"
   },
   {
     "id": "12",
@@ -93,7 +148,12 @@
     "date": "2025-06-26",
     "sentiment_score": 4,
     "content": "Went for a run and felt energized.",
-    "tags": ["Self", "Energy"]
+    "summary": "Physical exercise provided energy boost and positive mood.",
+    "tags": ["Self", "Energy"],
+    "memory_weight": 5,
+    "reflection_prompt": "What was it about this run that energized you? How does physical activity affect your overall mood and energy?",
+    "created_at": "2025-06-26T07:30:00Z",
+    "updated_at": "2025-06-26T07:30:00Z"
   },
   {
     "id": "13",
@@ -101,7 +161,12 @@
     "date": "2025-07-01",
     "sentiment_score": 1,
     "content": "A little stressed about upcoming deadlines.",
-    "tags": ["Career", "Self"]
+    "summary": "Feeling stressed about approaching deadlines and time pressure.",
+    "tags": ["Career", "Self"],
+    "memory_weight": 4,
+    "reflection_prompt": "Which deadlines are causing the most stress? What strategies can you use to manage this time pressure?",
+    "created_at": "2025-07-01T09:45:00Z",
+    "updated_at": "2025-07-01T09:45:00Z"
   },
   {
     "id": "14",
@@ -109,7 +174,12 @@
     "date": "2025-07-08",
     "sentiment_score": 0,
     "content": "Relaxed at home and watched a movie.",
-    "tags": ["Self", "Environment"]
+    "summary": "Chill day spent relaxing at home with entertainment.",
+    "tags": ["Self", "Environment"],
+    "memory_weight": 3,
+    "reflection_prompt": "What made this relaxation time so enjoyable? How does downtime at home contribute to your well-being?",
+    "created_at": "2025-07-08T20:00:00Z",
+    "updated_at": "2025-07-08T20:00:00Z"
   },
   {
     "id": "15",
@@ -117,7 +187,12 @@
     "date": "2025-07-15",
     "sentiment_score": 5,
     "content": "Had a great day outdoors with friends.",
-    "tags": ["Social Life", "Environment", "Energy"]
+    "summary": "Excellent outdoor social experience with close friends.",
+    "tags": ["Social Life", "Environment", "Energy"],
+    "memory_weight": 7,
+    "reflection_prompt": "What made this outdoor time with friends so special? How does being outdoors with friends energize you?",
+    "created_at": "2025-07-15T16:30:00Z",
+    "updated_at": "2025-07-15T16:30:00Z"
   },
   {
     "id": "16",
@@ -125,7 +200,12 @@
     "date": "2025-07-22",
     "sentiment_score": -2,
     "content": "Feeling a bit down today, but trying to stay positive.",
-    "tags": ["Self"]
+    "summary": "Struggling with low mood while attempting to maintain optimism.",
+    "tags": ["Self"],
+    "memory_weight": 5,
+    "reflection_prompt": "What might be contributing to feeling down? What strategies are you using to stay positive?",
+    "created_at": "2025-07-22T14:20:00Z",
+    "updated_at": "2025-07-22T14:20:00Z"
   },
   {
     "id": "17",
@@ -133,7 +213,12 @@
     "date": "2025-07-29",
     "sentiment_score": 4,
     "content": "Completed a challenging project successfully!",
-    "tags": ["Career", "Purpose"]
+    "summary": "Successfully finished a difficult project, feeling accomplished.",
+    "tags": ["Career", "Purpose"],
+    "memory_weight": 8,
+    "reflection_prompt": "What made this project challenging? How does completing it successfully impact your sense of purpose?",
+    "created_at": "2025-07-29T17:00:00Z",
+    "updated_at": "2025-07-29T17:00:00Z"
   },
   {
     "id": "18",
@@ -141,7 +226,12 @@
     "date": "2025-08-05",
     "sentiment_score": 3,
     "content": "Had a good workout session and felt accomplished.",
-    "tags": ["Self", "Energy"]
+    "summary": "Satisfying workout session that provided sense of achievement.",
+    "tags": ["Self", "Energy"],
+    "memory_weight": 5,
+    "reflection_prompt": "What made this workout session feel so good? How does physical accomplishment affect your overall mood?",
+    "created_at": "2025-08-05T06:30:00Z",
+    "updated_at": "2025-08-05T06:30:00Z"
   },
   {
     "id": "19",
@@ -149,7 +239,12 @@
     "date": "2025-08-12",
     "sentiment_score": 5,
     "content": "Amazing day! Everything went perfectly.",
-    "tags": ["Self", "Purpose"]
+    "summary": "Perfect day where everything aligned beautifully.",
+    "tags": ["Self", "Purpose"],
+    "memory_weight": 8,
+    "reflection_prompt": "What made this day so amazing? What can you learn from this perfect alignment of events?",
+    "created_at": "2025-08-12T19:30:00Z",
+    "updated_at": "2025-08-12T19:30:00Z"
   },
   {
     "id": "20",
@@ -157,7 +252,12 @@
     "date": "2025-08-19",
     "sentiment_score": 2,
     "content": "Regular day, nothing special but feeling okay.",
-    "tags": ["Self"]
+    "summary": "Standard day with neutral emotions and routine activities.",
+    "tags": ["Self"],
+    "memory_weight": 3,
+    "reflection_prompt": "What does a typical 'regular day' look like for you? How do you feel about days that are neither great nor terrible?",
+    "created_at": "2025-08-19T15:45:00Z",
+    "updated_at": "2025-08-19T15:45:00Z"
   },
   {
     "id": "21",
@@ -165,7 +265,12 @@
     "date": "2025-08-26",
     "sentiment_score": -1,
     "content": "Minor setback today, but keeping perspective.",
-    "tags": ["Self", "Career"]
+    "summary": "Experienced a setback but maintaining positive perspective.",
+    "tags": ["Self", "Career"],
+    "memory_weight": 4,
+    "reflection_prompt": "What was the setback and how are you maintaining perspective? What coping strategies are you using?",
+    "created_at": "2025-08-26T11:20:00Z",
+    "updated_at": "2025-08-26T11:20:00Z"
   },
   {
     "id": "22",
@@ -173,7 +278,12 @@
     "date": "2025-09-02",
     "sentiment_score": 4,
     "content": "Great conversation with an old friend today.",
-    "tags": ["Social Life", "Energy"]
+    "summary": "Meaningful conversation with a long-time friend, feeling connected.",
+    "tags": ["Social Life", "Energy"],
+    "memory_weight": 6,
+    "reflection_prompt": "What made this conversation so great? How do conversations with old friends energize you?",
+    "created_at": "2025-09-02T16:15:00Z",
+    "updated_at": "2025-09-02T16:15:00Z"
   },
   {
     "id": "23",
@@ -181,7 +291,12 @@
     "date": "2025-09-09",
     "sentiment_score": 3,
     "content": "Started planning for the upcoming vacation. Feeling excited!",
-    "tags": ["Self", "Environment"]
+    "summary": "Excited about vacation planning and upcoming travel.",
+    "tags": ["Self", "Environment"],
+    "memory_weight": 6,
+    "reflection_prompt": "What aspects of vacation planning are most exciting? How does anticipation of travel affect your mood?",
+    "created_at": "2025-09-09T13:00:00Z",
+    "updated_at": "2025-09-09T13:00:00Z"
   },
   {
     "id": "24",
@@ -189,7 +304,12 @@
     "date": "2025-09-16",
     "sentiment_score": 5,
     "content": "Had an incredible day at the beach with family.",
-    "tags": ["Family", "Environment", "Energy"]
+    "summary": "Amazing beach day with family, creating wonderful memories.",
+    "tags": ["Family", "Environment", "Energy"],
+    "memory_weight": 9,
+    "reflection_prompt": "What made this beach day so incredible? How does time in nature with family affect your energy and mood?",
+    "created_at": "2025-09-16T18:45:00Z",
+    "updated_at": "2025-09-16T18:45:00Z"
   },
   {
     "id": "25",
@@ -197,7 +317,12 @@
     "date": "2025-09-17",
     "sentiment_score": 3,
     "content": "Back to work after vacation. Feeling refreshed and ready.",
-    "tags": ["Career", "Energy"]
+    "summary": "Returned to work feeling rejuvenated after vacation.",
+    "tags": ["Career", "Energy"],
+    "memory_weight": 5,
+    "reflection_prompt": "How did the vacation help you feel refreshed? What strategies can you use to maintain this energy at work?",
+    "created_at": "2025-09-17T08:30:00Z",
+    "updated_at": "2025-09-17T08:30:00Z"
   },
   {
     "id": "26",
@@ -205,7 +330,12 @@
     "date": "2025-09-18",
     "sentiment_score": 4,
     "content": "Productive day at work. Made good progress on projects.",
-    "tags": ["Career", "Purpose"]
+    "summary": "Highly productive work day with significant project progress.",
+    "tags": ["Career", "Purpose"],
+    "memory_weight": 6,
+    "reflection_prompt": "What made this work day so productive? How does making progress on projects contribute to your sense of purpose?",
+    "created_at": "2025-09-18T17:00:00Z",
+    "updated_at": "2025-09-18T17:00:00Z"
   },
   {
     "id": "27",
@@ -213,7 +343,12 @@
     "date": "2025-09-19",
     "sentiment_score": 2,
     "content": "Regular day, nothing special but feeling okay.",
-    "tags": ["Self"]
+    "summary": "Standard day with neutral emotions and routine activities.",
+    "tags": ["Self"],
+    "memory_weight": 3,
+    "reflection_prompt": "What does a typical 'regular day' look like for you? How do you feel about days that are neither great nor terrible?",
+    "created_at": "2025-09-19T14:20:00Z",
+    "updated_at": "2025-09-19T14:20:00Z"
   },
   {
     "id": "28",
@@ -221,7 +356,12 @@
     "date": "2025-09-20",
     "sentiment_score": 5,
     "content": "Had a great dinner with friends. Feeling very social and happy.",
-    "tags": ["Social Life", "Energy"]
+    "summary": "Wonderful social evening with friends, feeling connected and joyful.",
+    "tags": ["Social Life", "Energy"],
+    "memory_weight": 7,
+    "reflection_prompt": "What made this dinner with friends so special? How does social connection contribute to your happiness?",
+    "created_at": "2025-09-20T21:00:00Z",
+    "updated_at": "2025-09-20T21:00:00Z"
   },
   {
     "id": "29",
@@ -229,7 +369,12 @@
     "date": "2025-09-21",
     "sentiment_score": 1,
     "content": "Feeling a bit tired today. Need to rest more.",
-    "tags": ["Self", "Energy"]
+    "summary": "Experiencing fatigue and recognizing need for more rest.",
+    "tags": ["Self", "Energy"],
+    "memory_weight": 4,
+    "reflection_prompt": "What might be contributing to your tiredness? What rest strategies work best for you?",
+    "created_at": "2025-09-21T10:15:00Z",
+    "updated_at": "2025-09-21T10:15:00Z"
   },
   {
     "id": "30",
@@ -237,7 +382,12 @@
     "date": "2025-09-22",
     "sentiment_score": 4,
     "content": "Went for a long walk and felt energized. Great weather!",
-    "tags": ["Self", "Environment", "Energy"]
+    "summary": "Energizing long walk in beautiful weather conditions.",
+    "tags": ["Self", "Environment", "Energy"],
+    "memory_weight": 6,
+    "reflection_prompt": "What was it about this walk that energized you? How does being outdoors in good weather affect your mood?",
+    "created_at": "2025-09-22T16:30:00Z",
+    "updated_at": "2025-09-22T16:30:00Z"
   },
   {
     "id": "31",
@@ -245,6 +395,11 @@
     "date": "2025-09-23",
     "sentiment_score": 3,
     "content": "Started a new book. Feeling intellectually stimulated.",
-    "tags": ["Self", "Purpose"]
+    "summary": "Intellectual engagement through starting a new book.",
+    "tags": ["Self", "Purpose"],
+    "memory_weight": 5,
+    "reflection_prompt": "What drew you to this particular book? How does intellectual stimulation contribute to your sense of purpose?",
+    "created_at": "2025-09-23T19:45:00Z",
+    "updated_at": "2025-09-23T19:45:00Z"
   }
 ] 

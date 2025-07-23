@@ -17,9 +17,17 @@ export async function POST(request: NextRequest) {
     }
 
     const prompt = `Analyze the following journal entry and provide:
-1. A sentiment score from -5 (very negative) to +5 (very positive)
+1. A sentiment score from -5 (very negative) to +5 (very positive) - this can be a decimal number (e.g., 2.3, -1.7) for more granular emotional assessment
 2. A brief summary (1-2 sentences)
-3. 3-5 relevant emotional tags
+3. Choose 2-4 tags from this fixed list that this entry relates to most:
+   - Self (personal growth, self-reflection, identity, mental health, self-care)
+   - Career (work, professional development, job-related stress/achievements)
+   - Social Life (friends, social activities, social connections)
+   - Partner (romantic relationships, dating, marriage, intimate connections)
+   - Energy (physical health, exercise, sleep, vitality)
+   - Purpose (goals, meaning, direction, life mission)
+   - Family (family relationships, parenting, family events)
+   - Environment (home, living situation, surroundings, nature)
 4. A memory weight from 1-10 indicating how memorable/significant this entry is
 
 Memory weight guidelines:

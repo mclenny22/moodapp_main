@@ -22,12 +22,7 @@ export async function POST(request: Request) {
           - Warm and supportive in tone
           - Open-ended (not yes/no questions)
           - Related to the themes or emotions mentioned in their entry
-          - Something they could ponder throughout the day
-          
-          Examples:
-          - "What would it look like to bring more of that sense of accomplishment into your daily routine?"
-          - "How might you approach tomorrow with the same patience you showed today?"
-          - "What small step could you take this week to build on this positive momentum?"`
+          - Something they could ponder throughout the day`
         },
         {
           role: 'user',

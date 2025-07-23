@@ -217,7 +217,7 @@ export function TrendsView() {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold">Trends</h2>
-          <Badge variant="secondary">Loading...</Badge>
+          <Badge variant="secondary" className="h-5 min-w-5">Loading...</Badge>
         </div>
         <div className="flex items-center justify-center py-8">
           <div className="text-center">
@@ -234,7 +234,7 @@ export function TrendsView() {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold">Trends</h2>
-          <Badge variant="secondary">{totalEntries} entries</Badge>
+          <Badge variant="secondary" className="h-5 min-w-5">{totalEntries} entries</Badge>
         </div>
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
@@ -264,8 +264,8 @@ export function TrendsView() {
               {averageSentiment.toFixed(1)}
             </CardTitle>
             <CardAction>
-              <Badge variant="outline">
-                {trendDirection === 'up' ? <TrendingUp className="h-4 w-4" /> : <TrendingDown className="h-4 w-4" />}
+              <Badge variant="outline" className="h-5 min-w-5">
+                {trendDirection === 'up' ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
                 {trendDirection === 'up' ? '+' : trendDirection === 'down' ? '-' : ''}{trendPercentage.toFixed(1)}%
               </Badge>
             </CardAction>
@@ -289,8 +289,8 @@ export function TrendsView() {
               {volatility.toFixed(1)}
             </CardTitle>
             <CardAction>
-              <Badge variant="outline">
-                {volatilityTrend === 'up' ? <TrendingUp className="h-4 w-4" /> : <TrendingDown className="h-4 w-4" />}
+              <Badge variant="outline" className="h-5 min-w-5">
+                {volatilityTrend === 'up' ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
                 {volatilityTrend === 'up' ? '+' : volatilityTrend === 'down' ? '-' : ''}{volatilityTrendPercentage.toFixed(1)}%
               </Badge>
             </CardAction>
@@ -321,23 +321,22 @@ export function TrendsView() {
                 <div key={item.tag} className="flex items-center justify-between p-4 rounded-lg border">
                   <div className="font-semibold text-lg">{item.tag}</div>
                   <div className="flex items-center gap-2">
-                    <Badge variant="outline" className="text-xs">
+                    <Badge variant="outline" className="h-5 min-w-5">
                       {item.percentageOfEntries}% of entries
+                    </Badge>
+                    <Badge variant="outline" className="h-5 min-w-5">
+                      {item.trend === 'up' ? <TrendingUp className="h-3 w-3" /> : item.trend === 'down' ? <TrendingDown className="h-3 w-3" /> : <span>↔️</span>}
+                      {item.trend === 'up' ? '+' : item.trend === 'down' ? '-' : ''}{item.trendPercentage.toFixed(1)}%
                     </Badge>
                     <Badge 
                       variant="outline" 
-                      className="text-xs"
+                      className="h-5 min-w-5 tabular-nums"
                       style={{ 
-                        backgroundColor: getSentimentGradientColor(item.avgMood),
-                        color: 'white',
+                        color: getSentimentGradientColor(item.avgMood),
                         borderColor: getSentimentGradientColor(item.avgMood)
                       }}
                     >
                       {item.avgMood > 0 ? '+' : ''}{item.avgMood.toFixed(1)}
-                    </Badge>
-                    <Badge variant="outline" className="text-xs">
-                      {item.trend === 'up' ? <TrendingUp className="h-3 w-3" /> : item.trend === 'down' ? <TrendingDown className="h-3 w-3" /> : <span>↔️</span>}
-                      {item.trend === 'up' ? '+' : item.trend === 'down' ? '-' : ''}{item.trendPercentage.toFixed(1)}%
                     </Badge>
                   </div>
                 </div>
