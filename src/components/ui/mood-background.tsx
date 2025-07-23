@@ -38,7 +38,7 @@ export function MoodBackground() {
       vec3 moodColor1 = vec3(0.9, 0.6, 0.3); // Warm orange (starting color)
       vec3 moodColor2 = vec3(0.2, 0.4, 0.8); // Deeper blue
       vec3 moodColor3 = vec3(0.4, 0.7, 0.4); // Richer green
-      vec3 moodColor4 = vec3(0.6, 0.3, 0.7); // Deeper purple
+      vec3 moodColor4 = vec3(0.6, 0.3, 0.6); // Deeper purple
 
       void main() {
         vec2 uv = gl_FragCoord.xy / u_resolution.xy;
