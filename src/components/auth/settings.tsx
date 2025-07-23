@@ -29,11 +29,6 @@ export function Settings() {
     }
   }
 
-  const handleTestClick = () => {
-    console.log('Test button clicked!')
-    alert('Test button works!')
-  }
-
   // Get user's name from metadata or fallback to email
   const userName = user.user_metadata?.display_name || user.user_metadata?.name || user.email?.split('@')[0] || 'User'
   const userInitial = userName.charAt(0).toUpperCase()
@@ -87,17 +82,9 @@ export function Settings() {
 
       <div className="space-y-3">
         <Button 
-          onClick={handleTestClick} 
-          variant="secondary" 
-          className="w-full"
-        >
-          Test Button (Click me!)
-        </Button>
-        
-        <Button 
           onClick={handleSignOut} 
           variant="destructive" 
-          className="w-full cursor-pointer"
+          className="w-full cursor-pointer hover:cursor-pointer"
           type="button"
         >
           Sign Out

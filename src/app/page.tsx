@@ -12,7 +12,7 @@ import { TrendsView } from '@/components/journal/trends-view'
 import { Settings } from '@/components/auth/settings'
 
 export default function Home() {
-  const { user, loading, signOut } = useAuth()
+  const { user, loading } = useAuth()
 
   if (loading) {
     return (
@@ -52,18 +52,6 @@ export default function Home() {
     )
   }
 
-  const handleTestSignOut = async () => {
-    try {
-      console.log('Test sign out clicked...')
-      await signOut()
-      console.log('Test sign out completed')
-      window.location.reload()
-    } catch (error) {
-      console.error('Test sign out error:', error)
-      window.location.reload()
-    }
-  }
-
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-[600px] mx-auto p-4 space-y-6">
@@ -77,17 +65,6 @@ export default function Home() {
               })()}
             </HeaderDescription>
           </Header>
-        </div>
-
-        {/* Test button outside tabs */}
-        <div className="text-center">
-          <Button 
-            onClick={handleTestSignOut} 
-            variant="destructive" 
-            className="mb-4"
-          >
-            Test Sign Out (Outside Tabs)
-          </Button>
         </div>
 
         <Tabs defaultValue="today" className="w-full">
