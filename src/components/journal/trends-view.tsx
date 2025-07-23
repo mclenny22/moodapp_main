@@ -182,21 +182,24 @@ export function TrendsView() {
     const mostRecentDate = new Date(data.dayData[total - 1].date);
     let mostRecentWeekday = mostRecentDate.getDay();
     // Convert to Monday=0, Sunday=6
-    mostRecentWeekday = (mostRecentWeekday + 6) % 7;
-    // Pad the top row with empty tiles if the week is incomplete
-    const padTop = cols - (mostRecentWeekday + 1);
-    const paddedDayData: (DayData | null)[] = [...data.dayData];
-    for (let i = 0; i < padTop; i++) {
-      paddedDayData.push(null);
-    }
+    const mostRecentCol = (mostRecentWeekday + 6) % 7;
+    // Pad the start (top row, right side) so the most recent day lands in its correct column
+    const padStart = cols - 1 - mostRecentCol;
+    let paddedDayData: (DayData | null)[] = [];
+    paddedDayData = [...Array(padStart).fill(null), ...data.dayData.slice().reverse()];
+    // Find the weekday of the oldest day
+    const oldestDate = new Date(data.dayData[0].date);
+    let oldestWeekday = oldestDate.getDay();
+    const oldestCol = (oldestWeekday + 6) % 7;
+    // Pad the end (bottom row, left side) so the oldest day lands in its correct column
+    const padEnd = oldestCol;
+    paddedDayData = [...paddedDayData, ...Array(padEnd).fill(null)];
     // Calculate number of rows
     const rows = Math.ceil(paddedDayData.length / cols);
-    // Fill the grid from the end, bottom up, left to right
+    // Fill the grid top-down, left to right, then reverse each row for correct weekday order
     const grid: (DayData | null)[][] = [];
     for (let r = 0; r < rows; r++) {
-      const start = paddedDayData.length - (r + 1) * cols;
-      const end = paddedDayData.length - r * cols;
-      grid.unshift(paddedDayData.slice(Math.max(0, start), end));
+      grid.push(paddedDayData.slice(r * cols, (r + 1) * cols).reverse());
     }
     return (
       <div className="grid grid-cols-7 gap-5 w-full">
