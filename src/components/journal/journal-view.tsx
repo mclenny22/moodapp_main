@@ -1,8 +1,11 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import { AlertCircle } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import { getSentimentGradientColor } from '@/lib/sentiment-utils'
 import { useAuth } from '@/lib/auth-context'
 import { getJournalEntries, getDemoJournalEntries, JournalEntry } from '@/lib/database'
@@ -71,12 +74,15 @@ export function JournalView() {
           <h2 className="text-xl font-semibold">Journal Entries</h2>
           <Badge variant="secondary">{entries.length} entries</Badge>
         </div>
-        <div className="text-center py-8">
-          <p className="text-sm text-muted-foreground mb-4">{error}</p>
-          <Button onClick={loadEntries} variant="outline">
-            Try Again
-          </Button>
-        </div>
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription className="flex items-center justify-between">
+            <span>{error}</span>
+            <Button onClick={loadEntries} variant="outline" size="sm">
+              Try Again
+            </Button>
+          </AlertDescription>
+        </Alert>
       </div>
     )
   }
@@ -105,36 +111,42 @@ export function JournalView() {
                     year: 'numeric',
                   })}
                 </TimelineDate>
-                <div className="flex items-center gap-2">
-                  <TimelineTitle>
-                    {new Date(entry.date).toLocaleDateString('en-US', {
-                      weekday: 'long',
-                    })} Journal Entry
-                  </TimelineTitle>
-                  <Badge
-                    variant="secondary"
-                    className="border-current"
-                    style={{
-                      background: getSentimentGradientColor(entry.sentiment_score),
-                      color: '#fff',
-                    }}
-                  >
-                    {entry.sentiment_score}
-                  </Badge>
-                </div>
                 <TimelineIndicator />
               </TimelineHeader>
               <TimelineContent>
-                <p className="text-base text-muted-foreground mb-3">
-                  {entry.content}
-                </p>
-                <div className="flex flex-wrap gap-1">
-                  {entry.tags.map((tag) => (
-                    <Badge key={tag} variant="outline" className="text-sm">
-                      {tag}
-                    </Badge>
-                  ))}
-                </div>
+                <Card>
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <CardTitle>
+                        {new Date(entry.date).toLocaleDateString('en-US', {
+                          weekday: 'long',
+                        })} Journal Entry
+                      </CardTitle>
+                      <Badge
+                        variant="secondary"
+                        className="border-current"
+                        style={{
+                          background: getSentimentGradientColor(entry.sentiment_score),
+                          color: '#fff',
+                        }}
+                      >
+                        {entry.sentiment_score}
+                      </Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-base text-muted-foreground mb-3">
+                      {entry.content}
+                    </p>
+                    <div className="flex flex-wrap gap-1">
+                      {entry.tags.map((tag) => (
+                        <Badge key={tag} variant="outline" className="text-sm">
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
               </TimelineContent>
             </TimelineItem>
           ))}

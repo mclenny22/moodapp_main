@@ -2,57 +2,249 @@
   {
     "id": "1",
     "user_id": "demo-user",
-    "date": "2024-07-01",
-    "sentiment_score": 3,
-    "content": "Had a productive day at work and enjoyed a nice walk in the evening.",
-    "tags": ["work", "health"]
+    "date": "2025-04-15",
+    "sentiment_score": 2,
+    "content": "Started a new project today. Feeling a bit overwhelmed but excited.",
+    "tags": ["Career", "Energy"]
   },
   {
     "id": "2",
     "user_id": "demo-user",
-    "date": "2024-07-02",
-    "sentiment_score": 5,
-    "content": "Spent quality time with family. Felt very grateful.",
-    "tags": ["family", "gratitude"]
+    "date": "2025-04-20",
+    "sentiment_score": 4,
+    "content": "Had a great weekend with family. Feeling refreshed.",
+    "tags": ["Family", "Energy"]
   },
   {
     "id": "3",
     "user_id": "demo-user",
-    "date": "2024-07-03",
-    "sentiment_score": 2,
-    "content": "A bit tired, but managed to finish my tasks.",
-    "tags": ["work"]
+    "date": "2025-04-25",
+    "sentiment_score": 1,
+    "content": "Stressed about deadlines. Need to focus better.",
+    "tags": ["Career", "Self"]
   },
   {
     "id": "4",
     "user_id": "demo-user",
-    "date": "2024-07-04",
-    "sentiment_score": 4,
-    "content": "Went for a run and felt energized.",
-    "tags": ["health"]
+    "date": "2025-05-01",
+    "sentiment_score": 3,
+    "content": "May started well. Got some good news about the project.",
+    "tags": ["Career", "Purpose"]
   },
   {
     "id": "5",
     "user_id": "demo-user",
-    "date": "2024-07-05",
-    "sentiment_score": 1,
-    "content": "A little stressed about upcoming deadlines.",
-    "tags": ["stress", "work"]
+    "date": "2025-05-08",
+    "sentiment_score": 5,
+    "content": "Amazing day! Everything went perfectly.",
+    "tags": ["Self", "Purpose"]
   },
   {
     "id": "6",
     "user_id": "demo-user",
-    "date": "2024-07-06",
-    "sentiment_score": 0,
-    "content": "Relaxed at home and watched a movie.",
-    "tags": ["relax"]
+    "date": "2025-05-15",
+    "sentiment_score": 2,
+    "content": "Regular day, nothing special but feeling okay.",
+    "tags": ["Self"]
   },
   {
     "id": "7",
     "user_id": "demo-user",
-    "date": "2024-07-07",
+    "date": "2025-05-22",
+    "sentiment_score": -1,
+    "content": "Minor setback today, but keeping perspective.",
+    "tags": ["Self", "Career"]
+  },
+  {
+    "id": "8",
+    "user_id": "demo-user",
+    "date": "2025-05-29",
+    "sentiment_score": 4,
+    "content": "Great conversation with an old friend today.",
+    "tags": ["Social Life", "Energy"]
+  },
+  {
+    "id": "9",
+    "user_id": "demo-user",
+    "date": "2025-06-05",
+    "sentiment_score": 3,
+    "content": "Had a productive day at work and enjoyed a nice walk in the evening.",
+    "tags": ["Career", "Self", "Environment"]
+  },
+  {
+    "id": "10",
+    "user_id": "demo-user",
+    "date": "2025-06-12",
+    "sentiment_score": 5,
+    "content": "Spent quality time with family. Felt very grateful.",
+    "tags": ["Family", "Purpose"]
+  },
+  {
+    "id": "11",
+    "user_id": "demo-user",
+    "date": "2025-06-19",
+    "sentiment_score": 2,
+    "content": "A bit tired, but managed to finish my tasks.",
+    "tags": ["Career", "Energy"]
+  },
+  {
+    "id": "12",
+    "user_id": "demo-user",
+    "date": "2025-06-26",
+    "sentiment_score": 4,
+    "content": "Went for a run and felt energized.",
+    "tags": ["Self", "Energy"]
+  },
+  {
+    "id": "13",
+    "user_id": "demo-user",
+    "date": "2025-07-01",
+    "sentiment_score": 1,
+    "content": "A little stressed about upcoming deadlines.",
+    "tags": ["Career", "Self"]
+  },
+  {
+    "id": "14",
+    "user_id": "demo-user",
+    "date": "2025-07-08",
+    "sentiment_score": 0,
+    "content": "Relaxed at home and watched a movie.",
+    "tags": ["Self", "Environment"]
+  },
+  {
+    "id": "15",
+    "user_id": "demo-user",
+    "date": "2025-07-15",
     "sentiment_score": 5,
     "content": "Had a great day outdoors with friends.",
-    "tags": ["friends", "outdoors"]
+    "tags": ["Social Life", "Environment", "Energy"]
+  },
+  {
+    "id": "16",
+    "user_id": "demo-user",
+    "date": "2025-07-22",
+    "sentiment_score": -2,
+    "content": "Feeling a bit down today, but trying to stay positive.",
+    "tags": ["Self"]
+  },
+  {
+    "id": "17",
+    "user_id": "demo-user",
+    "date": "2025-07-29",
+    "sentiment_score": 4,
+    "content": "Completed a challenging project successfully!",
+    "tags": ["Career", "Purpose"]
+  },
+  {
+    "id": "18",
+    "user_id": "demo-user",
+    "date": "2025-08-05",
+    "sentiment_score": 3,
+    "content": "Had a good workout session and felt accomplished.",
+    "tags": ["Self", "Energy"]
+  },
+  {
+    "id": "19",
+    "user_id": "demo-user",
+    "date": "2025-08-12",
+    "sentiment_score": 5,
+    "content": "Amazing day! Everything went perfectly.",
+    "tags": ["Self", "Purpose"]
+  },
+  {
+    "id": "20",
+    "user_id": "demo-user",
+    "date": "2025-08-19",
+    "sentiment_score": 2,
+    "content": "Regular day, nothing special but feeling okay.",
+    "tags": ["Self"]
+  },
+  {
+    "id": "21",
+    "user_id": "demo-user",
+    "date": "2025-08-26",
+    "sentiment_score": -1,
+    "content": "Minor setback today, but keeping perspective.",
+    "tags": ["Self", "Career"]
+  },
+  {
+    "id": "22",
+    "user_id": "demo-user",
+    "date": "2025-09-02",
+    "sentiment_score": 4,
+    "content": "Great conversation with an old friend today.",
+    "tags": ["Social Life", "Energy"]
+  },
+  {
+    "id": "23",
+    "user_id": "demo-user",
+    "date": "2025-09-09",
+    "sentiment_score": 3,
+    "content": "Started planning for the upcoming vacation. Feeling excited!",
+    "tags": ["Self", "Environment"]
+  },
+  {
+    "id": "24",
+    "user_id": "demo-user",
+    "date": "2025-09-16",
+    "sentiment_score": 5,
+    "content": "Had an incredible day at the beach with family.",
+    "tags": ["Family", "Environment", "Energy"]
+  },
+  {
+    "id": "25",
+    "user_id": "demo-user",
+    "date": "2025-09-17",
+    "sentiment_score": 3,
+    "content": "Back to work after vacation. Feeling refreshed and ready.",
+    "tags": ["Career", "Energy"]
+  },
+  {
+    "id": "26",
+    "user_id": "demo-user",
+    "date": "2025-09-18",
+    "sentiment_score": 4,
+    "content": "Productive day at work. Made good progress on projects.",
+    "tags": ["Career", "Purpose"]
+  },
+  {
+    "id": "27",
+    "user_id": "demo-user",
+    "date": "2025-09-19",
+    "sentiment_score": 2,
+    "content": "Regular day, nothing special but feeling okay.",
+    "tags": ["Self"]
+  },
+  {
+    "id": "28",
+    "user_id": "demo-user",
+    "date": "2025-09-20",
+    "sentiment_score": 5,
+    "content": "Had a great dinner with friends. Feeling very social and happy.",
+    "tags": ["Social Life", "Energy"]
+  },
+  {
+    "id": "29",
+    "user_id": "demo-user",
+    "date": "2025-09-21",
+    "sentiment_score": 1,
+    "content": "Feeling a bit tired today. Need to rest more.",
+    "tags": ["Self", "Energy"]
+  },
+  {
+    "id": "30",
+    "user_id": "demo-user",
+    "date": "2025-09-22",
+    "sentiment_score": 4,
+    "content": "Went for a long walk and felt energized. Great weather!",
+    "tags": ["Self", "Environment", "Energy"]
+  },
+  {
+    "id": "31",
+    "user_id": "demo-user",
+    "date": "2025-09-23",
+    "sentiment_score": 3,
+    "content": "Started a new book. Feeling intellectually stimulated.",
+    "tags": ["Self", "Purpose"]
   }
 ] 

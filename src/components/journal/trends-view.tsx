@@ -1,49 +1,50 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { TrendingUp, TrendingDown, Activity, AlertCircle } from 'lucide-react'
+import { CartesianGrid, Line, LineChart, XAxis } from 'recharts'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, CardAction } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Progress } from '@/components/ui/progress'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { getSentimentColor, getSentimentGradientColor } from '@/lib/sentiment-utils'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { getSentimentGradientColor } from '@/lib/sentiment-utils'
 import { useAuth } from '@/lib/auth-context'
-import { 
-  getAverageSentiment, 
-  getCommonTags, 
-  getJournalEntriesByDateRange,
-  JournalEntry 
-} from '@/lib/database'
+import { getJournalEntries, getDemoJournalEntries, JournalEntry } from '@/lib/database'
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from '@/components/ui/chart'
+import { Button } from '@/components/ui/button'
 
-type TimePeriod = '7d' | '30d' | '1y'
-
-interface DayData {
+interface ChartDataPoint {
   date: string
-  sentiment: number | null
-  hasEntry: boolean
+  mood: number
+  entries: number
+}
+
+interface LifeAreaAnalysis {
+  tag: string
+  avgMood: number
+  count: number
+  percentageOfEntries: number
+  trend: 'up' | 'down' | 'stable'
+  trendPercentage: number
 }
 
 export function TrendsView() {
   const { user } = useAuth()
-  const [selectedPeriod, setSelectedPeriod] = useState<TimePeriod>('30d')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [data, setData] = useState<{
-    averageSentiment: number
-    totalEntries: number
-    commonTags: { tag: string; count: number }[]
-    dayData: DayData[]
-  }>({
-    averageSentiment: 0,
-    totalEntries: 0,
-    commonTags: [],
-    dayData: []
-  })
+  const [chartData, setChartData] = useState<ChartDataPoint[]>([])
+  const [averageSentiment, setAverageSentiment] = useState(0)
+  const [totalEntries, setTotalEntries] = useState(0)
+  const [trendDirection, setTrendDirection] = useState<'up' | 'down' | 'stable'>('stable')
+  const [trendPercentage, setTrendPercentage] = useState(0)
+  const [volatility, setVolatility] = useState(0)
+  const [volatilityTrend, setVolatilityTrend] = useState<'up' | 'down' | 'stable'>('stable')
+  const [volatilityTrendPercentage, setVolatilityTrendPercentage] = useState(0)
+  const [lifeAreaAnalysis, setLifeAreaAnalysis] = useState<LifeAreaAnalysis[]>([])
 
   const loadTrendsData = useCallback(async () => {
     if (!user) return
@@ -52,43 +53,143 @@ export function TrendsView() {
     setError(null)
     
     try {
-      const days = selectedPeriod === '7d' ? 7 : selectedPeriod === '30d' ? 30 : 365
-      const averageSentiment = await getAverageSentiment(user.id, days)
-      const commonTags = await getCommonTags(user.id)
-      
-      // Get entries for the selected period
-      const endDate = new Date().toISOString().split('T')[0]
-      const startDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
-      const entries = await getJournalEntriesByDateRange(user.id, startDate, endDate)
-      
-      // Create a map of entries by date
-      const entriesByDate = new Map<string, JournalEntry>()
-      entries.forEach(entry => {
-        entriesByDate.set(entry.date, entry)
-      })
-      
-      // Generate day data for the entire period
-      const dayData: DayData[] = []
-      const start = new Date(startDate)
-      const end = new Date(endDate)
-      
-      for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
-        const dateStr = d.toISOString().split('T')[0]
-        const entry = entriesByDate.get(dateStr)
-        
-        dayData.push({
-          date: dateStr,
-          sentiment: entry ? entry.sentiment_score : null,
-          hasEntry: !!entry
-        })
+      let entries: JournalEntry[]
+      if (user.id === 'demo-user') {
+        entries = getDemoJournalEntries()
+      } else {
+        entries = await getJournalEntries(user.id)
       }
-      
-      setData({
-        averageSentiment,
-        totalEntries: entries.length,
-        commonTags,
-        dayData
+
+      // Always use 90 days
+      const days = 90
+      const endDate = new Date()
+      const startDate = new Date(endDate.getTime() - days * 24 * 60 * 60 * 1000)
+
+      // Filter entries for the selected period
+      const filteredEntries = entries.filter(entry => {
+        const entryDate = new Date(entry.date)
+        return entryDate >= startDate && entryDate <= endDate
       })
+
+      // Group entries by date and calculate average mood per day
+      const entriesByDate = new Map<string, { total: number; count: number }>()
+      
+      filteredEntries.forEach(entry => {
+        const date = entry.date
+        const current = entriesByDate.get(date) || { total: 0, count: 0 }
+        entriesByDate.set(date, {
+          total: current.total + entry.sentiment_score,
+          count: current.count + 1
+        })
+      })
+
+      // Create chart data - only include days with actual entries
+      const data: ChartDataPoint[] = []
+      for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+        const dateStr = d.toISOString().split('T')[0]
+        const dayData = entriesByDate.get(dateStr)
+        
+        if (dayData) {
+          data.push({
+            date: d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+            mood: Math.round((dayData.total / dayData.count) * 10) / 10,
+            entries: dayData.count
+          })
+        }
+      }
+
+      // Calculate overall stats
+      const moods = filteredEntries.map(entry => entry.sentiment_score)
+      const avgMood = moods.length > 0 ? moods.reduce((a, b) => a + b, 0) / moods.length : 0
+
+      // Calculate volatility (standard deviation)
+      const volatilityValue = moods.length > 1 ? 
+        Math.sqrt(moods.reduce((sum, mood) => sum + Math.pow(mood - avgMood, 2), 0) / (moods.length - 1)) : 0
+
+      // Calculate trend (compare first half vs second half of the period)
+      const midPoint = Math.floor(data.length / 2)
+      const firstHalf = data.slice(0, midPoint)
+      const secondHalf = data.slice(midPoint)
+      
+      const firstHalfAvg = firstHalf.length > 0 ? firstHalf.reduce((sum, item) => sum + item.mood, 0) / firstHalf.length : 0
+      const secondHalfAvg = secondHalf.length > 0 ? secondHalf.reduce((sum, item) => sum + item.mood, 0) / secondHalf.length : 0
+      
+      const trendDiff = secondHalfAvg - firstHalfAvg
+      const trendPercent = firstHalfAvg !== 0 ? (trendDiff / Math.abs(firstHalfAvg)) * 100 : 0
+      
+      setTrendDirection(trendDiff > 0.5 ? 'up' : trendDiff < -0.5 ? 'down' : 'stable')
+      setTrendPercentage(Math.abs(trendPercent))
+
+      // Calculate volatility trend
+      const firstHalfMoods = firstHalf.map(item => item.mood)
+      const secondHalfMoods = secondHalf.map(item => item.mood)
+      
+      const firstHalfAvgMood = firstHalfMoods.length > 0 ? firstHalfMoods.reduce((a, b) => a + b, 0) / firstHalfMoods.length : 0
+      const secondHalfAvgMood = secondHalfMoods.length > 0 ? secondHalfMoods.reduce((a, b) => a + b, 0) / secondHalfMoods.length : 0
+      
+      const firstHalfVolatility = firstHalfMoods.length > 1 ? 
+        Math.sqrt(firstHalfMoods.reduce((sum, mood) => sum + Math.pow(mood - firstHalfAvgMood, 2), 0) / (firstHalfMoods.length - 1)) : 0
+      const secondHalfVolatility = secondHalfMoods.length > 1 ? 
+        Math.sqrt(secondHalfMoods.reduce((sum, mood) => sum + Math.pow(mood - secondHalfAvgMood, 2), 0) / (secondHalfMoods.length - 1)) : 0
+      
+      const volatilityDiff = secondHalfVolatility - firstHalfVolatility
+      const volatilityTrendPercent = firstHalfVolatility !== 0 ? (volatilityDiff / Math.abs(firstHalfVolatility)) * 100 : 0
+      
+      setVolatilityTrend(volatilityDiff > 0.1 ? 'up' : volatilityDiff < -0.1 ? 'down' : 'stable')
+      setVolatilityTrendPercentage(Math.abs(volatilityTrendPercent))
+
+      // Calculate life area analysis
+      const lifeAreaData: { [key: string]: { total: number; count: number; entries: JournalEntry[] } } = {}
+      
+      filteredEntries.forEach(entry => {
+        if (entry.tags && entry.tags.length > 0) {
+          entry.tags.forEach(tag => {
+            if (!lifeAreaData[tag]) {
+              lifeAreaData[tag] = { total: 0, count: 0, entries: [] }
+            }
+            lifeAreaData[tag].total += entry.sentiment_score
+            lifeAreaData[tag].count += 1
+            lifeAreaData[tag].entries.push(entry)
+          })
+        }
+      })
+
+      const lifeAreaAnalysisData: LifeAreaAnalysis[] = Object.entries(lifeAreaData)
+        .map(([tag, data]) => {
+          const avgMood = Math.round((data.total / data.count) * 10) / 10
+          const percentageOfEntries = Math.round((data.count / filteredEntries.length) * 100)
+          
+          // Calculate trend for this life area
+          const sortedEntries = data.entries.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+          const midPoint = Math.floor(sortedEntries.length / 2)
+          const firstHalf = sortedEntries.slice(0, midPoint)
+          const secondHalf = sortedEntries.slice(midPoint)
+          
+          const firstHalfAvg = firstHalf.length > 0 ? firstHalf.reduce((sum, entry) => sum + entry.sentiment_score, 0) / firstHalf.length : 0
+          const secondHalfAvg = secondHalf.length > 0 ? secondHalf.reduce((sum, entry) => sum + entry.sentiment_score, 0) / secondHalf.length : 0
+          
+          const trendDiff = secondHalfAvg - firstHalfAvg
+          const trendPercent = firstHalfAvg !== 0 ? (trendDiff / Math.abs(firstHalfAvg)) * 100 : 0
+          
+          const trend: 'up' | 'down' | 'stable' = trendDiff > 0.3 ? 'up' : trendDiff < -0.3 ? 'down' : 'stable'
+          
+          return {
+            tag,
+            avgMood,
+            count: data.count,
+            percentageOfEntries,
+            trend,
+            trendPercentage: Math.abs(trendPercent)
+          }
+        })
+        .filter(item => item.count >= 2) // Only show life areas that appear at least twice
+        .sort((a, b) => b.count - a.count) // Sort by frequency
+
+      setChartData(data)
+      setAverageSentiment(Math.round(avgMood * 10) / 10)
+      setVolatility(Math.round(volatilityValue * 10) / 10)
+      setLifeAreaAnalysis(lifeAreaAnalysisData)
+      setTotalEntries(filteredEntries.length)
       
     } catch (err) {
       console.error('Error loading trends data:', err)
@@ -96,147 +197,26 @@ export function TrendsView() {
     } finally {
       setLoading(false)
     }
-  }, [user, selectedPeriod])
+  }, [user])
 
   useEffect(() => {
     if (user) {
-      if (user.id === 'demo-user') {
-        // Demo/test data for trends
-        let demoDayData: DayData[]
-        
-        if (selectedPeriod === '7d') {
-          demoDayData = [
-            { date: '2024-01-01', sentiment: 3, hasEntry: true },
-            { date: '2024-01-02', sentiment: 5, hasEntry: true },
-            { date: '2024-01-03', sentiment: 2, hasEntry: true },
-            { date: '2024-01-04', sentiment: 4, hasEntry: true },
-            { date: '2024-01-05', sentiment: 1, hasEntry: true },
-            { date: '2024-01-06', sentiment: null, hasEntry: false },
-            { date: '2024-01-07', sentiment: 5, hasEntry: true },
-          ]
-        } else if (selectedPeriod === '30d') {
-          demoDayData = Array.from({ length: 30 }, (_, i) => {
-            const date = new Date()
-            date.setDate(date.getDate() - (29 - i))
-            const dateStr = date.toISOString().split('T')[0]
-            const hasEntry = Math.random() > 0.3 // 70% chance of having an entry
-            return {
-              date: dateStr,
-              sentiment: hasEntry ? Math.floor(Math.random() * 11) - 5 : null,
-              hasEntry
-            }
-          })
-        } else {
-          // 1y - generate data for the past year
-          demoDayData = []
-          const today = new Date()
-          for (let i = 364; i >= 0; i--) {
-            const date = new Date(today)
-            date.setDate(date.getDate() - i)
-            const dateStr = date.toISOString().split('T')[0]
-            const hasEntry = Math.random() > 0.4 // 60% chance of having an entry
-            demoDayData.push({
-              date: dateStr,
-              sentiment: hasEntry ? Math.floor(Math.random() * 11) - 5 : null,
-              hasEntry
-            })
-          }
-        }
-        
-        const sentiments = demoDayData.filter(day => day.hasEntry).map(day => day.sentiment!)
-        
-        setData({
-          averageSentiment: sentiments.length > 0 ? sentiments.reduce((a, b) => a + b, 0) / sentiments.length : 0,
-          totalEntries: sentiments.length,
-          commonTags: [
-            { tag: 'work', count: 12 },
-            { tag: 'family', count: 8 },
-            { tag: 'health', count: 5 },
-            { tag: 'gratitude', count: 4 },
-            { tag: 'stress', count: 3 },
-          ],
-          dayData: demoDayData,
-        })
-        setLoading(false)
-        setError(null)
-        return
-      }
       loadTrendsData()
     }
-  }, [user, selectedPeriod, loadTrendsData])
+  }, [user, loadTrendsData])
 
-  const getPeriodLabel = (period: TimePeriod) => {
-    switch (period) {
-      case '7d': return 'Last 7 days'
-      case '30d': return 'Last 30 days'
-      case '1y': return 'Last year'
-    }
-  }
-
-  const renderContributionGrid = () => {
-    // Always 7 columns for days of the week, fill card width
-    const cols = 7;
-    const total = data.dayData.length;
-    if (total === 0) return null;
-    // Find the weekday of the most recent day (0=Sunday, 1=Monday, ... 6=Saturday)
-    const mostRecentDate = new Date(data.dayData[total - 1].date);
-    const mostRecentWeekday = mostRecentDate.getDay();
-    // Convert to Monday=0, Sunday=6
-    const mostRecentCol = (mostRecentWeekday + 6) % 7;
-    // Pad the start (top row, right side) so the most recent day lands in its correct column
-    const padStart = cols - 1 - mostRecentCol;
-    let paddedDayData: (DayData | null)[] = [];
-    paddedDayData = [...Array(padStart).fill(null), ...data.dayData.slice().reverse()];
-    // Find the weekday of the oldest day
-    const oldestDate = new Date(data.dayData[0].date);
-    const oldestWeekday = oldestDate.getDay();
-    const oldestCol = (oldestWeekday + 6) % 7;
-    // Pad the end (bottom row, left side) so the oldest day lands in its correct column
-    const padEnd = oldestCol;
-    paddedDayData = [...paddedDayData, ...Array(padEnd).fill(null)];
-    // Calculate number of rows
-    const rows = Math.ceil(paddedDayData.length / cols);
-    // Fill the grid top-down, left to right, then reverse each row for correct weekday order
-    const grid: (DayData | null)[][] = [];
-    for (let r = 0; r < rows; r++) {
-      grid.push(paddedDayData.slice(r * cols, (r + 1) * cols).reverse());
-    }
-    return (
-      <div className="grid grid-cols-7 gap-5 w-full">
-        {grid.flat().map((day, idx) => (
-          day ? (
-            <Tooltip key={day.date}>
-              <TooltipTrigger asChild>
-                <div
-                  className={`aspect-square w-full rounded-sm border border-gray-200 dark:border-gray-700 flex items-center justify-center cursor-pointer`}
-                  style={{ background: day.hasEntry ? getSentimentGradientColor(day.sentiment!) : '#ededed' }}
-                >
-                  {day.hasEntry && (
-                    <span className="text-xs font-medium text-foreground">
-                      {day.sentiment}
-                    </span>
-                  )}
-                </div>
-              </TooltipTrigger>
-              <TooltipContent>
-                <span>
-                  {new Date(day.date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' })}
-                </span>
-              </TooltipContent>
-            </Tooltip>
-          ) : (
-            <div key={idx} className="aspect-square w-full rounded-sm border border-gray-200 bg-white" />
-          )
-        ))}
-      </div>
-    )
-  }
+  const chartConfig = {
+    mood: {
+      label: "Mood",
+      color: "var(--chart-1)",
+    },
+  } satisfies ChartConfig
 
   if (loading) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold">Mood Trends</h2>
+          <h2 className="text-xl font-semibold">Trends</h2>
           <Badge variant="secondary">Loading...</Badge>
         </div>
         <div className="flex items-center justify-center py-8">
@@ -251,121 +231,114 @@ export function TrendsView() {
 
   if (error) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold">Mood Trends</h2>
-          <Badge variant="secondary">{data.totalEntries} entries</Badge>
+          <h2 className="text-xl font-semibold">Trends</h2>
+          <Badge variant="secondary">{totalEntries} entries</Badge>
         </div>
-        <div className="text-center py-8">
-          <p className="text-sm text-muted-foreground mb-4">{error}</p>
-          <button onClick={loadTrendsData} className="text-sm text-primary hover:underline">
-            Try Again
-          </button>
-        </div>
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription className="flex items-center justify-between">
+            <span>{error}</span>
+            <Button onClick={loadTrendsData} variant="outline" size="sm">
+              Try Again
+            </Button>
+          </AlertDescription>
+        </Alert>
       </div>
     )
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold">Mood Trends</h2>
-        <Badge variant="secondary">{data.totalEntries} entries</Badge>
       </div>
 
-      {/* Combined Average Sentiment and Contribution Grid */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle>Mood Overview</CardTitle>
-            
-            {/* Desktop: Tabs */}
-            <div className="hidden md:block">
-              <Tabs value={selectedPeriod} onValueChange={(value) => setSelectedPeriod(value as TimePeriod)}>
-                <TabsList className="grid w-full grid-cols-3">
-                  <TabsTrigger value="7d">7D</TabsTrigger>
-                  <TabsTrigger value="30d">30D</TabsTrigger>
-                  <TabsTrigger value="1y">1Y</TabsTrigger>
-                </TabsList>
-              </Tabs>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Average Sentiment Card */}
+        <Card className="@container/card">
+          <CardHeader>
+            <CardDescription>Average Sentiment</CardDescription>
+            <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+              {averageSentiment.toFixed(1)}
+            </CardTitle>
+            <CardAction>
+              <Badge variant="outline">
+                {trendDirection === 'up' ? <TrendingUp className="h-4 w-4" /> : <TrendingDown className="h-4 w-4" />}
+                {trendDirection === 'up' ? '+' : trendDirection === 'down' ? '-' : ''}{trendPercentage.toFixed(1)}%
+              </Badge>
+            </CardAction>
+          </CardHeader>
+          <CardFooter className="flex-col items-start gap-1.5 text-sm">
+            <div className="line-clamp-1 flex gap-2 font-medium">
+              {trendDirection === 'up' ? 'Mood trending up' : trendDirection === 'down' ? 'Mood trending down' : 'Mood stable'} 
+              {trendDirection === 'up' ? <TrendingUp className="size-4" /> : trendDirection === 'down' ? <TrendingDown className="size-4" /> : null}
             </div>
-            
-            {/* Mobile: Dropdown */}
-            <div className="md:hidden">
-              <Select value={selectedPeriod} onValueChange={(value) => setSelectedPeriod(value as TimePeriod)}>
-                <SelectTrigger className="w-20">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="7d">7D</SelectItem>
-                  <SelectItem value="30d">30D</SelectItem>
-                  <SelectItem value="1y">1Y</SelectItem>
-                </SelectContent>
-              </Select>
+            <div className="text-muted-foreground">
+              Over the last 90 days
             </div>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          {/* Average Sentiment */}
-          <div className="flex items-center justify-between">
-            <div>
-              <span className={`text-3xl font-bold ${getSentimentColor(data.averageSentiment)}`}>
-                {data.averageSentiment.toFixed(1)}
-              </span>
-              <div className="text-sm text-muted-foreground">
-                {data.averageSentiment > 0 ? 'Overall positive' : 'Overall neutral'} • {getPeriodLabel(selectedPeriod)}
-              </div>
-            </div>
-          </div>
+          </CardFooter>
+        </Card>
 
-          {/* Contribution Grid */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-sm font-medium">Mood Activity</h3>
-              <div className="flex items-center space-x-2 text-xs text-muted-foreground">
-                <span>Less</span>
-                <div className="flex space-x-1">
-                  <div className="w-3 h-3 bg-gray-100 dark:bg-gray-800 rounded-sm"></div>
-                  <div className="w-3 h-3 bg-green-100 rounded-sm"></div>
-                  <div className="w-3 h-3 bg-green-200 rounded-sm"></div>
-                  <div className="w-3 h-3 bg-green-300 rounded-sm"></div>
-                  <div className="w-3 h-3 bg-green-400 rounded-sm"></div>
-                  <div className="w-3 h-3 bg-green-500 rounded-sm"></div>
-                </div>
-                <span>More</span>
-              </div>
+        {/* Mood Volatility Card */}
+        <Card className="@container/card">
+          <CardHeader>
+            <CardDescription>Mood Volatility</CardDescription>
+            <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+              {volatility.toFixed(1)}
+            </CardTitle>
+            <CardAction>
+              <Badge variant="outline">
+                {volatilityTrend === 'up' ? <TrendingUp className="h-4 w-4" /> : <TrendingDown className="h-4 w-4" />}
+                {volatilityTrend === 'up' ? '+' : volatilityTrend === 'down' ? '-' : ''}{volatilityTrendPercentage.toFixed(1)}%
+              </Badge>
+            </CardAction>
+          </CardHeader>
+          <CardFooter className="flex-col items-start gap-1.5 text-sm">
+            <div className="line-clamp-1 flex gap-2 font-medium">
+              {volatilityTrend === 'up' ? 'Volatility increasing' : volatilityTrend === 'down' ? 'Volatility decreasing' : 'Volatility stable'}
             </div>
-            
-            <div className="flex justify-center">
-              {renderContributionGrid()}
+            <div className="text-muted-foreground">
+              Standard deviation of mood scores
             </div>
-            
-            <div className="text-xs text-muted-foreground text-center">
-              {getPeriodLabel(selectedPeriod)}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardFooter>
+        </Card>
+      </div>
 
-      {/* Common Themes */}
-      {data.commonTags.length > 0 && (
+      {/* Emotional Balance Sheet Card */}
+      {lifeAreaAnalysis.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>Common Themes</CardTitle>
+            <CardTitle>Emotional Balance Sheet</CardTitle>
+            <CardDescription>
+              How do you feel about the parts of your life that matter most?
+            </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3">
-              {data.commonTags.map(({ tag, count }) => (
-                <div key={tag} className="flex items-center justify-between">
-                  <Badge variant="outline">{tag}</Badge>
-                  <div className="flex items-center space-x-2">
-                    <Progress 
-                      value={(count / data.commonTags[0].count) * 100} 
-                      className="w-20 h-2"
-                    />
-                    <span className="text-sm text-muted-foreground w-8 text-right">
-                      {count}
-                    </span>
+            <div className="space-y-4">
+              {lifeAreaAnalysis.map((item) => (
+                <div key={item.tag} className="flex items-center justify-between p-4 rounded-lg border">
+                  <div className="font-semibold text-lg">{item.tag}</div>
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline" className="text-xs">
+                      {item.percentageOfEntries}% of entries
+                    </Badge>
+                    <Badge 
+                      variant="outline" 
+                      className="text-xs"
+                      style={{ 
+                        backgroundColor: getSentimentGradientColor(item.avgMood),
+                        color: 'white',
+                        borderColor: getSentimentGradientColor(item.avgMood)
+                      }}
+                    >
+                      {item.avgMood > 0 ? '+' : ''}{item.avgMood.toFixed(1)}
+                    </Badge>
+                    <Badge variant="outline" className="text-xs">
+                      {item.trend === 'up' ? <TrendingUp className="h-3 w-3" /> : item.trend === 'down' ? <TrendingDown className="h-3 w-3" /> : <span>↔️</span>}
+                      {item.trend === 'up' ? '+' : item.trend === 'down' ? '-' : ''}{item.trendPercentage.toFixed(1)}%
+                    </Badge>
                   </div>
                 </div>
               ))}
@@ -373,6 +346,8 @@ export function TrendsView() {
           </CardContent>
         </Card>
       )}
+
+
     </div>
   )
 } 
