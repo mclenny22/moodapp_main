@@ -143,15 +143,8 @@ export function TodayView() {
       }
 
       const analysis = await sentimentResponse.json()
-      
-      // Save to database with analysis
-      const savedEntry = await createJournalEntry(user.id, content, analysis)
-      
-      if (!savedEntry) {
-        throw new Error('Failed to save entry to database')
-      }
-      
-      // Generate reflection prompt
+
+      // Fetch reflection prompt BEFORE saving to database
       const reflectionResponse = await fetch('/api/reflection-prompt', {
         method: 'POST',
         headers: {
@@ -170,6 +163,13 @@ export function TodayView() {
         console.log('Analysis object with reflection prompt:', analysis)
       } else {
         console.error('Reflection API failed for new entry:', reflectionResponse.status, reflectionResponse.statusText)
+      }
+      
+      // Save to database with analysis (now includes reflection_prompt)
+      const savedEntry = await createJournalEntry(user.id, content, analysis)
+      
+      if (!savedEntry) {
+        throw new Error('Failed to save entry to database')
       }
       
       // Show success state
