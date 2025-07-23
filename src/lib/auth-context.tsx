@@ -52,14 +52,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [supabase.auth])
 
   const signOut = async () => {
-    // Check if it's a demo user
-    if (user?.id === 'demo-user') {
-      localStorage.removeItem('demo-user')
+    try {
+      // Check if it's a demo user
+      if (user?.id === 'demo-user') {
+        localStorage.removeItem('demo-user')
+        setUser(null)
+        return
+      }
+      
+      // For real users, try to sign out from Supabase
+      const { error } = await supabase.auth.signOut()
+      if (error) {
+        console.error('Supabase sign out error:', error)
+        // Even if Supabase fails, clear the local user state
+        setUser(null)
+        return
+      }
+      
+      // Clear any local storage or session data
       setUser(null)
-      return
+    } catch (error) {
+      console.error('Sign out error:', error)
+      // Ensure user state is cleared even if there's an error
+      setUser(null)
     }
-    
-    await supabase.auth.signOut()
   }
 
   return (

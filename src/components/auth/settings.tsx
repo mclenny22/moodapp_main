@@ -20,8 +20,12 @@ export function Settings() {
       console.log('Signing out...')
       await signOut()
       console.log('Sign out completed')
+      // Force page reload to ensure clean state
+      window.location.reload()
     } catch (error) {
       console.error('Sign out error:', error)
+      // Even if there's an error, reload to ensure clean state
+      window.location.reload()
     }
   }
 
