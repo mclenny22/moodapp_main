@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { getSentimentColor, getSentimentBackgroundColor, formatSentimentScore } from '@/lib/sentiment-utils'
+import { getSentimentColor, getSentimentBackgroundColor, formatSentimentScore, getSentimentGradientColor } from '@/lib/sentiment-utils'
 import { useAuth } from '@/lib/auth-context'
 import { getJournalEntries, JournalEntry } from '@/lib/database'
 
@@ -89,7 +89,7 @@ export function JournalView() {
           {entries.map((entry) => (
             <Card 
               key={entry.id}
-              className={`cursor-pointer transition-colors hover:bg-muted/50 ${getSentimentBackgroundColor(entry.sentiment_score)}`}
+              className={"cursor-pointer transition-colors hover:bg-muted/50 bg-transparent border"}
               onClick={() => setSelectedEntry(entry)}
             >
               <CardHeader className="pb-3">
@@ -108,9 +108,13 @@ export function JournalView() {
                       </Badge>
                     )}
                   </div>
-                  <Badge 
-                    variant="secondary" 
-                    className={`${getSentimentColor(entry.sentiment_score)} border-current`}
+                  <Badge
+                    variant="secondary"
+                    className={`border-current`}
+                    style={{
+                      background: getSentimentGradientColor(entry.sentiment_score),
+                      color: '#fff',
+                    }}
                   >
                     {formatSentimentScore(entry.sentiment_score)}
                   </Badge>
