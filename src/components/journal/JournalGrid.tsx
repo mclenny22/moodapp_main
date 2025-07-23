@@ -71,10 +71,22 @@ export function JournalGrid({ entries, onEntryClick }: JournalGridProps) {
   // Split into weeks (arrays of 7 days, Monday-Sunday)
   const weeks: DayData[][] = [];
   for (let i = 0; i < dayData.length; i += 7) {
-    weeks.push(dayData.slice(i, i + 7));
+    // Shift the week array left by 1 (so Monday aligns with first column)
+    const week = dayData.slice(i, i + 7);
+    if (week.length === 7) {
+      weeks.push(week);
+    } else {
+      // Pad incomplete weeks at the start with nulls to always have 7 columns
+      while (week.length < 7) week.push({
+        date: '', sentiment: null, hasEntry: false, isFuture: false
+      });
+      weeks.push(week);
+    }
   }
   // Most recent week at the top
   weeks.reverse();
+  // Shift each week left by 1 (so Monday aligns with first column)
+  const shiftedWeeks = weeks.map(week => week.slice(1).concat(week[0]));
 
   return (
     <div className="flex flex-col gap-2 w-full">
@@ -88,10 +100,10 @@ export function JournalGrid({ entries, onEntryClick }: JournalGridProps) {
         <span>Sat</span>
         <span>Sun</span>
       </div>
-      {weeks.map((week, wIdx) => (
+      {shiftedWeeks.map((week, wIdx) => (
         <div key={wIdx} className="grid grid-cols-7 gap-1 w-full">
           {week.map((day, idx) => (
-            <div key={day.date}>
+            <div key={day.date + idx}>
               {day.hasEntry ? (
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -107,7 +119,7 @@ export function JournalGrid({ entries, onEntryClick }: JournalGridProps) {
                   </TooltipTrigger>
                   <TooltipContent>
                     <span>
-                      {new Date(day.date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' })}
+                      {day.date && new Date(day.date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' })}
                     </span>
                   </TooltipContent>
                 </Tooltip>
