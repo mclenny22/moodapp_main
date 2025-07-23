@@ -29,59 +29,80 @@ export function Settings() {
     }
   }
 
+  const handleTestClick = () => {
+    console.log('Test button clicked!')
+    alert('Test button works!')
+  }
+
   // Get user's name from metadata or fallback to email
   const userName = user.user_metadata?.display_name || user.user_metadata?.name || user.email?.split('@')[0] || 'User'
   const userInitial = userName.charAt(0).toUpperCase()
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Settings</CardTitle>
-        <CardDescription>Manage your account and preferences</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="flex items-center space-x-4">
-          <Avatar>
-            <AvatarFallback>
-              {userInitial}
-            </AvatarFallback>
-          </Avatar>
-          <div>
-            <p className="text-sm font-medium">{userName}</p>
-            <p className="text-sm text-muted-foreground">{user.email}</p>
-          </div>
+    <div className="space-y-4 p-6 border rounded-lg bg-card">
+      <div>
+        <h2 className="text-lg font-semibold">Settings</h2>
+        <p className="text-sm text-muted-foreground">Manage your account and preferences</p>
+      </div>
+      
+      <div className="flex items-center space-x-4">
+        <Avatar>
+          <AvatarFallback>
+            {userInitial}
+          </AvatarFallback>
+        </Avatar>
+        <div>
+          <p className="text-sm font-medium">{userName}</p>
+          <p className="text-sm text-muted-foreground">{user.email}</p>
         </div>
+      </div>
+      
+      <Separator />
+      
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <span className="text-sm font-medium">Email verified</span>
+          <Badge variant={user.email_confirmed_at ? "default" : "secondary"}>
+            {user.email_confirmed_at ? 'Yes' : 'No'}
+          </Badge>
+        </div>
+        <div className="flex items-center justify-between">
+          <span className="text-sm font-medium">Member since</span>
+          <span className="text-sm text-muted-foreground">
+            {new Date(user.created_at).toLocaleDateString()}
+          </span>
+        </div>
+      </div>
+
+      <Separator />
+
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <span className="text-sm font-medium">Theme</span>
+          <ModeToggle />
+        </div>
+      </div>
+
+      <Separator />
+
+      <div className="space-y-3">
+        <Button 
+          onClick={handleTestClick} 
+          variant="secondary" 
+          className="w-full"
+        >
+          Test Button (Click me!)
+        </Button>
         
-        <Separator />
-        
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium">Email verified</span>
-            <Badge variant={user.email_confirmed_at ? "default" : "secondary"}>
-              {user.email_confirmed_at ? 'Yes' : 'No'}
-            </Badge>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium">Member since</span>
-            <span className="text-sm text-muted-foreground">
-              {new Date(user.created_at).toLocaleDateString()}
-            </span>
-          </div>
-        </div>
-
-        <Separator />
-
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium">Theme</span>
-            <ModeToggle />
-          </div>
-        </div>
-
-        <Button onClick={handleSignOut} variant="outline" className="w-full">
+        <Button 
+          onClick={handleSignOut} 
+          variant="destructive" 
+          className="w-full cursor-pointer"
+          type="button"
+        >
           Sign Out
         </Button>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   )
 } 
