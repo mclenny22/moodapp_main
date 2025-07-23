@@ -10,8 +10,9 @@ interface JournalGridProps {
 function getMonday(date: Date) {
   const d = new Date(date);
   const day = d.getDay();
-  const diff = (day === 0 ? -6 : 1) - day; // Monday=1, Sunday=0
-  d.setDate(d.getDate() + diff);
+  // 0 (Sunday) -> 6, 1 (Monday) -> 0, ..., 6 (Saturday) -> 5
+  const diff = (day + 6) % 7;
+  d.setDate(d.getDate() - diff);
   d.setHours(0, 0, 0, 0);
   return d;
 }
