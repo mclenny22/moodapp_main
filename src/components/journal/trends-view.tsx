@@ -235,16 +235,19 @@ export function TrendsView() {
                   <Line
                     type="monotone"
                     dataKey="sentiment"
-                    stroke="#22c55e"
+                    stroke="#222"
                     strokeWidth={2}
-                    dot={{ r: 4, fill: '#22c55e' }}
-                    activeDot={{ r: 6 }}
+                    dot={{ r: 5, fill: '#000' }}
+                    activeDot={{ r: 7, fill: '#000' }}
                   >
                     <LabelList
                       dataKey="sentiment"
                       position="top"
                       className="fill-foreground"
                       fontSize={12}
+                      formatter={(value) =>
+                        typeof value === 'number' ? value.toFixed(1) : value
+                      }
                     />
                   </Line>
                 </LineChart>
