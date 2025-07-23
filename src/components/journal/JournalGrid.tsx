@@ -25,26 +25,24 @@ export function JournalGrid({ entries, onEntryClick }: JournalGridProps) {
   const cols = 7;
   const total = dayData.length;
   if (total === 0) return null;
-  // Reverse the data so the most recent day is first
-  const reversedDayData = dayData.slice().reverse();
   // Find the weekday of the most recent day (0=Sunday, 1=Monday, ... 6=Saturday)
-  const mostRecentDate = new Date(reversedDayData[0].date);
+  const mostRecentDate = new Date(dayData[total - 1].date);
   const mostRecentWeekday = mostRecentDate.getDay();
   // Convert to Monday=0, Sunday=6
   const mostRecentCol = (mostRecentWeekday + 6) % 7;
   // Pad the start (top row, right side) so the most recent day lands in its correct column
   const padStart = cols - 1 - mostRecentCol;
-  let paddedDayData: (DayData | null)[] = [...reversedDayData, ...Array(padStart).fill(null)];
-  // Find the weekday of the oldest day
-  const oldestDate = new Date(reversedDayData[reversedDayData.length - 1].date);
+  let reversedData = dayData.slice().reverse(); // Most recent first
+  // Pad the last row (oldest week) on the left if the oldest entry is not a Monday
+  const oldestDate = new Date(reversedData[reversedData.length - 1].date);
   const oldestWeekday = oldestDate.getDay();
-  const oldestCol = (oldestWeekday + 6) % 7;
-  // Pad the end (bottom row, left side) so the oldest day lands in its correct column
-  const padEnd = oldestCol;
-  paddedDayData = [...Array(padEnd).fill(null), ...paddedDayData];
+  const padLeft = (oldestWeekday + 6) % 7;
+  reversedData = Array(padLeft).fill(null).concat(reversedData);
+  // Now pad the start for the top row as before
+  const paddedDayData: (DayData | null)[] = [...reversedData, ...Array(padStart).fill(null)];
   // Calculate number of rows
   const rows = Math.ceil(paddedDayData.length / cols);
-  // Fill the grid top-down, left to right
+  // Fill the grid top-down, left to right, then reverse each row for correct weekday order
   const grid: (DayData | null)[][] = [];
   for (let r = 0; r < rows; r++) {
     grid.push(paddedDayData.slice(r * cols, (r + 1) * cols));
