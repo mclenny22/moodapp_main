@@ -242,7 +242,16 @@ export function TodayView({ userName }: { userName?: string }) {
   })
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 relative">
+      {/* Processing overlay */}
+      {(isSubmitting || (isLoading && showSuccessState)) && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="flex flex-col items-center gap-4 p-6 bg-background/80 rounded-xl shadow-lg">
+            <Spinner className="h-8 w-8 text-primary animate-spin" />
+            <span className="text-base font-medium text-primary">Analyzing your entry...</span>
+          </div>
+        </div>
+      )}
       <div>
         <h2 className="text-xl font-semibold">Welcome back, {userName || 'there'}!</h2>
       </div>
