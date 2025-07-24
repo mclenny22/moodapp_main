@@ -60,8 +60,8 @@ export function TrendsView() {
       
       if (user.id === 'demo-user') {
         // For demo user, use a fixed date range that includes the demo data
-        endDate = new Date('2025-07-31')
-        startDate = new Date('2025-05-01')
+        endDate = new Date('2025-09-23')
+        startDate = new Date('2025-04-15')
       } else {
         endDate = new Date()
         startDate = new Date(endDate.getTime() - days * 24 * 60 * 60 * 1000)
@@ -75,6 +75,12 @@ export function TrendsView() {
 
       console.log('Filtered entries count:', filteredEntries.length)
       console.log('Date range:', startDate.toISOString(), 'to', endDate.toISOString())
+      
+      // Debug: Log all entries and their tags
+      console.log('All filtered entries with tags:')
+      filteredEntries.forEach(entry => {
+        console.log(`Entry ${entry.date}: tags=${JSON.stringify(entry.tags)}, sentiment=${entry.sentiment_score}`)
+      })
 
       // Group entries by date and calculate average mood per day
       const entriesByDate = new Map<string, { total: number; count: number }>()
@@ -159,6 +165,8 @@ export function TrendsView() {
           })
         }
       })
+
+      console.log('Life area data before processing:', lifeAreaData)
 
       const lifeAreaAnalysisData: LifeAreaAnalysis[] = Object.entries(lifeAreaData)
         .map(([tag, data]) => {
