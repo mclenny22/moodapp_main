@@ -184,7 +184,9 @@ export function TodayView({ userName }: { userName?: string }) {
         throw new Error('Failed to save entry to database')
       }
       
-      // Show success state
+      // Clear content and reset state after successful submission
+      setContent('')
+      setReflectionPrompt(null)
       setShowSuccessState(true)
       
     } catch (error) {
@@ -255,7 +257,7 @@ export function TodayView({ userName }: { userName?: string }) {
         todaysEntry && (
           <div className="w-full space-y-8 border rounded-lg p-6 bg-background shadow-lg">
             {/* Header Section */}
-            <div className="flex items-start justify-between mb-4">
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-4 gap-4">
               <div>
                 <p className="text-sm text-muted-foreground mb-1">
                   {new Date(todaysEntry.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
