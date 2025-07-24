@@ -93,7 +93,6 @@ export function SignInForm({ showDemoButton = false }: { showDemoButton?: boolea
 
   return (
     <div className="relative flex items-center justify-center p-4">
-      <MoodBackground />
       <Card className="w-full max-w-md relative z-10">
         <CardHeader className="text-center">
           <CardTitle>Welcome</CardTitle>
