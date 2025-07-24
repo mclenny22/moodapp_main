@@ -198,7 +198,7 @@ export function TrendsView() {
             trendPercentage: Math.abs(trendPercent)
           }
         })
-        .filter(item => item.count >= 2) // Only show life areas that appear at least twice
+        .filter(item => item.count >= 1) // Show life areas that appear at least once
         .sort((a, b) => b.count - a.count) // Sort by frequency
 
       setAverageSentiment(Math.round(avgMood * 10) / 10)
