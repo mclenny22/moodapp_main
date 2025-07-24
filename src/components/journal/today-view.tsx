@@ -185,8 +185,9 @@ export function TodayView({ userName }: { userName?: string }) {
         throw new Error('Failed to save entry to database')
       }
       
-      // Update local state to show the submitted entry
-      setTodaysEntry(savedEntry)
+      // After saving, re-fetch the latest entry from the DB for robust state
+      setIsLoading(true)
+      await checkTodaysEntry()
       setShowSuccessState(true)
       
     } catch (error) {
@@ -246,14 +247,7 @@ export function TodayView({ userName }: { userName?: string }) {
         <h2 className="text-xl font-semibold">Welcome back, {userName || 'there'}!</h2>
       </div>
       
-      {isLoading ? (
-        <div className="flex items-center justify-center py-8">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-            <p className="text-sm text-muted-foreground">Loading...</p>
-          </div>
-        </div>
-      ) : (isSubmitting || todaysEntry) ? (
+      {(isLoading || isSubmitting || todaysEntry) ? (
         <div className="w-full space-y-8 border rounded-lg p-6 bg-background shadow-lg">
           {/* Header Section */}
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-4 gap-4">
