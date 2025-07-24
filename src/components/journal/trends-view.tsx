@@ -318,7 +318,7 @@ export function TrendsView() {
           <CardHeader>
             <CardTitle>Emotional Balance Sheet</CardTitle>
             <CardDescription>
-              You&apos;ll get emotional balance insights after 3 days of journaling
+            How do you feel about the parts of my life that matter most?
             </CardDescription>
           </CardHeader>
           <CardContent>
