@@ -30,7 +30,7 @@ export function MoodBackground() {
     let mouseX = -1000
     let mouseY = -1000
     let isMobile = false
-    let mobileAnimSeed = Math.random() * 1000
+    const mobileAnimSeed = Math.random() * 1000
 
     // Mobile detection
     if (typeof window !== 'undefined') {

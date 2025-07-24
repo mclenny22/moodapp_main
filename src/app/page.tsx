@@ -2,9 +2,7 @@
 
 import { useAuth } from '@/lib/auth-context'
 import { SignInForm } from '@/components/auth/sign-in-form'
-import { Header, HeaderTitle, HeaderDescription } from '@/components/ui/header'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Button } from '@/components/ui/button'
 import { TodayView } from '@/components/journal/today-view'
 import { JournalView } from '@/components/journal/journal-view'
 import { TrendsView } from '@/components/journal/trends-view'

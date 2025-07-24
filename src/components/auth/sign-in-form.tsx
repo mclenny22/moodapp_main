@@ -8,7 +8,6 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { MoodBackground } from '@/components/ui/mood-background'
 import { AlertCircleIcon, CheckCircle2Icon } from 'lucide-react'
 
 export function SignInForm({ showDemoButton = false }: { showDemoButton?: boolean }) {
