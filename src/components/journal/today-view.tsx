@@ -253,7 +253,7 @@ export function TodayView({ userName }: { userName?: string }) {
             <p className="text-sm text-muted-foreground">Loading...</p>
           </div>
         </div>
-      ) : showSuccessState || todaysEntry ? (
+      ) : (isSubmitting || todaysEntry) ? (
         <div className="w-full space-y-8 border rounded-lg p-6 bg-background shadow-lg">
           {/* Header Section */}
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-4 gap-4">
