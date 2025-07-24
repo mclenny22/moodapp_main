@@ -11,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { MoodBackground } from '@/components/ui/mood-background'
 import { AlertCircleIcon, CheckCircle2Icon } from 'lucide-react'
 
-export function SignInForm() {
+export function SignInForm({ showDemoButton = false }: { showDemoButton?: boolean }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [name, setName] = useState('')
@@ -156,6 +156,19 @@ export function SignInForm() {
                 >
                   {loading ? 'Signing in...' : 'Sign In'}
                 </Button>
+                {showDemoButton && (
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    className="w-full mt-2"
+                    onClick={() => {
+                      localStorage.setItem('demo-user', 'true')
+                      window.location.reload()
+                    }}
+                  >
+                    Demo Login
+                  </Button>
+                )}
               </form>
             </TabsContent>
             
