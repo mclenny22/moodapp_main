@@ -55,14 +55,26 @@ export function TrendsView() {
 
       // Always use 90 days
       const days = 90
-      const endDate = new Date()
-      const startDate = new Date(endDate.getTime() - days * 24 * 60 * 60 * 1000)
+      let endDate: Date
+      let startDate: Date
+      
+      if (user.id === 'demo-user') {
+        // For demo user, use a fixed date range that includes the demo data
+        endDate = new Date('2025-07-31')
+        startDate = new Date('2025-05-01')
+      } else {
+        endDate = new Date()
+        startDate = new Date(endDate.getTime() - days * 24 * 60 * 60 * 1000)
+      }
 
       // Filter entries for the selected period
       const filteredEntries = entries.filter(entry => {
         const entryDate = new Date(entry.date)
         return entryDate >= startDate && entryDate <= endDate
       })
+
+      console.log('Filtered entries count:', filteredEntries.length)
+      console.log('Date range:', startDate.toISOString(), 'to', endDate.toISOString())
 
       // Group entries by date and calculate average mood per day
       const entriesByDate = new Map<string, { total: number; count: number }>()
@@ -100,12 +112,13 @@ export function TrendsView() {
         Math.sqrt(moods.reduce((sum, mood) => sum + Math.pow(mood - avgMood, 2), 0) / (moods.length - 1)) : 0
 
       // Calculate trend (compare first half vs second half of the period)
-      const midPoint = Math.floor(data.length / 2)
-      const firstHalf = data.slice(0, midPoint)
-      const secondHalf = data.slice(midPoint)
+      const sortedFilteredEntries = filteredEntries.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+      const midPoint = Math.floor(sortedFilteredEntries.length / 2)
+      const firstHalf = sortedFilteredEntries.slice(0, midPoint)
+      const secondHalf = sortedFilteredEntries.slice(midPoint)
       
-      const firstHalfAvg = firstHalf.length > 0 ? firstHalf.reduce((sum, item) => sum + item.mood, 0) / firstHalf.length : 0
-      const secondHalfAvg = secondHalf.length > 0 ? secondHalf.reduce((sum, item) => sum + item.mood, 0) / secondHalf.length : 0
+      const firstHalfAvg = firstHalf.length > 0 ? firstHalf.reduce((sum, entry) => sum + entry.sentiment_score, 0) / firstHalf.length : 0
+      const secondHalfAvg = secondHalf.length > 0 ? secondHalf.reduce((sum, entry) => sum + entry.sentiment_score, 0) / secondHalf.length : 0
       
       const trendDiff = secondHalfAvg - firstHalfAvg
       const trendPercent = firstHalfAvg !== 0 ? (trendDiff / Math.abs(firstHalfAvg)) * 100 : 0
@@ -114,8 +127,8 @@ export function TrendsView() {
       setTrendPercentage(Math.abs(trendPercent))
 
       // Calculate volatility trend
-      const firstHalfMoods = firstHalf.map(item => item.mood)
-      const secondHalfMoods = secondHalf.map(item => item.mood)
+      const firstHalfMoods = firstHalf.map(entry => entry.sentiment_score)
+      const secondHalfMoods = secondHalf.map(entry => entry.sentiment_score)
       
       const firstHalfAvgMood = firstHalfMoods.length > 0 ? firstHalfMoods.reduce((a, b) => a + b, 0) / firstHalfMoods.length : 0
       const secondHalfAvgMood = secondHalfMoods.length > 0 ? secondHalfMoods.reduce((a, b) => a + b, 0) / secondHalfMoods.length : 0
@@ -152,7 +165,7 @@ export function TrendsView() {
           const avgMood = Math.round((data.total / data.count) * 10) / 10
           const percentageOfEntries = Math.round((data.count / filteredEntries.length) * 100)
           
-          // Calculate trend for this life area
+          // Calculate trend for this life area using actual entry dates
           const sortedEntries = data.entries.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
           const midPoint = Math.floor(sortedEntries.length / 2)
           const firstHalf = sortedEntries.slice(0, midPoint)
@@ -165,6 +178,8 @@ export function TrendsView() {
           const trendPercent = firstHalfAvg !== 0 ? (trendDiff / Math.abs(firstHalfAvg)) * 100 : 0
           
           const trend: 'up' | 'down' | 'stable' = trendDiff > 0.3 ? 'up' : trendDiff < -0.3 ? 'down' : 'stable'
+          
+          console.log(`Life area ${tag}: avg=${avgMood}, count=${data.count}, percentage=${percentageOfEntries}%, trend=${trend}`)
           
           return {
             tag,
