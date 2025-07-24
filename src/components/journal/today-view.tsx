@@ -10,6 +10,7 @@ import { useAuth } from '@/lib/auth-context'
 import { createJournalEntry, getTodaysEntry, updateJournalEntry, JournalEntry } from '@/lib/database'
 import { toast } from "sonner"
 import { Badge } from '@/components/ui/badge'
+import { Skeleton } from '@/components/ui/skeleton'
 
 export function TodayView({ userName }: { userName?: string }) {
   const { user } = useAuth()
@@ -184,9 +185,8 @@ export function TodayView({ userName }: { userName?: string }) {
         throw new Error('Failed to save entry to database')
       }
       
-      // Clear content and reset state after successful submission
-      setContent('')
-      setReflectionPrompt(null)
+      // Update local state to show the submitted entry
+      setTodaysEntry(savedEntry)
       setShowSuccessState(true)
       
     } catch (error) {
@@ -254,55 +254,79 @@ export function TodayView({ userName }: { userName?: string }) {
           </div>
         </div>
       ) : showSuccessState || todaysEntry ? (
-        todaysEntry && (
-          <div className="w-full space-y-8 border rounded-lg p-6 bg-background shadow-lg">
-            {/* Header Section */}
-            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-4 gap-4">
-              <div>
-                <p className="text-sm text-muted-foreground mb-1">
-                  {new Date(todaysEntry.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-                </p>
-                <h2 className="text-xl font-semibold mb-2">Today&apos;s Recap</h2>
-              </div>
-              <div className="flex gap-2 flex-wrap">
-                <Badge 
-                  variant="outline"
-                  className="h-5 min-w-5 tabular-nums"
-                  style={{ 
-                    color: todaysEntry.sentiment_score > 0 ? '#22c55e' : '#ef4444',
-                    borderColor: todaysEntry.sentiment_score > 0 ? '#22c55e' : '#ef4444'
-                  }}
-                >
-                  {todaysEntry.sentiment_score > 0 ? '+' : ''}{todaysEntry.sentiment_score.toFixed(1)}
-                </Badge>
-                {todaysEntry.tags && todaysEntry.tags.map((tag, index) => (
-                  <Badge key={index} variant="outline" className="h-5 min-w-5">
-                    {tag}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-            {/* Summary Section */}
+        <div className="w-full space-y-8 border rounded-lg p-6 bg-background shadow-lg">
+          {/* Header Section */}
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-4 gap-4">
             <div>
-              <h3 className="font-semibold text-base mb-2">Summary</h3>
+              <p className="text-sm text-muted-foreground mb-1">
+                {todaysEntry ? new Date(todaysEntry.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Today'}
+              </p>
+              <h2 className="text-xl font-semibold mb-2">Today&apos;s Recap</h2>
+            </div>
+            <div className="flex gap-2 flex-wrap">
+              {todaysEntry ? (
+                <>
+                  <Badge 
+                    variant="outline"
+                    className="h-5 min-w-5 tabular-nums"
+                    style={{ 
+                      color: todaysEntry.sentiment_score > 0 ? '#22c55e' : '#ef4444',
+                      borderColor: todaysEntry.sentiment_score > 0 ? '#22c55e' : '#ef4444'
+                    }}
+                  >
+                    {todaysEntry.sentiment_score > 0 ? '+' : ''}{todaysEntry.sentiment_score.toFixed(1)}
+                  </Badge>
+                  {todaysEntry.tags && todaysEntry.tags.map((tag, index) => (
+                    <Badge key={index} variant="outline" className="h-5 min-w-5">
+                      {tag}
+                    </Badge>
+                  ))}
+                </>
+              ) : (
+                <>
+                  <Skeleton className="h-5 w-12" />
+                  <Skeleton className="h-5 w-16" />
+                  <Skeleton className="h-5 w-14" />
+                </>
+              )}
+            </div>
+          </div>
+          {/* Summary Section */}
+          <div>
+            <h3 className="font-semibold text-base mb-2">Summary</h3>
+            {todaysEntry ? (
               <p className="text-sm text-muted-foreground">
                 {todaysEntry.summary}
               </p>
-            </div>
-            {/* Reflection Prompt Section */}
-            {reflectionPrompt && (
-              <div>
-                <h3 className="font-semibold text-base mb-2">Reflection Prompt</h3>
-                <p className="text-sm text-muted-foreground">
-                  {reflectionPrompt}
-                </p>
+            ) : (
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-3/4" />
               </div>
             )}
+          </div>
+          {/* Reflection Prompt Section */}
+          {(reflectionPrompt || todaysEntry?.reflection_prompt) && (
+            <div>
+              <h3 className="font-semibold text-base mb-2">Reflection Prompt</h3>
+              {todaysEntry?.reflection_prompt || reflectionPrompt ? (
+                <p className="text-sm text-muted-foreground">
+                  {todaysEntry?.reflection_prompt || reflectionPrompt}
+                </p>
+              ) : (
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-2/3" />
+                </div>
+              )}
+            </div>
+          )}
+          {todaysEntry && (
             <div className="flex justify-start mt-6">
               <Button variant="outline" onClick={handleEditClick}>Edit Entry</Button>
             </div>
-          </div>
-        )
+          )}
+        </div>
       ) : (
         <div className="space-y-4">
           {error && (
