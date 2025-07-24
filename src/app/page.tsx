@@ -55,28 +55,16 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-[600px] mx-auto p-4 space-y-6">
-        <div className="text-center">
-          <Header>
-            <HeaderTitle>Mood App</HeaderTitle>
-            <HeaderDescription>
-              {(() => {
-                const userName = user.user_metadata?.display_name || user.user_metadata?.name || user.email?.split('@')[0] || 'there'
-                return `Welcome back, ${userName}! Track your emotional journey`
-              })()}
-            </HeaderDescription>
-          </Header>
-        </div>
-
         <Tabs defaultValue="today" className="w-full">
           <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="today">Today</TabsTrigger>
             <TabsTrigger value="journal">Journal</TabsTrigger>
-            <TabsTrigger value="trends">Trends</TabsTrigger>
+            <TabsTrigger value="trends">Insights</TabsTrigger>
             <TabsTrigger value="settings">Settings</TabsTrigger>
           </TabsList>
           
           <TabsContent value="today" className="mt-6">
-            <TodayView />
+            <TodayView userName={user.user_metadata?.display_name || user.user_metadata?.name || user.email?.split('@')[0] || 'there'} />
           </TabsContent>
           
           <TabsContent value="journal" className="mt-6">

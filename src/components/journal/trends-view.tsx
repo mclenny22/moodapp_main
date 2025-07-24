@@ -201,7 +201,7 @@ export function TrendsView() {
     return (
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold">Trends</h2>
+          <h2 className="text-xl font-semibold">Your Mood Insights</h2>
           <Badge variant="secondary" className="h-5 min-w-5">Loading...</Badge>
         </div>
         <div className="flex items-center justify-center py-8">
@@ -218,7 +218,7 @@ export function TrendsView() {
     return (
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold">Trends</h2>
+          <h2 className="text-xl font-semibold">Your Mood Insights</h2>
           <Badge variant="secondary" className="h-5 min-w-5">{totalEntries} entries</Badge>
         </div>
         <Alert variant="destructive">
@@ -237,7 +237,7 @@ export function TrendsView() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Mood Trends</h2>
+        <h2 className="text-xl font-semibold">Your Mood Insights</h2>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -257,8 +257,7 @@ export function TrendsView() {
           </CardHeader>
           <CardFooter className="flex-col items-start gap-1.5 text-sm">
             <div className="line-clamp-1 flex gap-2 font-medium">
-              {trendDirection === 'up' ? 'Mood trending up' : trendDirection === 'down' ? 'Mood trending down' : 'Mood stable'} 
-              {trendDirection === 'up' ? <TrendingUp className="size-4" /> : trendDirection === 'down' ? <TrendingDown className="size-4" /> : null}
+              {trendDirection === 'up' ? 'Mood trending up' : trendDirection === 'down' ? 'Mood trending down' : 'Mood stable'}
             </div>
             <div className="text-muted-foreground">
               Over the last 90 days

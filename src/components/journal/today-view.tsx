@@ -8,8 +8,10 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { CheckCircle2Icon } from 'lucide-react'
 import { useAuth } from '@/lib/auth-context'
 import { createJournalEntry, getTodaysEntry, updateJournalEntry, JournalEntry } from '@/lib/database'
+import { toast } from "sonner"
+import { Badge } from '@/components/ui/badge'
 
-export function TodayView() {
+export function TodayView({ userName }: { userName?: string }) {
   const { user } = useAuth()
   const [content, setContent] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -32,8 +34,6 @@ export function TodayView() {
       setTodaysEntry(entry)
       
       if (entry) {
-        // If there's already an entry for today, show success state
-        setShowSuccessState(true)
         console.log('Today\'s entry:', entry)
         console.log('Reflection prompt from DB:', entry.reflection_prompt)
         console.log('Summary from DB:', entry.summary)
@@ -51,6 +51,18 @@ export function TodayView() {
       checkTodaysEntry()
     }
   }, [user, checkTodaysEntry])
+
+  // Show toast on success
+  useEffect(() => {
+    if (showSuccessState) {
+      toast.success("Success! Your entry was analyzed.", {
+        description: "Head over to the Trends page to learn more.",
+        icon: <CheckCircle2Icon className="text-green-600" />,
+        duration: 6000,
+      })
+      setShowSuccessState(false)
+    }
+  }, [showSuccessState])
 
   const handleEditClick = () => {
     if (todaysEntry) {
@@ -229,7 +241,7 @@ export function TodayView() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-semibold">{today}</h2>
+        <h2 className="text-xl font-semibold">Welcome back, {userName || 'there'}!</h2>
       </div>
       
       {isLoading ? (
@@ -239,29 +251,56 @@ export function TodayView() {
             <p className="text-sm text-muted-foreground">Loading...</p>
           </div>
         </div>
-      ) : showSuccessState ? (
-        <div className="space-y-6">
-          <Alert className="border-green-500 bg-green-50 text-green-900">
-            <CheckCircle2Icon className="h-4 w-4 text-green-600" />
-            <AlertTitle>Success! Here&apos;s something to think about:</AlertTitle>
-            <AlertDescription>
-              {reflectionPrompt}
-            </AlertDescription>
-          </Alert>
-          
-          <div className="text-center space-y-4">
-            <p className="text-sm text-muted-foreground">
-              You can view your entry and see your mood trends in the Journal and Trends tabs.
-            </p>
-            <Button 
-              variant="outline" 
-              onClick={handleEditClick}
-              className="w-full max-w-xs"
-            >
-              Edit Entry
-            </Button>
+      ) : showSuccessState || todaysEntry ? (
+        todaysEntry && (
+          <div className="w-full space-y-8 border rounded-lg p-6 bg-background shadow-lg">
+            {/* Header Section */}
+            <div className="flex items-start justify-between mb-4">
+              <div>
+                <p className="text-sm text-muted-foreground mb-1">
+                  {new Date(todaysEntry.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                </p>
+                <h2 className="text-xl font-semibold mb-2">Today&apos;s Recap</h2>
+              </div>
+              <div className="flex gap-2 flex-wrap">
+                <Badge 
+                  variant="outline"
+                  className="h-5 min-w-5 tabular-nums"
+                  style={{ 
+                    color: todaysEntry.sentiment_score > 0 ? '#22c55e' : '#ef4444',
+                    borderColor: todaysEntry.sentiment_score > 0 ? '#22c55e' : '#ef4444'
+                  }}
+                >
+                  {todaysEntry.sentiment_score > 0 ? '+' : ''}{todaysEntry.sentiment_score.toFixed(1)}
+                </Badge>
+                {todaysEntry.tags && todaysEntry.tags.map((tag, index) => (
+                  <Badge key={index} variant="outline" className="h-5 min-w-5">
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+            {/* Summary Section */}
+            <div>
+              <h3 className="font-semibold text-base mb-2">Summary</h3>
+              <p className="text-sm text-muted-foreground">
+                {todaysEntry.summary}
+              </p>
+            </div>
+            {/* Reflection Prompt Section */}
+            {reflectionPrompt && (
+              <div>
+                <h3 className="font-semibold text-base mb-2">Reflection Prompt</h3>
+                <p className="text-sm text-muted-foreground">
+                  {reflectionPrompt}
+                </p>
+              </div>
+            )}
+            <div className="flex justify-start mt-6">
+              <Button variant="outline" onClick={handleEditClick}>Edit Entry</Button>
+            </div>
           </div>
-        </div>
+        )
       ) : (
         <div className="space-y-4">
           {error && (

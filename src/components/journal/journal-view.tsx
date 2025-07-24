@@ -120,7 +120,7 @@ export function JournalView() {
         </div>
       ) : (
         <div className="space-y-4">
-          {entries.slice().reverse().map((entry) => (
+          {[...entries].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((entry) => (
             <Card 
               key={entry.id} 
               className="cursor-pointer hover:shadow-md transition-shadow"
