@@ -305,7 +305,7 @@ export function TrendsView() {
                   <div key={item.tag} className="flex items-center justify-between p-4 rounded-lg border">
                     <div className="font-semibold text-lg">{item.tag}</div>
                     <div className="flex items-center gap-2">
-                      <Badge variant="outline" className="h-5 min-w-5">
+                      <Badge variant="outline" className="h-5 min-w-5 hidden sm:inline-flex">
                         {item.percentageOfEntries}% of entries
                       </Badge>
                       <Badge variant="outline" className="h-5 min-w-5">
