@@ -27,7 +27,7 @@ export default function Home() {
 
   if (!user) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-background" style={{ background: 'rgba(20,20,20,1)' }}>
+      <div className="min-h-screen flex flex-col items-center justify-center p-1 bg-background" style={{ background: 'rgba(20,20,20,1)' }}>
         <div className="w-full max-w-md">
           <SignInForm showDemoButton />
         </div>

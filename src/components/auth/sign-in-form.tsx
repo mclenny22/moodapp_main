@@ -149,26 +149,28 @@ export function SignInForm({ showDemoButton = false }: { showDemoButton?: boolea
                   </Alert>
                 )}
 
-                <Button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full"
-                >
-                  {loading ? 'Signing in...' : 'Sign In'}
-                </Button>
-                {showDemoButton && (
+                <div className="flex flex-col gap-2">
                   <Button
-                    type="button"
-                    variant="secondary"
-                    className="w-full mt-2"
-                    onClick={() => {
-                      localStorage.setItem('demo-user', 'true')
-                      window.location.reload()
-                    }}
+                    type="submit"
+                    disabled={loading}
+                    className="w-full"
                   >
-                    Demo Login
+                    {loading ? 'Signing in...' : 'Sign In'}
                   </Button>
-                )}
+                  {showDemoButton && (
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      className="w-full"
+                      onClick={() => {
+                        localStorage.setItem('demo-user', 'true')
+                        window.location.reload()
+                      }}
+                    >
+                      Demo Login
+                    </Button>
+                  )}
+                </div>
               </form>
             </TabsContent>
             
