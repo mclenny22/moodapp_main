@@ -8,6 +8,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { CheckCircle2Icon } from 'lucide-react'
 import { useAuth } from '@/lib/auth-context'
 import { createJournalEntry, getTodaysEntry, updateJournalEntry, JournalEntry } from '@/lib/database'
+import { getSentimentGradientColor } from '@/lib/sentiment-utils'
 import { toast } from "sonner"
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -268,8 +269,8 @@ export function TodayView({ userName }: { userName?: string }) {
                     variant="outline"
                     className="h-5 min-w-5 tabular-nums"
                     style={{ 
-                      color: todaysEntry.sentiment_score > 0 ? '#22c55e' : '#ef4444',
-                      borderColor: todaysEntry.sentiment_score > 0 ? '#22c55e' : '#ef4444'
+                      color: getSentimentGradientColor(todaysEntry.sentiment_score),
+                      borderColor: getSentimentGradientColor(todaysEntry.sentiment_score)
                     }}
                   >
                     {todaysEntry.sentiment_score > 0 ? '+' : ''}{todaysEntry.sentiment_score.toFixed(1)}
