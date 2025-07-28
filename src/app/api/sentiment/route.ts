@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
 
     const prompt = `Analyze the following journal entry and provide:
 1. A sentiment score from -5 (very negative) to +5 (very positive) - this can be a decimal number (e.g., 2.3, -1.7) for more granular emotional assessment
-2. A brief summary (1-2 sentences)
+2. A brief summary (1-2 sentences) written in SECOND PERSON - use "You felt..." "You experienced..." "A theme that emerged for you was..." "You noticed..." etc. Never use "The user..." or "The writer..."
 3. Choose 2-4 tags from this fixed list that this entry relates to most:
    - Self (personal growth, self-reflection, identity, mental health, self-care)
    - Career (work, professional development, job-related stress/achievements)
