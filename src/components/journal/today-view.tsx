@@ -234,12 +234,7 @@ export function TodayView({ userName }: { userName?: string }) {
 
 
 
-  const today = new Date().toLocaleDateString('en-US', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  })
+
 
   return (
     <div className="space-y-6 relative">
