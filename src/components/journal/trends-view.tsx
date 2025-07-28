@@ -295,12 +295,14 @@ export function TrendsView() {
             <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
               {volatility.toFixed(1)}
             </CardTitle>
-            <CardAction>
-              <Badge variant="outline" className="h-5 min-w-5">
-                {volatilityTrend === 'up' ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
-                {volatilityTrend === 'up' ? '+' : volatilityTrend === 'down' ? '-' : ''}{volatilityTrendPercentage.toFixed(1)}%
-              </Badge>
-            </CardAction>
+            {volatilityTrend !== 'stable' && (
+              <CardAction>
+                <Badge variant="outline" className="h-5 min-w-5">
+                  {volatilityTrend === 'up' ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
+                  {volatilityTrend === 'up' ? '+' : '-'}{volatilityTrendPercentage.toFixed(1)}%
+                </Badge>
+              </CardAction>
+            )}
           </CardHeader>
           <CardFooter className="flex-col items-start gap-1.5 text-sm">
             <div className="line-clamp-1 flex gap-2 font-medium">
@@ -331,10 +333,12 @@ export function TrendsView() {
                       <Badge variant="outline" className="h-5 min-w-5 hidden sm:inline-flex">
                         {item.percentageOfEntries}% of entries
                       </Badge>
-                      <Badge variant="outline" className="h-5 min-w-5">
-                        {item.trend === 'up' ? <TrendingUp className="h-3 w-3" /> : item.trend === 'down' ? <TrendingDown className="h-3 w-3" /> : <span>↔️</span>}
-                        {item.trend === 'up' ? '+' : item.trend === 'down' ? '-' : ''}{item.trendPercentage.toFixed(1)}%
-                      </Badge>
+                      {item.trend !== 'stable' && (
+                        <Badge variant="outline" className="h-5 min-w-5">
+                          {item.trend === 'up' ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
+                          {item.trend === 'up' ? '+' : '-'}{item.trendPercentage.toFixed(1)}%
+                        </Badge>
+                      )}
                       <Badge 
                         variant="outline" 
                         className="h-5 min-w-5 tabular-nums"
