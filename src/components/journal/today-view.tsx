@@ -238,7 +238,7 @@ export function TodayView({ userName }: { userName?: string }) {
 
 
   return (
-    <div className="space-y-6 relative">
+    <div className="space-y-4 relative">
       {/* Processing overlay */}
       {(isSubmitting || (isLoading && showSuccessState)) && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
@@ -253,32 +253,63 @@ export function TodayView({ userName }: { userName?: string }) {
       </div>
       
       {(isLoading || isSubmitting || todaysEntry) ? (
-        <div className="w-full space-y-8 border rounded-lg p-6 bg-background shadow-lg">
+        <div className="box-border content-stretch flex flex-col gap-[30px] items-start justify-start p-[25px] relative rounded-[25px] w-full font-sans">
+          {/* Card Border */}
+          <div
+            aria-hidden="true"
+            className="absolute border border-[var(--card-border)] border-solid inset-0 pointer-events-none rounded-[25px]"
+          />
+          
           {/* Header Section */}
-          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-4 gap-4">
-            <div>
-              <p className="text-sm text-muted-foreground mb-1">
+          <div className="box-border content-stretch flex flex-col gap-2 items-start justify-start p-0 relative shrink-0 w-full">
+            {/* Date */}
+            <div className="font-sans font-normal leading-[0] not-italic relative shrink-0 text-[var(--annotation)] text-[12px] text-left text-nowrap">
+              <p className="block leading-[normal] whitespace-pre">
                 {todaysEntry ? new Date(todaysEntry.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Today'}
               </p>
-              <h2 className="text-xl font-semibold mb-2">Today&apos;s Recap</h2>
             </div>
-            <div className="flex gap-2 flex-wrap">
+            
+            {/* Title */}
+            <div className="font-sans font-normal leading-[0] min-w-full not-italic relative shrink-0 text-[var(--base-text)] text-[18px] text-left">
+              <p className="block leading-[normal]">Today&apos;s Recap</p>
+            </div>
+            
+            {/* Badges */}
+            <div className="box-border content-stretch flex flex-row gap-2 items-start justify-start p-0 relative shrink-0">
               {todaysEntry ? (
                 <>
-                  <Badge 
-                    variant="outline"
-                    className="h-5 min-w-5 tabular-nums"
-                    style={{ 
-                      color: getSentimentGradientColor(todaysEntry.sentiment_score),
-                      borderColor: getSentimentGradientColor(todaysEntry.sentiment_score)
-                    }}
-                  >
-                    {todaysEntry.sentiment_score > 0 ? '+' : ''}{todaysEntry.sentiment_score.toFixed(1)}
-                  </Badge>
+                  {/* Sentiment Score Badge */}
+                  <div className="relative rounded-xl shrink-0">
+                    <div className="box-border content-stretch flex flex-row gap-1 items-center justify-center overflow-clip px-[9px] py-[3px] relative">
+                      <div 
+                        className="flex flex-col font-sans font-normal justify-center leading-[0] not-italic relative shrink-0 text-[12px] text-center text-nowrap"
+                        style={{ color: getSentimentGradientColor(todaysEntry.sentiment_score) }}
+                      >
+                        <p className="block leading-[normal] whitespace-pre">
+                          {todaysEntry.sentiment_score < 0 ? '-' : ''}{Math.abs(todaysEntry.sentiment_score).toFixed(1)}
+                        </p>
+                      </div>
+                    </div>
+                    <div
+                      aria-hidden="true"
+                      className="absolute border-solid inset-0 pointer-events-none rounded-xl"
+                      style={{ borderColor: getSentimentGradientColor(todaysEntry.sentiment_score) }}
+                    />
+                  </div>
+                  
+                  {/* Tags */}
                   {todaysEntry.tags && todaysEntry.tags.map((tag, index) => (
-                    <Badge key={index} variant="outline" className="h-5 min-w-5">
-                      {tag}
-                    </Badge>
+                    <div key={index} className="relative rounded-xl shrink-0">
+                      <div className="box-border content-stretch flex flex-row gap-1 items-center justify-center overflow-clip px-[9px] py-[3px] relative">
+                        <div className="flex flex-col font-sans font-normal justify-center leading-[0] not-italic relative shrink-0 text-[var(--button-text-secondary)] text-[12px] text-center text-nowrap">
+                          <p className="block leading-[normal] whitespace-pre">{tag}</p>
+                        </div>
+                      </div>
+                      <div
+                        aria-hidden="true"
+                        className="absolute border border-[var(--card-border)] border-solid inset-0 pointer-events-none rounded-xl"
+                      />
+                    </div>
                   ))}
                 </>
               ) : (
@@ -290,13 +321,18 @@ export function TodayView({ userName }: { userName?: string }) {
               )}
             </div>
           </div>
+          
           {/* Summary Section */}
-          <div>
-            <h3 className="font-semibold text-base mb-2">Summary</h3>
+          <div className="box-border content-stretch flex flex-col font-sans font-normal gap-2 items-start justify-start leading-[0] not-italic p-0 relative shrink-0 text-left w-full">
+            <div className="relative shrink-0 text-[var(--annotation)] text-[12px] text-nowrap">
+              <p className="block leading-[normal] whitespace-pre">Summary</p>
+            </div>
             {todaysEntry ? (
-              <p className="text-sm text-muted-foreground">
-                {todaysEntry.summary}
-              </p>
+              <div className="min-w-full relative shrink-0 text-[var(--base-text)] text-[16px]">
+                <p className="block leading-[normal]">
+                  {todaysEntry.summary}
+                </p>
+              </div>
             ) : (
               <div className="space-y-2">
                 <Skeleton className="h-4 w-full" />
@@ -304,14 +340,19 @@ export function TodayView({ userName }: { userName?: string }) {
               </div>
             )}
           </div>
+          
           {/* Reflection Prompt Section */}
           {(reflectionPrompt || todaysEntry?.reflection_prompt) && (
-            <div>
-              <h3 className="font-semibold text-base mb-2">Reflection Prompt</h3>
+            <div className="box-border content-stretch flex flex-col font-sans font-normal gap-2 items-start justify-start leading-[0] not-italic p-0 relative shrink-0 text-left w-full">
+              <div className="relative shrink-0 text-[var(--annotation)] text-[12px] text-nowrap">
+                <p className="block leading-[normal] whitespace-pre">Reflection Prompt</p>
+              </div>
               {todaysEntry?.reflection_prompt || reflectionPrompt ? (
-                <p className="text-sm text-muted-foreground">
-                  {todaysEntry?.reflection_prompt || reflectionPrompt}
-                </p>
+                <div className="min-w-full relative shrink-0 text-[var(--base-text)] text-[16px]">
+                  <p className="block leading-[normal]">
+                    {todaysEntry?.reflection_prompt || reflectionPrompt}
+                  </p>
+                </div>
               ) : (
                 <div className="space-y-2">
                   <Skeleton className="h-4 w-full" />
@@ -320,9 +361,13 @@ export function TodayView({ userName }: { userName?: string }) {
               )}
             </div>
           )}
+          
+          {/* Edit Entry Button */}
           {todaysEntry && (
-            <div className="flex justify-start mt-6">
-              <Button variant="outline" onClick={handleEditClick}>Edit Entry</Button>
+            <div className="box-border content-stretch flex flex-row gap-2.5 h-[50px] items-center justify-center p-[20px] relative rounded-[10px] shrink-0 w-full cursor-pointer border border-[var(--button-text-secondary)] hover:bg-[var(--button-text-secondary)]/10 transition-all duration-200" onClick={handleEditClick}>
+              <div className="font-sans font-normal leading-[0] not-italic relative shrink-0 text-[var(--button-text-secondary)] text-[14px] text-center text-nowrap">
+                <p className="block leading-[normal] whitespace-pre">Edit Entry</p>
+              </div>
             </div>
           )}
         </div>
@@ -334,44 +379,46 @@ export function TodayView({ userName }: { userName?: string }) {
             </Alert>
           )}
           
-          <Textarea
-            placeholder="How are you feeling today? Write freely about your thoughts, emotions, and experiences..."
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            className="min-h-[200px] resize-none"
-          />
-          
-          <div className="flex gap-2">
-            <Button 
-              onClick={handleSubmit}
-              disabled={!content.trim() || isSubmitting || isGettingHelp}
-              className="flex-1"
-            >
-              {isSubmitting ? (
-                <>
-                  <Spinner className="mr-2 h-4 w-4" />
-                  Analyzing...
-                </>
-              ) : (
-                'Submit Entry'
-              )}
-            </Button>
+          <div className="relative rounded-[25px] border border-[var(--card-border)] p-[25px] min-h-[300px] flex flex-col justify-between">
+            <Textarea
+              placeholder="How are you feeling today? Write freely about your thoughts, emotions, and experiences..."
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              className="min-h-[200px] resize-none border-0 p-0 bg-transparent text-[var(--base-text)] placeholder:text-[var(--annotation)] font-sans text-[14px] focus-visible:ring-0 focus-visible:outline-none rounded-none"
+            />
             
-            <Button 
-              variant="outline"
-              onClick={handleHelpWrite}
-              disabled={isSubmitting || isGettingHelp}
-              className="flex-1"
-            >
-              {isGettingHelp ? (
-                <>
-                  <Spinner className="mr-2 h-4 w-4" />
-                  Getting help...
-                </>
-              ) : (
-                'Help me write'
-              )}
-            </Button>
+            <div className="flex gap-2 mt-4">
+              <Button 
+                onClick={handleSubmit}
+                disabled={!content.trim() || isSubmitting || isGettingHelp}
+                className="flex-1"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Spinner className="mr-2 h-4 w-4" />
+                    Analyzing...
+                  </>
+                ) : (
+                  'Submit Entry'
+                )}
+              </Button>
+              
+              <Button 
+                variant="outline"
+                onClick={handleHelpWrite}
+                disabled={isSubmitting || isGettingHelp}
+                className="flex-1"
+              >
+                {isGettingHelp ? (
+                  <>
+                    <Spinner className="mr-2 h-4 w-4" />
+                    Getting help...
+                  </>
+                ) : (
+                  'Help me write'
+                )}
+              </Button>
+            </div>
           </div>
         </div>
       )}
@@ -397,37 +444,39 @@ export function TodayView({ userName }: { userName?: string }) {
               </Alert>
             )}
             
-            <Textarea
-              placeholder="Edit your journal entry..."
-              value={editContent}
-              onChange={(e) => setEditContent(e.target.value)}
-              className="min-h-[200px] resize-none mb-4"
-            />
-            
-            <div className="flex gap-2">
-              <Button 
-                onClick={handleSaveEdit}
-                disabled={!editContent.trim() || isUpdating}
-                className="flex-1"
-              >
-                {isUpdating ? (
-                  <>
-                    <Spinner className="mr-2 h-4 w-4" />
-                    Updating...
-                  </>
-                ) : (
-                  'Save Edits'
-                )}
-              </Button>
+            <div className="relative rounded-[25px] border border-[var(--card-border)] p-[25px] min-h-[300px] flex flex-col justify-between mb-4">
+              <Textarea
+                placeholder="Edit your journal entry..."
+                value={editContent}
+                onChange={(e) => setEditContent(e.target.value)}
+                className="min-h-[200px] resize-none border-0 p-0 bg-transparent text-[var(--base-text)] placeholder:text-[var(--annotation)] font-sans text-[14px] focus-visible:ring-0 focus-visible:outline-none rounded-none"
+              />
               
-              <Button 
-                variant="outline"
-                onClick={() => setShowEditModal(false)}
-                disabled={isUpdating}
-                className="flex-1"
-              >
-                Cancel
-              </Button>
+              <div className="flex gap-2 mt-4">
+                <Button 
+                  onClick={handleSaveEdit}
+                  disabled={!editContent.trim() || isUpdating}
+                  className="flex-1"
+                >
+                  {isUpdating ? (
+                    <>
+                      <Spinner className="mr-2 h-4 w-4" />
+                      Updating...
+                    </>
+                  ) : (
+                    'Save Edits'
+                  )}
+                </Button>
+                
+                <Button 
+                  variant="outline"
+                  onClick={() => setShowEditModal(false)}
+                  disabled={isUpdating}
+                  className="flex-1"
+                >
+                  Cancel
+                </Button>
+              </div>
             </div>
           </div>
         </div>

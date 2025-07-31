@@ -265,124 +265,245 @@ export function TrendsView() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Average Sentiment Card */}
-        <Card className="@container/card">
-          <CardHeader>
-            <CardDescription>Average Sentiment</CardDescription>
-            <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-              {averageSentiment.toFixed(1)}
-            </CardTitle>
-            <CardAction>
-              <Badge variant="outline" className="h-5 min-w-5">
-                {trendDirection === 'up' ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
-                {trendDirection === 'up' ? '+' : trendDirection === 'down' ? '-' : ''}{trendPercentage.toFixed(1)}%
-              </Badge>
-            </CardAction>
-          </CardHeader>
-          <CardFooter className="flex-col items-start gap-1.5 text-sm">
-            <div className="line-clamp-1 flex gap-2 font-medium">
-              {trendDirection === 'up' ? 'Mood trending up' : trendDirection === 'down' ? 'Mood trending down' : 'Mood stable'}
+        <div className="box-border content-stretch flex flex-col items-start justify-between p-[25px] relative rounded-[25px] w-full font-sans min-h-[200px]">
+          {/* Card Border */}
+          <div
+            aria-hidden="true"
+            className="absolute border border-[var(--card-border)] border-solid inset-0 pointer-events-none rounded-[25px]"
+          />
+          
+          {/* Header Section */}
+          <div className="box-border content-stretch flex flex-col gap-2 items-start justify-start p-0 relative shrink-0 w-full">
+            <div className="box-border content-stretch flex flex-row gap-2.5 items-start justify-start p-0 relative shrink-0 w-full">
+              <div className="basis-0 font-sans font-normal grow leading-[0] min-h-px min-w-px not-italic relative shrink-0 text-[var(--annotation)] text-[12px] text-left">
+                <p className="block leading-[normal]">Average Sentiment</p>
+              </div>
+              <div className="relative rounded-[23px] shrink-0">
+                <div className="box-border content-stretch flex flex-row gap-1 items-center justify-center overflow-clip px-[9px] py-[3px] relative">
+                  <div className="flex flex-col font-sans font-normal justify-center leading-[0] not-italic relative shrink-0 text-[var(--high-score)] text-[12px] text-center text-nowrap">
+                    <p className="block leading-[normal] whitespace-pre">
+                      {trendDirection === 'up' ? '+' : trendDirection === 'down' ? '-' : ''}{trendPercentage.toFixed(1)}%
+                    </p>
+                  </div>
+                </div>
+                <div
+                  aria-hidden="true"
+                  className="absolute border border-[var(--high-score)] border-solid inset-0 pointer-events-none rounded-[23px]"
+                />
+              </div>
             </div>
-            <div className="text-muted-foreground">
-              Over the last 90 days
+            
+            {/* Sentiment Score */}
+            <div 
+              className="font-sans font-medium leading-[0] not-italic relative shrink-0 text-[60px] text-left w-full"
+              style={{ color: getSentimentGradientColor(averageSentiment) }}
+            >
+              <p className="block leading-[60px]">{averageSentiment < 0 ? '-' : ''}{Math.abs(averageSentiment).toFixed(1)}</p>
             </div>
-          </CardFooter>
-        </Card>
+          </div>
+          
+          {/* Encouraging Text */}
+          <div className="font-sans font-normal leading-[0] not-italic relative shrink-0 text-[var(--base-text)] text-[14px] text-left w-full">
+            <p className="block leading-[normal]">
+              {trendDirection === 'up' 
+                ? "Your average mood is up this week. Good on ya! " 
+                : trendDirection === 'down' 
+                ? "Looks like you're a bit down lately. Sorry bud!" 
+                : "You seem to be in a good place. Keep it up!"
+              }
+            </p>
+          </div>
+        </div>
 
         {/* Mood Volatility Card */}
-        <Card className="@container/card">
-          <CardHeader>
-            <CardDescription>Mood Volatility</CardDescription>
-            <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-              {volatility.toFixed(1)}
-            </CardTitle>
-            {volatilityTrend !== 'stable' && (
-              <CardAction>
-                <Badge variant="outline" className="h-5 min-w-5">
-                  {volatilityTrend === 'up' ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
-                  {volatilityTrend === 'up' ? '+' : '-'}{volatilityTrendPercentage.toFixed(1)}%
-                </Badge>
-              </CardAction>
-            )}
-          </CardHeader>
-          <CardFooter className="flex-col items-start gap-1.5 text-sm">
-            <div className="line-clamp-1 flex gap-2 font-medium">
-              {volatilityTrend === 'up' ? 'Volatility increasing' : volatilityTrend === 'down' ? 'Volatility decreasing' : 'Volatility stable'}
+        <div className="box-border content-stretch flex flex-col items-start justify-between p-[25px] relative rounded-[25px] w-full font-sans min-h-[200px]">
+          {/* Card Border */}
+          <div
+            aria-hidden="true"
+            className="absolute border border-[var(--card-border)] border-solid inset-0 pointer-events-none rounded-[25px]"
+          />
+          
+          {/* Header Section */}
+          <div className="box-border content-stretch flex flex-col gap-2 items-start justify-start p-0 relative shrink-0 w-full">
+            <div className="box-border content-stretch flex flex-row gap-2.5 items-start justify-start p-0 relative shrink-0 w-full">
+              <div className="basis-0 font-sans font-normal grow leading-[0] min-h-px min-w-px not-italic relative shrink-0 text-[var(--annotation)] text-[12px] text-left">
+                <p className="block leading-[normal]">Mood Volatility</p>
+              </div>
+              {volatilityTrend !== 'stable' && (
+                <div className="relative rounded-[14px] shrink-0">
+                  <div className="box-border content-stretch flex flex-row gap-1 items-center justify-center overflow-clip px-[9px] py-[3px] relative">
+                    <div className="flex flex-col font-sans font-normal justify-center leading-[0] not-italic relative shrink-0 text-[var(--button-text-secondary)] text-[12px] text-center text-nowrap">
+                      <p className="block leading-[normal] whitespace-pre">
+                        {volatilityTrend === 'up' ? '+' : '-'}{volatilityTrendPercentage.toFixed(1)}%
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    aria-hidden="true"
+                    className="absolute border border-[var(--card-border)] border-solid inset-0 pointer-events-none rounded-[14px]"
+                  />
+                </div>
+              )}
             </div>
-            <div className="text-muted-foreground">
-              Standard deviation of mood scores
+            
+            {/* Volatility Score */}
+            <div className="font-sans font-medium leading-[0] not-italic relative shrink-0 text-[var(--high-score)] text-[60px] text-left w-full">
+              <p className="block leading-[60px]">{volatility.toFixed(1)}</p>
             </div>
-          </CardFooter>
-        </Card>
+          </div>
+          
+          {/* Encouraging Text */}
+          <div className="font-sans font-normal leading-[0] not-italic relative shrink-0 text-[var(--base-text)] text-[14px] text-left w-full">
+            <p className="block leading-[normal]">
+              {volatilityTrend === 'up' 
+                ? "Looks like you had quite an emotional rollercoaster this week."
+                : volatilityTrend === 'down' 
+                ? "Your mood's been pretty steady lately. Nice work!"
+                : volatility < 1.0
+                ? "Your emotions are pretty stable. You're doing great!"
+                : volatility < 2.0
+                ? "You've got some ups and downs, but that's totally normal."
+                : "You've been on quite the emotional journey. Hang in there!"
+              }
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Emotional Balance Sheet Card */}
-              <Card>
-          <CardHeader>
-            <CardTitle>Emotional Balance Sheet</CardTitle>
-            <CardDescription>
-            How do you feel about the parts of my life that matter most?
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {lifeAreaAnalysis.length > 0 ? (
-              <div className="space-y-4">
-                {lifeAreaAnalysis.map((item) => (
-                  <div key={item.tag} className="flex items-center justify-between p-4 rounded-lg border">
-                    <div className="font-semibold text-lg">{item.tag}</div>
-                    <div className="flex items-center gap-2">
-                      <Badge variant="outline" className="h-5 min-w-5 hidden sm:inline-flex">
-                        {item.percentageOfEntries}% of entries
-                      </Badge>
-                      {item.trend !== 'stable' && (
-                        <Badge variant="outline" className="h-5 min-w-5">
-                          {item.trend === 'up' ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
-                          {item.trend === 'up' ? '+' : '-'}{item.trendPercentage.toFixed(1)}%
-                        </Badge>
-                      )}
-                      <Badge 
-                        variant="outline" 
-                        className="h-5 min-w-5 tabular-nums"
-                        style={{ 
-                          color: getSentimentGradientColor(item.avgMood),
-                          borderColor: getSentimentGradientColor(item.avgMood)
-                        }}
-                      >
-                        {item.avgMood > 0 ? '+' : ''}{item.avgMood.toFixed(1)}
-                      </Badge>
+      <div className="box-border content-stretch flex flex-col gap-[30px] items-start justify-start p-[25px] relative rounded-[25px] w-full font-sans">
+        {/* Card Border */}
+        <div
+          aria-hidden="true"
+          className="absolute border border-[var(--card-border)] border-solid inset-0 pointer-events-none rounded-[25px]"
+        />
+        
+        {/* Header Section */}
+        <div className="box-border content-stretch flex flex-col font-sans font-normal gap-2 items-start justify-start leading-[0] not-italic p-0 relative shrink-0 text-left w-full">
+          <div className="min-w-full relative shrink-0 text-[var(--base-text)] text-[18px]">
+            <p className="block leading-[normal]">Emotional Balance Sheet</p>
+          </div>
+          <div className="relative shrink-0 text-[var(--annotation)] text-[12px] text-nowrap">
+            <p className="block leading-[normal] whitespace-pre">
+              How do you feel about the parts of my life that matter most?
+            </p>
+          </div>
+        </div>
+        
+        {/* Life Areas */}
+        <div className="box-border content-stretch flex flex-col items-start justify-start p-0 relative shrink-0 w-full">
+          {lifeAreaAnalysis.length > 0 ? (
+            lifeAreaAnalysis.map((item, index) => (
+              <div key={item.tag} className="w-full">
+                {/* Life Area Row */}
+                <div className="box-border content-stretch flex flex-row items-center justify-between py-[15px] px-0 relative shrink-0 w-full">
+                  {/* Life Area Name */}
+                  <div className="font-sans font-normal leading-[0] not-italic relative shrink-0 text-[var(--base-text)] text-[16px] text-left text-nowrap">
+                    <p className="block leading-[normal] whitespace-pre">{item.tag}</p>
+                  </div>
+                  
+                  {/* Metrics */}
+                  <div className="box-border content-stretch flex flex-row gap-[9px] items-center justify-end p-0 relative shrink-0">
+                    {/* Percentage of entries */}
+                    <div className="relative rounded-[14px] shrink-0">
+                      <div className="box-border content-stretch flex flex-row gap-1 items-center justify-center overflow-clip px-[9px] py-[3px] relative">
+                        <div className="flex flex-col font-sans font-normal justify-center leading-[0] not-italic relative shrink-0 text-[var(--button-text-secondary)] text-[12px] text-center text-nowrap">
+                          <p className="block leading-[normal] whitespace-pre">
+                            {item.percentageOfEntries}% of entries
+                          </p>
+                        </div>
+                      </div>
+                      <div
+                        aria-hidden="true"
+                        className="absolute border border-[var(--card-border)] border-solid inset-0 pointer-events-none rounded-[14px]"
+                      />
+                    </div>
+                    
+                    {/* Trend percentage */}
+                    <div className="relative rounded-[14px] shrink-0">
+                      <div className="box-border content-stretch flex flex-row gap-1 items-center justify-center overflow-clip px-[9px] py-[3px] relative">
+                        <div className="flex flex-col font-sans font-normal justify-center leading-[0] not-italic relative shrink-0 text-[var(--button-text-secondary)] text-[12px] text-center text-nowrap">
+                          <p className="block leading-[normal] whitespace-pre">
+                            {item.trend === 'up' ? '+' : item.trend === 'down' ? '-' : ''}{item.trendPercentage.toFixed(1)}%
+                          </p>
+                        </div>
+                      </div>
+                      <div
+                        aria-hidden="true"
+                        className="absolute border border-[var(--card-border)] border-solid inset-0 pointer-events-none rounded-[14px]"
+                      />
+                    </div>
+                    
+                    {/* Average mood */}
+                    <div className="relative rounded-[23px] shrink-0">
+                      <div className="box-border content-stretch flex flex-row gap-1 items-center justify-center overflow-clip px-[9px] py-[3px] relative">
+                        <div 
+                          className="flex flex-col font-sans font-normal justify-center leading-[0] not-italic relative shrink-0 text-[12px] text-center text-nowrap"
+                          style={{ color: getSentimentGradientColor(item.avgMood) }}
+                        >
+                          <p className="block leading-[normal] whitespace-pre">{item.avgMood < 0 ? '-' : ''}{Math.abs(item.avgMood).toFixed(1)}</p>
+                        </div>
+                      </div>
+                      <div
+                        aria-hidden="true"
+                        className="absolute border-solid inset-0 pointer-events-none rounded-[23px]"
+                        style={{ borderColor: getSentimentGradientColor(item.avgMood) }}
+                      />
                     </div>
                   </div>
-                ))}
+                </div>
+                
+                {/* Separator - only show if not the last item */}
+                {index < lifeAreaAnalysis.length - 1 && (
+                  <div className="h-[15px] relative shrink-0 w-full flex items-center">
+                    <div className="w-full border-b border-[var(--card-border)]"></div>
+                  </div>
+                )}
               </div>
-            ) : (
-              <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 rounded-lg border">
+            ))
+          ) : (
+            // Loading skeletons
+            <>
+              <div className="w-full">
+                <div className="box-border content-stretch flex flex-row items-center justify-between py-[15px] px-0 relative shrink-0 w-full">
                   <Skeleton className="h-6 w-24" />
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-[9px]">
                     <Skeleton className="h-5 w-20" />
                     <Skeleton className="h-5 w-16" />
                     <Skeleton className="h-5 w-12" />
                   </div>
                 </div>
-                <div className="flex items-center justify-between p-4 rounded-lg border">
+              </div>
+              <div className="h-[15px] relative shrink-0 w-full flex items-center">
+                <div className="w-full border-b border-[var(--card-border)]"></div>
+              </div>
+              <div className="w-full">
+                <div className="box-border content-stretch flex flex-row items-center justify-between py-[15px] px-0 relative shrink-0 w-full">
                   <Skeleton className="h-6 w-20" />
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-[9px]">
                     <Skeleton className="h-5 w-16" />
                     <Skeleton className="h-5 w-14" />
                     <Skeleton className="h-5 w-10" />
                   </div>
                 </div>
-                <div className="flex items-center justify-between p-4 rounded-lg border">
+              </div>
+              <div className="h-[15px] relative shrink-0 w-full flex items-center">
+                <div className="w-full border-b border-[var(--card-border)]"></div>
+              </div>
+              <div className="w-full">
+                <div className="box-border content-stretch flex flex-row items-center justify-between py-[15px] px-0 relative shrink-0 w-full">
                   <Skeleton className="h-6 w-28" />
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-[9px]">
                     <Skeleton className="h-5 w-18" />
                     <Skeleton className="h-5 w-12" />
                     <Skeleton className="h-5 w-11" />
                   </div>
                 </div>
               </div>
-            )}
-          </CardContent>
-        </Card>
+            </>
+          )}
+        </div>
+      </div>
 
 
     </div>

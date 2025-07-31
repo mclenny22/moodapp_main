@@ -2,22 +2,17 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { AlertCircle } from 'lucide-react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
-import { getSentimentGradientColor } from '@/lib/sentiment-utils'
 import { useAuth } from '@/lib/auth-context'
 import { getJournalEntries, getDemoJournalEntries, JournalEntry } from '@/lib/database'
+import { JournalCard } from './JournalCard'
 
 export function JournalView() {
   const { user } = useAuth()
   const [entries, setEntries] = useState<JournalEntry[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [selectedEntry, setSelectedEntry] = useState<JournalEntry | null>(null)
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   const loadEntries = useCallback(async () => {
     if (!user) return
@@ -44,42 +39,27 @@ export function JournalView() {
     }
   }, [user, loadEntries])
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
-    const options: Intl.DateTimeFormatOptions = { 
-      month: 'long', 
-      day: 'numeric', 
-      year: 'numeric' 
-    }
-    return date.toLocaleDateString('en-US', options)
-  }
-
-  const formatWeekday = (dateString: string) => {
-    const date = new Date(dateString)
-    return date.toLocaleDateString('en-US', { weekday: 'long' })
-  }
-
-  const handleCardClick = (entry: JournalEntry) => {
-    setSelectedEntry(entry)
-    setIsDialogOpen(true)
-  }
-
-  const handleDialogClose = () => {
-    setIsDialogOpen(false)
-    setSelectedEntry(null)
-  }
-
   if (loading) {
     return (
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold">Journal Entries</h2>
-          <Badge variant="secondary" className="h-5 min-w-5">Loading...</Badge>
+          <h2 className="text-xl font-semibold text-[var(--base-text)] font-sans">Journal Entries</h2>
+          <div className="relative rounded-xl shrink-0">
+            <div className="box-border content-stretch flex flex-row gap-1 items-center justify-center overflow-clip px-[9px] py-[3px] relative">
+              <div className="flex flex-col font-sans font-normal justify-center leading-[0] not-italic relative shrink-0 text-[var(--button-text-secondary)] text-[12px] text-center text-nowrap">
+                <p className="block leading-[normal] whitespace-pre">Loading...</p>
+              </div>
+            </div>
+            <div
+              aria-hidden="true"
+              className="absolute border border-[var(--card-border)] border-solid inset-0 pointer-events-none rounded-xl"
+            />
+          </div>
         </div>
         <div className="flex items-center justify-center py-8">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-            <p className="text-sm text-muted-foreground">Loading entries...</p>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--high-score)] mx-auto mb-4"></div>
+            <p className="text-sm text-[var(--annotation)]">Loading entries...</p>
           </div>
         </div>
       </div>
@@ -90,8 +70,18 @@ export function JournalView() {
     return (
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold">Journal Entries</h2>
-          <Badge variant="secondary" className="h-5 min-w-5">{entries.length} entries</Badge>
+          <h2 className="text-xl font-semibold text-[var(--base-text)] font-sans">Journal Entries</h2>
+          <div className="relative rounded-xl shrink-0">
+            <div className="box-border content-stretch flex flex-row gap-1 items-center justify-center overflow-clip px-[9px] py-[3px] relative">
+              <div className="flex flex-col font-sans font-normal justify-center leading-[0] not-italic relative shrink-0 text-[var(--button-text-secondary)] text-[12px] text-center text-nowrap">
+                <p className="block leading-[normal] whitespace-pre">{entries.length} entries</p>
+              </div>
+            </div>
+            <div
+              aria-hidden="true"
+              className="absolute border border-[var(--card-border)] border-solid inset-0 pointer-events-none rounded-xl"
+            />
+          </div>
         </div>
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
@@ -109,108 +99,35 @@ export function JournalView() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Journal Entries</h2>
-        <Badge variant="secondary">{entries.length} entries</Badge>
+        <h2 className="text-xl font-semibold text-[var(--base-text)] font-sans">Journal Entries</h2>
+        <div className="relative rounded-xl shrink-0">
+          <div className="box-border content-stretch flex flex-row gap-1 items-center justify-center overflow-clip px-[9px] py-[3px] relative">
+            <div className="flex flex-col font-sans font-normal justify-center leading-[0] not-italic relative shrink-0 text-[var(--button-text-secondary)] text-[12px] text-center text-nowrap">
+              <p className="block leading-[normal] whitespace-pre">{entries.length} entries</p>
+            </div>
+          </div>
+          <div
+            aria-hidden="true"
+            className="absolute border border-[var(--card-border)] border-solid inset-0 pointer-events-none rounded-xl"
+          />
+        </div>
       </div>
       
       {entries.length === 0 ? (
         <div className="text-center py-8">
-          <p className="text-sm text-muted-foreground mb-4">No journal entries yet</p>
-          <p className="text-xs text-muted-foreground">Start writing in the Today tab to see your entries here</p>
+          <p className="text-sm text-[var(--annotation)] mb-4">No journal entries yet</p>
+          <p className="text-xs text-[var(--annotation)]">Start writing in the Today tab to see your entries here</p>
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-6">
           {[...entries].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((entry) => (
-            <Card 
+            <JournalCard 
               key={entry.id} 
-              className="cursor-pointer hover:shadow-md transition-shadow"
-              onClick={() => handleCardClick(entry)}
-            >
-              <CardHeader className="pb-3">
-                <div className="flex items-start justify-between">
-                  <div className="space-y-1">
-                    <p className="text-sm text-muted-foreground">
-                      {formatDate(entry.date)}
-                    </p>
-                    <CardTitle className="text-lg">
-                      {formatWeekday(entry.date)}
-                    </CardTitle>
-                  </div>
-                  <Badge 
-                    variant="outline"
-                    className="h-5 min-w-5 tabular-nums"
-                    style={{ 
-                      color: getSentimentGradientColor(entry.sentiment_score),
-                      borderColor: getSentimentGradientColor(entry.sentiment_score)
-                    }}
-                  >
-                    {entry.sentiment_score > 0 ? '+' : ''}{entry.sentiment_score.toFixed(1)}
-                  </Badge>
-                </div>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <CardDescription>
-                  {entry.summary}
-                </CardDescription>
-              </CardContent>
-            </Card>
+              entry={entry}
+            />
           ))}
         </div>
       )}
-
-      {/* Entry Detail Dialog */}
-      <Dialog open={isDialogOpen} onOpenChange={handleDialogClose}>
-        <DialogContent className="w-[95%] max-w-sm mx-auto">
-          {selectedEntry && (
-            <div className="space-y-6">
-              {/* Header Section */}
-              <div>
-                <DialogTitle className="text-xl font-semibold mb-2">
-                  {formatWeekday(selectedEntry.date)}&apos;s Journal Entry
-                </DialogTitle>
-                <p className="text-sm text-muted-foreground mb-4">
-                  {formatDate(selectedEntry.date)}
-                </p>
-                
-                {/* Badges Row */}
-                <div className="flex gap-2">
-                  <Badge 
-                    variant="outline"
-                    className="h-5 min-w-5 tabular-nums"
-                    style={{ 
-                      color: getSentimentGradientColor(selectedEntry.sentiment_score),
-                      borderColor: getSentimentGradientColor(selectedEntry.sentiment_score)
-                    }}
-                  >
-                    {selectedEntry.sentiment_score > 0 ? '+' : ''}{selectedEntry.sentiment_score.toFixed(1)}
-                  </Badge>
-                  {selectedEntry.tags.map((tag, index) => (
-                    <Badge key={index} variant="outline" className="h-5 min-w-5">
-                      {tag}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-              
-              {/* Summary Section */}
-              <div>
-                <h3 className="font-semibold text-base mb-2">Summary</h3>
-                <p className="text-sm text-muted-foreground">
-                  {selectedEntry.summary}
-                </p>
-              </div>
-              
-              {/* Original Entry Section */}
-              <div>
-                <h3 className="font-semibold text-base mb-2">Original Entry</h3>
-                <div className="whitespace-pre-wrap leading-relaxed text-sm text-muted-foreground">
-                  {selectedEntry.content}
-                </div>
-              </div>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
     </div>
   )
 } 

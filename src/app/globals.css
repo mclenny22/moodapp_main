@@ -49,10 +49,20 @@
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
+
+  /* Custom design system colors */
+  --base-text: #393939;
+  --card-border: #d0d0d0;
+  --annotation: #767676;
+  --button-primary: #393939;
+  --button-text-primary: #ffffff;
+  --button-text-secondary: #1c1c1c;
+  --primary-inactive: #ebebeb;
+  --high-score: #72e485;
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
+  --background: #1c1c1c;
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
@@ -69,6 +79,16 @@
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.556 0 0);
+
+  /* Custom design system colors - dark mode */
+  --base-text: #f0f0f0;
+  --card-border: #6b6b6b;
+  --annotation: #afafaf;
+  --button-primary: #f0f0f0;
+  --button-text-primary: #1c1c1c;
+  --button-text-secondary: #f0f0f0;
+  --primary-inactive: #3d3d3d;
+  --high-score: #72e485;
 }
 
 @layer base {
