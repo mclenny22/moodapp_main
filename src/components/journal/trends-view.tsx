@@ -407,7 +407,10 @@ export function TrendsView() {
                     {/* Percentage of entries */}
                     <div className="relative rounded-[14px] shrink-0">
                       <div className="box-border content-stretch flex flex-row gap-1 items-center justify-center overflow-clip px-[9px] py-[3px] relative">
-                        <div className="flex flex-col font-sans font-normal justify-center leading-[0] not-italic relative shrink-0 text-[var(--button-text-secondary)] text-[12px] text-center text-nowrap">
+                        <div 
+                          className="flex flex-col font-sans font-normal justify-center leading-[0] not-italic relative shrink-0 text-[12px] text-center text-nowrap"
+                          style={{ color: getSentimentGradientColor(item.avgMood) }}
+                        >
                           <p className="block leading-[normal] whitespace-pre">
                             {item.percentageOfEntries}% of entries
                           </p>
@@ -415,14 +418,18 @@ export function TrendsView() {
                       </div>
                       <div
                         aria-hidden="true"
-                        className="absolute border border-[var(--card-border)] border-solid inset-0 pointer-events-none rounded-[14px]"
+                        className="absolute border border-solid inset-0 pointer-events-none rounded-[14px]"
+                        style={{ borderColor: getSentimentGradientColor(item.avgMood) }}
                       />
                     </div>
                     
                     {/* Trend percentage */}
                     <div className="relative rounded-[14px] shrink-0">
                       <div className="box-border content-stretch flex flex-row gap-1 items-center justify-center overflow-clip px-[9px] py-[3px] relative">
-                        <div className="flex flex-col font-sans font-normal justify-center leading-[0] not-italic relative shrink-0 text-[var(--button-text-secondary)] text-[12px] text-center text-nowrap">
+                        <div 
+                          className="flex flex-col font-sans font-normal justify-center leading-[0] not-italic relative shrink-0 text-[12px] text-center text-nowrap"
+                          style={{ color: getSentimentGradientColor(item.avgMood) }}
+                        >
                           <p className="block leading-[normal] whitespace-pre">
                             {item.trend === 'up' ? '+' : item.trend === 'down' ? '-' : ''}{item.trendPercentage.toFixed(1)}%
                           </p>
@@ -430,7 +437,8 @@ export function TrendsView() {
                       </div>
                       <div
                         aria-hidden="true"
-                        className="absolute border border-[var(--card-border)] border-solid inset-0 pointer-events-none rounded-[14px]"
+                        className="absolute border border-solid inset-0 pointer-events-none rounded-[14px]"
+                        style={{ borderColor: getSentimentGradientColor(item.avgMood) }}
                       />
                     </div>
                     
