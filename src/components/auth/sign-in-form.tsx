@@ -2,12 +2,8 @@
 
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase'
-import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { AlertCircleIcon, CheckCircle2Icon } from 'lucide-react'
 
 export function SignInForm({ showDemoButton = false }: { showDemoButton?: boolean }) {
@@ -17,6 +13,7 @@ export function SignInForm({ showDemoButton = false }: { showDemoButton?: boolea
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [message, setMessage] = useState<string | null>(null)
+  const [activeTab, setActiveTab] = useState<'signin' | 'signup'>('signin')
   const supabase = createClient()
 
   const handleSignIn = async (e: React.FormEvent) => {
@@ -91,151 +88,234 @@ export function SignInForm({ showDemoButton = false }: { showDemoButton?: boolea
   }
 
   return (
-    <div className="relative flex items-center justify-center p-4">
-      <Card className="w-full max-w-md relative z-10">
-        <CardHeader className="text-center">
-          <CardTitle>Welcome</CardTitle>
-          <CardDescription>
-            Track your emotions with AI-powered insights
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Tabs defaultValue="signin" className="w-full" onValueChange={clearMessages}>
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="signin">Sign In</TabsTrigger>
-              <TabsTrigger value="signup">Sign Up</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="signin" className="space-y-4 mt-4">
-              <form onSubmit={handleSignIn} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="signin-email">Email</Label>
-                  <Input
-                    id="signin-email"
-                    type="email"
-                    placeholder="Enter your email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="signin-password">Password</Label>
-                  <Input
-                    id="signin-password"
-                    type="password"
-                    placeholder="Enter your password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  />
-                </div>
-                
-                {error && (
-                  <Alert variant="destructive">
-                    <AlertCircleIcon />
-                    <AlertTitle>Authentication Error</AlertTitle>
-                    <AlertDescription>{error}</AlertDescription>
-                  </Alert>
-                )}
-                
-                {message && (
-                  <Alert>
-                    <CheckCircle2Icon />
-                    <AlertTitle>Success</AlertTitle>
-                    <AlertDescription>{message}</AlertDescription>
-                  </Alert>
-                )}
+    <div className="box-border content-stretch flex flex-col gap-[30px] items-center justify-start p-[25px] relative rounded-[25px] size-full">
+      {/* Card Border */}
+      <div
+        aria-hidden="true"
+        className="absolute border border-[#6b6b6b] border-solid inset-0 pointer-events-none rounded-[25px]"
+      />
+      
+      {/* Header Content */}
+      <div className="box-border content-stretch flex flex-col gap-2 items-center justify-start leading-[0] not-italic p-0 relative shrink-0 text-left text-nowrap w-full">
+        <div className="font-['Inter:Medium',_sans-serif] font-medium relative shrink-0 text-[#f0f0f0] text-[20px]">
+          <p className="block leading-[normal] text-nowrap whitespace-pre">
+            Welcome
+          </p>
+        </div>
+        <div className="font-['Inter:Regular',_sans-serif] font-normal relative shrink-0 text-[#afafaf] text-[16px]">
+          <p className="block leading-[normal] text-nowrap whitespace-pre">
+            Track your emotions with AI-powered insights.
+          </p>
+        </div>
+      </div>
 
-                <div className="flex flex-col gap-2">
-                  <Button
-                    type="submit"
-                    disabled={loading}
-                    className="w-full"
-                  >
+      {/* Form Content */}
+      <div className="box-border content-stretch flex flex-col gap-[25px] items-center justify-start p-0 relative shrink-0 w-full">
+        {/* Custom Tabs */}
+        <div className="bg-[#3d3d3d] box-border content-stretch flex flex-row h-10 items-center justify-end p-[4px] relative rounded-[10px] shrink-0">
+          <button
+            onClick={() => {
+              setActiveTab('signin')
+              clearMessages()
+            }}
+            className={`box-border content-stretch flex flex-row h-full items-center justify-center overflow-clip px-[11px] py-[5px] relative rounded-[7px] shrink-0 transition-all duration-200 ${
+              activeTab === 'signin' 
+                ? 'bg-[#f0f0f0]' 
+                : 'hover:bg-[#4d4d4d]'
+            }`}
+          >
+            <div className={`flex flex-col font-['Inter:Regular',_sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[14px] text-center text-nowrap ${
+              activeTab === 'signin' ? 'text-[#1c1c1c]' : 'text-[#afafaf]'
+            }`}>
+              <p className="block leading-[normal] whitespace-pre">Sign In</p>
+            </div>
+          </button>
+          <button
+            onClick={() => {
+              setActiveTab('signup')
+              clearMessages()
+            }}
+            className={`box-border content-stretch flex flex-row h-full items-center justify-center px-[11px] py-[5px] relative rounded-[10px] shrink-0 transition-all duration-200 ${
+              activeTab === 'signup' 
+                ? 'bg-[#f0f0f0]' 
+                : 'hover:bg-[#4d4d4d]'
+            }`}
+          >
+            <div className={`flex flex-col font-['Inter:Regular',_sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[14px] text-center text-nowrap ${
+              activeTab === 'signup' ? 'text-[#1c1c1c]' : 'text-[#afafaf]'
+            }`}>
+              <p className="block leading-[normal] whitespace-pre">Sign Up</p>
+            </div>
+          </button>
+        </div>
+
+        {/* Form Fields */}
+        {activeTab === 'signin' ? (
+          <form onSubmit={handleSignIn} className="box-border content-stretch flex flex-col gap-[25px] items-center justify-start p-0 relative shrink-0 w-full">
+            {/* Email Field */}
+            <div className="box-border content-stretch flex flex-col gap-[5px] items-start justify-start p-0 relative shrink-0 w-full">
+              <div className="font-['Inter:Regular',_sans-serif] font-normal leading-[0] not-italic relative shrink-0 text-[#afafaf] text-[12px] text-left text-nowrap">
+                <p className="block leading-[normal] whitespace-pre">Email</p>
+              </div>
+              <Input
+                type="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="bg-[#3d3d3d] border border-[#6b6b6b] rounded-[10px] h-[50px] px-[15px] font-['Inter:Regular',_sans-serif] font-normal text-[#f0f0f0] text-[14px] placeholder:text-[#afafaf] focus:ring-0 focus:border-[#6b6b6b] focus:outline-none"
+              />
+            </div>
+
+            {/* Password Field */}
+            <div className="box-border content-stretch flex flex-col gap-[5px] items-start justify-start p-0 relative shrink-0 w-full">
+              <div className="font-['Inter:Regular',_sans-serif] font-normal leading-[0] not-italic relative shrink-0 text-[#afafaf] text-[12px] text-left text-nowrap">
+                <p className="block leading-[normal] whitespace-pre">Password</p>
+              </div>
+              <Input
+                type="password"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="bg-[#3d3d3d] border border-[#6b6b6b] rounded-[10px] h-[50px] px-[15px] font-['Inter:Regular',_sans-serif] font-normal text-[#f0f0f0] text-[14px] placeholder:text-[#afafaf] focus:ring-0 focus:border-[#6b6b6b] focus:outline-none"
+              />
+            </div>
+
+            {/* Error/Message Display */}
+            {error && (
+              <Alert variant="destructive" className="bg-red-900/20 border-red-700 text-red-300">
+                <AlertCircleIcon className="h-4 w-4" />
+                <AlertTitle>Authentication Error</AlertTitle>
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+            
+            {message && (
+              <Alert className="bg-green-900/20 border-green-700 text-green-300">
+                <CheckCircle2Icon className="h-4 w-4" />
+                <AlertTitle>Success</AlertTitle>
+                <AlertDescription>{message}</AlertDescription>
+              </Alert>
+            )}
+
+            {/* Buttons */}
+            <div className="box-border content-stretch flex flex-col gap-2.5 items-start justify-start p-0 relative shrink-0 w-full">
+              <button
+                type="submit"
+                disabled={loading}
+                className="bg-[#f0f0f0] box-border content-stretch flex flex-row gap-2.5 h-[50px] items-center justify-center px-[116px] py-5 relative rounded-[10px] shrink-0 w-full hover:bg-[#e0e0e0] transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <div className="font-['Inter:Regular',_sans-serif] font-normal leading-[0] not-italic relative shrink-0 text-[#1c1c1c] text-[14px] text-center text-nowrap">
+                  <p className="block leading-[normal] whitespace-pre">
                     {loading ? 'Signing in...' : 'Sign In'}
-                  </Button>
-                  {showDemoButton && (
-                    <Button
-                      type="button"
-                      variant="secondary"
-                      className="w-full"
-                      onClick={() => {
-                        localStorage.setItem('demo-user', 'true')
-                        window.location.reload()
-                      }}
-                    >
-                      Demo Login
-                    </Button>
-                  )}
+                  </p>
                 </div>
-              </form>
-            </TabsContent>
-            
-            <TabsContent value="signup" className="space-y-4 mt-4">
-              <form onSubmit={handleSignUp} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="signup-name">Full Name</Label>
-                  <Input
-                    id="signup-name"
-                    type="text"
-                    placeholder="Enter your full name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="signup-email">Email</Label>
-                  <Input
-                    id="signup-email"
-                    type="email"
-                    placeholder="Enter your email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="signup-password">Password</Label>
-                  <Input
-                    id="signup-password"
-                    type="password"
-                    placeholder="Create a password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  />
-                </div>
-                
-                {error && (
-                  <Alert variant="destructive">
-                    <AlertCircleIcon />
-                    <AlertTitle>Authentication Error</AlertTitle>
-                    <AlertDescription>{error}</AlertDescription>
-                  </Alert>
-                )}
-                
-                {message && (
-                  <Alert>
-                    <CheckCircle2Icon />
-                    <AlertTitle>Success</AlertTitle>
-                    <AlertDescription>{message}</AlertDescription>
-                  </Alert>
-                )}
-
-                <Button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full"
+              </button>
+              
+              {showDemoButton && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    localStorage.setItem('demo-user', 'true')
+                    window.location.reload()
+                  }}
+                  className="box-border content-stretch flex flex-row gap-2.5 h-[50px] items-center justify-center px-[116px] py-5 relative rounded-[10px] shrink-0 w-full hover:bg-[#4d4d4d] transition-colors duration-200"
                 >
-                  {loading ? 'Creating account...' : 'Create Account'}
-                </Button>
-              </form>
-            </TabsContent>
-          </Tabs>
-        </CardContent>
-      </Card>
+                  <div
+                    aria-hidden="true"
+                    className="absolute border border-[#f0f0f0] border-solid inset-0 pointer-events-none rounded-[10px]"
+                  />
+                  <div className="font-['Inter:Regular',_sans-serif] font-normal leading-[0] not-italic relative shrink-0 text-[#f0f0f0] text-[14px] text-center text-nowrap">
+                    <p className="block leading-[normal] whitespace-pre">
+                      Demo Login
+                    </p>
+                  </div>
+                </button>
+              )}
+            </div>
+          </form>
+        ) : (
+          <form onSubmit={handleSignUp} className="box-border content-stretch flex flex-col gap-[25px] items-center justify-start p-0 relative shrink-0 w-full">
+            {/* Name Field */}
+            <div className="box-border content-stretch flex flex-col gap-[5px] items-start justify-start p-0 relative shrink-0 w-full">
+              <div className="font-['Inter:Regular',_sans-serif] font-normal leading-[0] not-italic relative shrink-0 text-[#afafaf] text-[12px] text-left text-nowrap">
+                <p className="block leading-[normal] whitespace-pre">Full Name</p>
+              </div>
+              <Input
+                type="text"
+                placeholder="Enter your full name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+                className="bg-[#3d3d3d] border border-[#6b6b6b] rounded-[10px] h-[50px] px-[15px] font-['Inter:Regular',_sans-serif] font-normal text-[#f0f0f0] text-[14px] placeholder:text-[#afafaf] focus:ring-0 focus:border-[#6b6b6b] focus:outline-none"
+              />
+            </div>
+
+            {/* Email Field */}
+            <div className="box-border content-stretch flex flex-col gap-[5px] items-start justify-start p-0 relative shrink-0 w-full">
+              <div className="font-['Inter:Regular',_sans-serif] font-normal leading-[0] not-italic relative shrink-0 text-[#afafaf] text-[12px] text-left text-nowrap">
+                <p className="block leading-[normal] whitespace-pre">Email</p>
+              </div>
+              <Input
+                type="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="bg-[#3d3d3d] border border-[#6b6b6b] rounded-[10px] h-[50px] px-[15px] font-['Inter:Regular',_sans-serif] font-normal text-[#f0f0f0] text-[14px] placeholder:text-[#afafaf] focus:ring-0 focus:border-[#6b6b6b] focus:outline-none"
+              />
+            </div>
+
+            {/* Password Field */}
+            <div className="box-border content-stretch flex flex-col gap-[5px] items-start justify-start p-0 relative shrink-0 w-full">
+              <div className="font-['Inter:Regular',_sans-serif] font-normal leading-[0] not-italic relative shrink-0 text-[#afafaf] text-[12px] text-left text-nowrap">
+                <p className="block leading-[normal] whitespace-pre">Password</p>
+              </div>
+              <Input
+                type="password"
+                placeholder="Create a password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="bg-[#3d3d3d] border border-[#6b6b6b] rounded-[10px] h-[50px] px-[15px] font-['Inter:Regular',_sans-serif] font-normal text-[#f0f0f0] text-[14px] placeholder:text-[#afafaf] focus:ring-0 focus:border-[#6b6b6b] focus:outline-none"
+              />
+            </div>
+
+            {/* Error/Message Display */}
+            {error && (
+              <Alert variant="destructive" className="bg-red-900/20 border-red-700 text-red-300">
+                <AlertCircleIcon className="h-4 w-4" />
+                <AlertTitle>Authentication Error</AlertTitle>
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+            
+            {message && (
+              <Alert className="bg-green-900/20 border-green-700 text-green-300">
+                <CheckCircle2Icon className="h-4 w-4" />
+                <AlertTitle>Success</AlertTitle>
+                <AlertDescription>{message}</AlertDescription>
+              </Alert>
+            )}
+
+            {/* Create Account Button */}
+            <div className="box-border content-stretch flex flex-col gap-2.5 items-start justify-start p-0 relative shrink-0 w-full">
+              <button
+                type="submit"
+                disabled={loading}
+                className="bg-[#f0f0f0] box-border content-stretch flex flex-row gap-2.5 h-[50px] items-center justify-center px-[116px] py-5 relative rounded-[10px] shrink-0 w-full hover:bg-[#e0e0e0] transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <div className="font-['Inter:Regular',_sans-serif] font-normal leading-[0] not-italic relative shrink-0 text-[#1c1c1c] text-[14px] text-center text-nowrap">
+                  <p className="block leading-[normal] whitespace-pre">
+                    {loading ? 'Creating account...' : 'Create Account'}
+                  </p>
+                </div>
+              </button>
+            </div>
+          </form>
+        )}
+      </div>
     </div>
   )
 } 
