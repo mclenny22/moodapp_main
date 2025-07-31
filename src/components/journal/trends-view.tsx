@@ -445,17 +445,13 @@ export function TrendsView() {
                     {/* Average mood */}
                     <div className="relative rounded-[23px] shrink-0">
                       <div className="box-border content-stretch flex flex-row gap-1 items-center justify-center overflow-clip px-[9px] py-[3px] relative">
-                        <div 
-                          className="flex flex-col font-sans font-normal justify-center leading-[0] not-italic relative shrink-0 text-[12px] text-center text-nowrap"
-                          style={{ color: getSentimentGradientColor(item.avgMood) }}
-                        >
+                        <div className="flex flex-col font-sans font-normal justify-center leading-[0] not-italic relative shrink-0 text-[var(--button-text-secondary)] text-[12px] text-center text-nowrap">
                           <p className="block leading-[normal] whitespace-pre">{item.avgMood < 0 ? '-' : ''}{Math.abs(item.avgMood).toFixed(1)}</p>
                         </div>
                       </div>
                       <div
                         aria-hidden="true"
-                        className="absolute border-solid inset-0 pointer-events-none rounded-[23px]"
-                        style={{ borderColor: getSentimentGradientColor(item.avgMood) }}
+                        className="absolute border border-[var(--card-border)] border-solid inset-0 pointer-events-none rounded-[23px]"
                       />
                     </div>
                   </div>
