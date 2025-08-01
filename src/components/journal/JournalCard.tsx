@@ -14,12 +14,17 @@ export function JournalCard({ entry, onClick }: JournalCardProps) {
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
-    const options: Intl.DateTimeFormatOptions = { 
+    const weekdayOptions: Intl.DateTimeFormatOptions = { 
+      weekday: 'long'
+    }
+    const dateOptions: Intl.DateTimeFormatOptions = { 
       month: 'long', 
       day: 'numeric', 
       year: 'numeric' 
     }
-    return date.toLocaleDateString('en-US', options)
+    const weekday = date.toLocaleDateString('en-US', weekdayOptions)
+    const fullDate = date.toLocaleDateString('en-US', dateOptions)
+    return `${weekday} / ${fullDate}`
   }
 
   const handleClick = () => {
