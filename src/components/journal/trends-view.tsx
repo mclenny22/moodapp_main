@@ -1,8 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { TrendingUp, TrendingDown, AlertCircle } from 'lucide-react'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, CardAction } from '@/components/ui/card'
+import { AlertCircle } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -278,9 +277,9 @@ export function TrendsView() {
               <div className="basis-0 font-sans font-normal grow leading-[0] min-h-px min-w-px not-italic relative shrink-0 text-[var(--annotation)] text-[12px] text-left">
                 <p className="block leading-[normal]">Average Sentiment</p>
               </div>
-              <div className="relative rounded-[23px] shrink-0">
+              <div className="relative rounded-[7px] shrink-0">
                 <div className="box-border content-stretch flex flex-row gap-1 items-center justify-center overflow-clip px-[9px] py-[3px] relative">
-                  <div className="flex flex-col font-sans font-normal justify-center leading-[0] not-italic relative shrink-0 text-[var(--high-score)] text-[12px] text-center text-nowrap">
+                  <div className="flex flex-col font-['Inter:Regular',_sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[#f0f0f0] text-[12px] text-center text-nowrap">
                     <p className="block leading-[normal] whitespace-pre">
                       {trendDirection === 'up' ? '+' : trendDirection === 'down' ? '-' : ''}{trendPercentage.toFixed(1)}%
                     </p>
@@ -288,7 +287,7 @@ export function TrendsView() {
                 </div>
                 <div
                   aria-hidden="true"
-                  className="absolute border border-[var(--high-score)] border-solid inset-0 pointer-events-none rounded-[23px]"
+                  className="absolute border border-[#6b6b6b] border-solid inset-0 pointer-events-none rounded-[7px]"
                 />
               </div>
             </div>
@@ -330,9 +329,9 @@ export function TrendsView() {
                 <p className="block leading-[normal]">Mood Volatility</p>
               </div>
               {volatilityTrend !== 'stable' && (
-                <div className="relative rounded-[14px] shrink-0">
+                <div className="relative rounded-[7px] shrink-0">
                   <div className="box-border content-stretch flex flex-row gap-1 items-center justify-center overflow-clip px-[9px] py-[3px] relative">
-                    <div className="flex flex-col font-sans font-normal justify-center leading-[0] not-italic relative shrink-0 text-[var(--button-text-secondary)] text-[12px] text-center text-nowrap">
+                    <div className="flex flex-col font-['Inter:Regular',_sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[#f0f0f0] text-[12px] text-center text-nowrap">
                       <p className="block leading-[normal] whitespace-pre">
                         {volatilityTrend === 'up' ? '+' : '-'}{volatilityTrendPercentage.toFixed(1)}%
                       </p>
@@ -340,7 +339,7 @@ export function TrendsView() {
                   </div>
                   <div
                     aria-hidden="true"
-                    className="absolute border border-[var(--card-border)] border-solid inset-0 pointer-events-none rounded-[14px]"
+                    className="absolute border border-[#6b6b6b] border-solid inset-0 pointer-events-none rounded-[7px]"
                   />
                 </div>
               )}
@@ -405,7 +404,7 @@ export function TrendsView() {
                   {/* Metrics */}
                   <div className="box-border content-stretch flex flex-row gap-[9px] items-center justify-end p-0 relative shrink-0">
                     {/* Percentage of entries */}
-                    <div className="relative rounded-[14px] shrink-0">
+                    <div className="relative rounded-[7px] shrink-0">
                       <div className="box-border content-stretch flex flex-row gap-1 items-center justify-center overflow-clip px-[9px] py-[3px] relative">
                         <div className="flex flex-col font-sans font-normal justify-center leading-[0] not-italic relative shrink-0 text-[var(--button-text-secondary)] text-[12px] text-center text-nowrap">
                           <p className="block leading-[normal] whitespace-pre">
@@ -415,12 +414,12 @@ export function TrendsView() {
                       </div>
                       <div
                         aria-hidden="true"
-                        className="absolute border border-[var(--card-border)] border-solid inset-0 pointer-events-none rounded-[14px]"
+                        className="absolute border border-[var(--card-border)] border-solid inset-0 pointer-events-none rounded-[7px]"
                       />
                     </div>
                     
                     {/* Trend percentage */}
-                    <div className="relative rounded-[14px] shrink-0">
+                    <div className="relative rounded-[7px] shrink-0">
                       <div className="box-border content-stretch flex flex-row gap-1 items-center justify-center overflow-clip px-[9px] py-[3px] relative">
                         <div className="flex flex-col font-sans font-normal justify-center leading-[0] not-italic relative shrink-0 text-[var(--button-text-secondary)] text-[12px] text-center text-nowrap">
                           <p className="block leading-[normal] whitespace-pre">
@@ -430,12 +429,12 @@ export function TrendsView() {
                       </div>
                       <div
                         aria-hidden="true"
-                        className="absolute border border-[var(--card-border)] border-solid inset-0 pointer-events-none rounded-[14px]"
+                        className="absolute border border-[var(--card-border)] border-solid inset-0 pointer-events-none rounded-[7px]"
                       />
                     </div>
                     
                     {/* Average mood */}
-                    <div className="relative rounded-[23px] shrink-0">
+                    <div className="relative rounded-[7px] shrink-0">
                       <div className="box-border content-stretch flex flex-row gap-1 items-center justify-center overflow-clip px-[9px] py-[3px] relative">
                         <div 
                           className="flex flex-col font-sans font-normal justify-center leading-[0] not-italic relative shrink-0 text-[12px] text-center text-nowrap"
@@ -446,7 +445,7 @@ export function TrendsView() {
                       </div>
                       <div
                         aria-hidden="true"
-                        className="absolute border-solid inset-0 pointer-events-none rounded-[23px]"
+                        className="absolute border border-solid inset-0 pointer-events-none rounded-[7px]"
                         style={{ borderColor: getSentimentGradientColor(item.avgMood) }}
                       />
                     </div>

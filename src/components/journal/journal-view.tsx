@@ -44,7 +44,7 @@ export function JournalView() {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold text-[var(--base-text)] font-sans">Journal Entries</h2>
-          <div className="relative rounded-xl shrink-0">
+          <div className="relative rounded-[7px] shrink-0">
             <div className="box-border content-stretch flex flex-row gap-1 items-center justify-center overflow-clip px-[9px] py-[3px] relative">
               <div className="flex flex-col font-sans font-normal justify-center leading-[0] not-italic relative shrink-0 text-[var(--button-text-secondary)] text-[12px] text-center text-nowrap">
                 <p className="block leading-[normal] whitespace-pre">Loading...</p>
@@ -52,7 +52,7 @@ export function JournalView() {
             </div>
             <div
               aria-hidden="true"
-              className="absolute border border-[var(--card-border)] border-solid inset-0 pointer-events-none rounded-xl"
+              className="absolute border border-[var(--card-border)] border-solid inset-0 pointer-events-none rounded-[7px]"
             />
           </div>
         </div>
@@ -71,7 +71,7 @@ export function JournalView() {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold text-[var(--base-text)] font-sans">Journal Entries</h2>
-          <div className="relative rounded-xl shrink-0">
+          <div className="relative rounded-[7px] shrink-0">
             <div className="box-border content-stretch flex flex-row gap-1 items-center justify-center overflow-clip px-[9px] py-[3px] relative">
               <div className="flex flex-col font-sans font-normal justify-center leading-[0] not-italic relative shrink-0 text-[var(--button-text-secondary)] text-[12px] text-center text-nowrap">
                 <p className="block leading-[normal] whitespace-pre">{entries.length} entries</p>
@@ -79,7 +79,7 @@ export function JournalView() {
             </div>
             <div
               aria-hidden="true"
-              className="absolute border border-[var(--card-border)] border-solid inset-0 pointer-events-none rounded-xl"
+              className="absolute border border-[var(--card-border)] border-solid inset-0 pointer-events-none rounded-[7px]"
             />
           </div>
         </div>
@@ -100,7 +100,7 @@ export function JournalView() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold text-[var(--base-text)] font-sans">Journal Entries</h2>
-        <div className="relative rounded-xl shrink-0">
+        <div className="relative rounded-[7px] shrink-0">
           <div className="box-border content-stretch flex flex-row gap-1 items-center justify-center overflow-clip px-[9px] py-[3px] relative">
             <div className="flex flex-col font-sans font-normal justify-center leading-[0] not-italic relative shrink-0 text-[var(--button-text-secondary)] text-[12px] text-center text-nowrap">
               <p className="block leading-[normal] whitespace-pre">{entries.length} entries</p>
@@ -108,7 +108,7 @@ export function JournalView() {
           </div>
           <div
             aria-hidden="true"
-            className="absolute border border-[var(--card-border)] border-solid inset-0 pointer-events-none rounded-xl"
+            className="absolute border border-[var(--card-border)] border-solid inset-0 pointer-events-none rounded-[7px]"
           />
         </div>
       </div>

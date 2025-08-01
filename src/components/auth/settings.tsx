@@ -1,10 +1,7 @@
 'use client'
 
 import { useAuth } from '@/lib/auth-context'
-import { Button } from '@/components/ui/button'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
-import { Separator } from '@/components/ui/separator'
 import { Switch } from '@/components/ui/switch'
 import { useTheme } from 'next-themes'
 
@@ -89,19 +86,19 @@ export function Settings() {
               Email Verified
             </p>
           </div>
-          <div className="relative rounded-[23px] shrink-0">
-            <div className="box-border content-stretch flex flex-row gap-1 items-center justify-center overflow-clip px-[9px] py-[3px] relative">
-              <div className="flex flex-col font-sans font-normal justify-center leading-[0] not-italic relative shrink-0 text-[#72e485] text-[12px] text-center text-nowrap">
-                <p className="block leading-[normal] whitespace-pre">
-                  {user.email_confirmed_at ? 'Yes' : 'No'}
-                </p>
+                      <div className="relative rounded-[7px] shrink-0">
+              <div className="box-border content-stretch flex flex-row gap-1 items-center justify-center overflow-clip px-[9px] py-[3px] relative">
+                <div className="flex flex-col font-sans font-normal justify-center leading-[0] not-italic relative shrink-0 text-[#72e485] text-[12px] text-center text-nowrap">
+                  <p className="block leading-[normal] whitespace-pre">
+                    {user.email_confirmed_at ? 'Yes' : 'No'}
+                  </p>
+                </div>
               </div>
+              <div
+                aria-hidden="true"
+                className="absolute border border-[#72e485] border-solid inset-0 pointer-events-none rounded-[7px]"
+              />
             </div>
-            <div
-              aria-hidden="true"
-              className="absolute border border-[#72e485] border-solid inset-0 pointer-events-none rounded-[23px]"
-            />
-          </div>
         </div>
         
         {/* Member Since Row */}

@@ -10,14 +10,13 @@ import { useAuth } from '@/lib/auth-context'
 import { createJournalEntry, getTodaysEntry, updateJournalEntry, JournalEntry } from '@/lib/database'
 import { getSentimentGradientColor } from '@/lib/sentiment-utils'
 import { toast } from "sonner"
-import { Badge } from '@/components/ui/badge'
+
 import { Skeleton } from '@/components/ui/skeleton'
 
 export function TodayView({ userName }: { userName?: string }) {
   const { user } = useAuth()
   const [content, setContent] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isGettingHelp, setIsGettingHelp] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [reflectionPrompt, setReflectionPrompt] = useState<string | null>(null)
   const [showSuccessState, setShowSuccessState] = useState(false)
@@ -199,39 +198,7 @@ export function TodayView({ userName }: { userName?: string }) {
     }
   }
 
-  const handleHelpWrite = async () => {
-    setIsGettingHelp(true)
-    setError(null)
-    
-    try {
-      const response = await fetch('/api/writing-help', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ currentContent: content }),
-      })
 
-      if (!response.ok) {
-        throw new Error('Failed to get writing help')
-      }
-
-      const { writingStarter } = await response.json()
-      
-      // Add the writing starter to the current content
-      if (content.trim()) {
-        setContent(content + '\n\n' + writingStarter)
-      } else {
-        setContent(writingStarter)
-      }
-      
-    } catch (error) {
-      console.error('Error getting writing help:', error)
-      setError('Failed to get writing help. Please try again.')
-    } finally {
-      setIsGettingHelp(false)
-    }
-  }
 
 
 
@@ -390,7 +357,7 @@ export function TodayView({ userName }: { userName?: string }) {
             <div className="flex gap-2 mt-4">
               <Button 
                 onClick={handleSubmit}
-                disabled={!content.trim() || isSubmitting || isGettingHelp}
+                disabled={!content.trim() || isSubmitting}
                 className="flex-1"
               >
                 {isSubmitting ? (
@@ -400,22 +367,6 @@ export function TodayView({ userName }: { userName?: string }) {
                   </>
                 ) : (
                   'Submit Entry'
-                )}
-              </Button>
-              
-              <Button 
-                variant="outline"
-                onClick={handleHelpWrite}
-                disabled={isSubmitting || isGettingHelp}
-                className="flex-1"
-              >
-                {isGettingHelp ? (
-                  <>
-                    <Spinner className="mr-2 h-4 w-4" />
-                    Getting help...
-                  </>
-                ) : (
-                  'Help me write'
                 )}
               </Button>
             </div>
