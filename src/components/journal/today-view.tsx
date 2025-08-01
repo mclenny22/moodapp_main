@@ -237,7 +237,7 @@ export function TodayView({ userName }: { userName?: string }) {
             </div>
             
             {/* Title */}
-            <div className="font-sans font-normal leading-[0] min-w-full not-italic relative shrink-0 text-[var(--base-text)] text-[18px] text-left">
+            <div className="font-inter font-medium leading-[0] min-w-full not-italic relative shrink-0 text-[var(--base-text)] text-[18px] text-left">
               <p className="block leading-[normal]">Today&apos;s Recap</p>
             </div>
             

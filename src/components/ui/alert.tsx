@@ -53,7 +53,7 @@ function Alert({
       </div>
       
       {/* Alert Content */}
-      <div className="font-['Inter:Regular',_sans-serif] font-normal leading-[0] not-italic relative shrink-0 text-[14px] text-left">
+      <div className="font-inter font-normal leading-[0] not-italic relative shrink-0 text-[14px] text-left">
         {props.children}
       </div>
     </div>

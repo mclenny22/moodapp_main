@@ -264,7 +264,7 @@ export function TrendsView() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Average Sentiment Card */}
-        <div className="box-border content-stretch flex flex-col items-start justify-between p-[25px] relative rounded-[25px] w-full font-sans min-h-[200px]">
+        <div className="box-border content-stretch flex flex-col items-start justify-between p-[25px] relative rounded-[25px] w-full font-inter min-h-[200px]">
           {/* Card Border */}
           <div
             aria-hidden="true"
@@ -274,12 +274,12 @@ export function TrendsView() {
           {/* Header Section */}
           <div className="box-border content-stretch flex flex-col gap-2 items-start justify-start p-0 relative shrink-0 w-full">
             <div className="box-border content-stretch flex flex-row gap-2.5 items-start justify-start p-0 relative shrink-0 w-full">
-              <div className="basis-0 font-sans font-normal grow leading-[0] min-h-px min-w-px not-italic relative shrink-0 text-[var(--annotation)] text-[12px] text-left">
+              <div className="basis-0 font-inter font-normal grow leading-[0] min-h-px min-w-px not-italic relative shrink-0 text-[var(--annotation)] text-[12px] text-left">
                 <p className="block leading-[normal]">Average Sentiment</p>
               </div>
               <div className="relative rounded-[7px] shrink-0">
                 <div className="box-border content-stretch flex flex-row gap-1 items-center justify-center overflow-clip px-[9px] py-[3px] relative">
-                  <div className="flex flex-col font-['Inter:Regular',_sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[#f0f0f0] text-[12px] text-center text-nowrap">
+                  <div className="flex flex-col font-inter font-normal justify-center leading-[0] not-italic relative shrink-0 text-[var(--base-text)] text-[12px] text-center text-nowrap">
                     <p className="block leading-[normal] whitespace-pre">
                       {trendDirection === 'up' ? '+' : trendDirection === 'down' ? '-' : ''}{trendPercentage.toFixed(1)}%
                     </p>
@@ -287,14 +287,14 @@ export function TrendsView() {
                 </div>
                 <div
                   aria-hidden="true"
-                  className="absolute border border-[#6b6b6b] border-solid inset-0 pointer-events-none rounded-[7px]"
+                  className="absolute border border-[var(--card-border)] border-solid inset-0 pointer-events-none rounded-[7px]"
                 />
               </div>
             </div>
             
             {/* Sentiment Score */}
             <div 
-              className="font-sans font-medium leading-[0] not-italic relative shrink-0 text-[60px] text-left w-full"
+              className="font-inter font-medium leading-[0] not-italic relative shrink-0 text-[60px] text-left w-full"
               style={{ color: getSentimentGradientColor(averageSentiment) }}
             >
               <p className="block leading-[60px]">{averageSentiment < 0 ? '-' : ''}{Math.abs(averageSentiment).toFixed(1)}</p>
@@ -302,7 +302,7 @@ export function TrendsView() {
           </div>
           
           {/* Encouraging Text */}
-          <div className="font-sans font-normal leading-[0] not-italic relative shrink-0 text-[var(--base-text)] text-[14px] text-left w-full">
+          <div className="font-inter font-normal leading-[0] not-italic relative shrink-0 text-[var(--base-text)] text-[14px] text-left w-full">
             <p className="block leading-[normal]">
               {trendDirection === 'up' 
                 ? "Your average mood is up this week. Good on ya! " 
@@ -315,7 +315,7 @@ export function TrendsView() {
         </div>
 
         {/* Mood Volatility Card */}
-        <div className="box-border content-stretch flex flex-col items-start justify-between p-[25px] relative rounded-[25px] w-full font-sans min-h-[200px]">
+        <div className="box-border content-stretch flex flex-col items-start justify-between p-[25px] relative rounded-[25px] w-full font-inter min-h-[200px]">
           {/* Card Border */}
           <div
             aria-hidden="true"
@@ -325,13 +325,13 @@ export function TrendsView() {
           {/* Header Section */}
           <div className="box-border content-stretch flex flex-col gap-2 items-start justify-start p-0 relative shrink-0 w-full">
             <div className="box-border content-stretch flex flex-row gap-2.5 items-start justify-start p-0 relative shrink-0 w-full">
-              <div className="basis-0 font-sans font-normal grow leading-[0] min-h-px min-w-px not-italic relative shrink-0 text-[var(--annotation)] text-[12px] text-left">
+              <div className="basis-0 font-inter font-normal grow leading-[0] min-h-px min-w-px not-italic relative shrink-0 text-[var(--annotation)] text-[12px] text-left">
                 <p className="block leading-[normal]">Mood Volatility</p>
               </div>
               {volatilityTrend !== 'stable' && (
                 <div className="relative rounded-[7px] shrink-0">
                   <div className="box-border content-stretch flex flex-row gap-1 items-center justify-center overflow-clip px-[9px] py-[3px] relative">
-                    <div className="flex flex-col font-['Inter:Regular',_sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[#f0f0f0] text-[12px] text-center text-nowrap">
+                    <div className="flex flex-col font-inter font-normal justify-center leading-[0] not-italic relative shrink-0 text-[var(--base-text)] text-[12px] text-center text-nowrap">
                       <p className="block leading-[normal] whitespace-pre">
                         {volatilityTrend === 'up' ? '+' : '-'}{volatilityTrendPercentage.toFixed(1)}%
                       </p>
@@ -339,20 +339,20 @@ export function TrendsView() {
                   </div>
                   <div
                     aria-hidden="true"
-                    className="absolute border border-[#6b6b6b] border-solid inset-0 pointer-events-none rounded-[7px]"
+                    className="absolute border border-[var(--card-border)] border-solid inset-0 pointer-events-none rounded-[7px]"
                   />
                 </div>
               )}
             </div>
             
             {/* Volatility Score */}
-            <div className="font-sans font-medium leading-[0] not-italic relative shrink-0 text-[var(--high-score)] text-[60px] text-left w-full">
+            <div className="font-inter font-medium leading-[0] not-italic relative shrink-0 text-[var(--high-score)] text-[60px] text-left w-full">
               <p className="block leading-[60px]">{volatility.toFixed(1)}</p>
             </div>
           </div>
           
           {/* Encouraging Text */}
-          <div className="font-sans font-normal leading-[0] not-italic relative shrink-0 text-[var(--base-text)] text-[14px] text-left w-full">
+          <div className="font-inter font-normal leading-[0] not-italic relative shrink-0 text-[var(--base-text)] text-[14px] text-left w-full">
             <p className="block leading-[normal]">
               {volatilityTrend === 'up' 
                 ? "Looks like you had quite an emotional rollercoaster this week."
@@ -370,7 +370,7 @@ export function TrendsView() {
       </div>
 
       {/* Emotional Balance Sheet Card */}
-      <div className="box-border content-stretch flex flex-col gap-[30px] items-start justify-start p-[25px] relative rounded-[25px] w-full font-sans">
+      <div className="box-border content-stretch flex flex-col gap-[30px] items-start justify-start p-[25px] relative rounded-[25px] w-full font-inter">
         {/* Card Border */}
         <div
           aria-hidden="true"
@@ -378,8 +378,8 @@ export function TrendsView() {
         />
         
         {/* Header Section */}
-        <div className="box-border content-stretch flex flex-col font-sans font-normal gap-2 items-start justify-start leading-[0] not-italic p-0 relative shrink-0 text-left w-full">
-          <div className="min-w-full relative shrink-0 text-[var(--base-text)] text-[18px]">
+                  <div className="box-border content-stretch flex flex-col font-inter font-normal gap-2 items-start justify-start leading-[0] not-italic p-0 relative shrink-0 text-left w-full">
+                      <div className="font-inter font-medium min-w-full relative shrink-0 text-[var(--base-text)] text-[18px]">
             <p className="block leading-[normal]">Emotional Balance Sheet</p>
           </div>
           <div className="relative shrink-0 text-[var(--annotation)] text-[12px] text-nowrap">

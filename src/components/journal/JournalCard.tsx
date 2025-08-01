@@ -50,7 +50,7 @@ export function JournalCard({ entry, onClick }: JournalCardProps) {
       {/* Card Header - Always Visible */}
       <div className="box-border content-stretch flex flex-col gap-2 items-start justify-start leading-[0] not-italic p-0 relative shrink-0 text-left w-full">
         {/* Date */}
-        <div className="font-['Inter:Regular',_sans-serif] font-normal relative shrink-0 text-[#afafaf] text-[12px] text-nowrap">
+        <div className="font-inter font-normal relative shrink-0 text-[var(--annotation)] text-[12px] text-nowrap">
           <p className="block leading-[normal] whitespace-pre">
             {formatDate(entry.date)}
           </p>
@@ -58,7 +58,7 @@ export function JournalCard({ entry, onClick }: JournalCardProps) {
         
         {/* Sentiment Score */}
         <div 
-          className="font-['Inter:Medium',_sans-serif] font-medium min-w-full relative shrink-0 text-[60px] text-left"
+          className="font-inter font-medium min-w-full relative shrink-0 text-[60px] text-left"
           style={{ 
             color: getSentimentGradientColor(entry.sentiment_score),
             width: "min-content"
@@ -87,13 +87,13 @@ export function JournalCard({ entry, onClick }: JournalCardProps) {
               }}
             >
               <div className="box-border content-stretch flex flex-row gap-1 h-[21px] items-center justify-center overflow-clip px-[9px] py-[3px] relative">
-                <div className="flex flex-col font-['Inter:Regular',_sans-serif] font-normal justify-center leading-[0] not-italic relative shrink-0 text-[#f0f0f0] text-[12px] text-center text-nowrap">
+                <div className="flex flex-col font-inter font-normal justify-center leading-[0] not-italic relative shrink-0 text-[var(--base-text)] text-[12px] text-center text-nowrap">
                   <p className="block leading-[normal] whitespace-pre">{tag}</p>
                 </div>
               </div>
               <div
                 aria-hidden="true"
-                className="absolute border border-[#6b6b6b] border-solid inset-0 pointer-events-none rounded-[7px]"
+                className="absolute border border-[var(--card-border)] border-solid inset-0 pointer-events-none rounded-[7px]"
               />
             </div>
           ))}
@@ -101,11 +101,11 @@ export function JournalCard({ entry, onClick }: JournalCardProps) {
       </div>
       
       {/* Summary Section - Always Visible */}
-      <div className="box-border content-stretch flex flex-col font-['Inter:Regular',_sans-serif] font-normal gap-2 items-start justify-start leading-[0] not-italic p-0 relative shrink-0 text-left w-full">
-        <div className="relative shrink-0 text-[#afafaf] text-[12px] text-nowrap">
+      <div className="box-border content-stretch flex flex-col font-inter font-normal gap-2 items-start justify-start leading-[0] not-italic p-0 relative shrink-0 text-left w-full">
+        <div className="relative shrink-0 text-[var(--annotation)] text-[12px] text-nowrap">
           <p className="block leading-[normal] whitespace-pre">Summary</p>
         </div>
-        <div className="min-w-full relative shrink-0 text-[#f0f0f0] text-[16px]" style={{ width: "min-content" }}>
+        <div className="min-w-full relative shrink-0 text-[var(--base-text)] text-[16px]" style={{ width: "min-content" }}>
           <p className="block leading-[normal]">
             {entry.summary}
           </p>
@@ -114,7 +114,7 @@ export function JournalCard({ entry, onClick }: JournalCardProps) {
 
       {/* Original Entry Section - Only visible when expanded with fade-in animation */}
       <div 
-        className={`box-border content-stretch flex flex-col font-['Inter:Regular',_sans-serif] font-normal gap-2 items-start justify-start leading-[0] not-italic p-0 relative shrink-0 text-left w-full transition-all duration-500 ease-out ${
+        className={`box-border content-stretch flex flex-col font-inter font-normal gap-2 items-start justify-start leading-[0] not-italic p-0 relative shrink-0 text-left w-full transition-all duration-500 ease-out ${
           isExpanded 
             ? 'opacity-100 max-h-[500px] translate-y-0' 
             : 'opacity-0 max-h-0 translate-y-[-10px] overflow-hidden'
@@ -123,10 +123,10 @@ export function JournalCard({ entry, onClick }: JournalCardProps) {
           animationDelay: isExpanded ? '200ms' : '0ms'
         }}
       >
-        <div className="relative shrink-0 text-[#afafaf] text-[12px] text-nowrap">
+        <div className="relative shrink-0 text-[var(--annotation)] text-[12px] text-nowrap">
           <p className="block leading-[normal] whitespace-pre">Original Entry</p>
         </div>
-        <div className="min-w-full relative shrink-0 text-[#f0f0f0] text-[16px]" style={{ width: "min-content" }}>
+        <div className="min-w-full relative shrink-0 text-[var(--base-text)] text-[16px]" style={{ width: "min-content" }}>
           <p className="block leading-[normal] whitespace-pre-wrap">
             {entry.content}
           </p>

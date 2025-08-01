@@ -41,7 +41,7 @@ export function Settings() {
       
       {/* Header Section */}
       <div className="box-border content-stretch flex flex-col font-sans font-normal gap-2 items-start justify-start leading-[0] not-italic p-0 relative shrink-0 text-left w-full">
-        <div className="min-w-full relative shrink-0 text-[var(--base-text)] text-[18px]">
+                    <div className="font-inter font-medium min-w-full relative shrink-0 text-[var(--base-text)] text-[18px]">
           <p className="block leading-[normal]">Settings</p>
         </div>
         <div className="relative shrink-0 text-[var(--annotation)] text-[12px] text-nowrap">
