@@ -264,7 +264,7 @@ export function TrendsView() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Average Sentiment Card */}
-        <div className="box-border content-stretch flex flex-col items-start justify-between p-[25px] relative rounded-[25px] w-full font-inter min-h-[200px]">
+        <div className="box-border content-stretch flex flex-col items-start justify-between p-[20px] sm:p-[25px] relative rounded-[25px] w-full font-inter min-h-[200px]">
           {/* Card Border */}
           <div
             aria-hidden="true"
@@ -315,7 +315,7 @@ export function TrendsView() {
         </div>
 
         {/* Mood Volatility Card */}
-        <div className="box-border content-stretch flex flex-col items-start justify-between p-[25px] relative rounded-[25px] w-full font-inter min-h-[200px]">
+        <div className="box-border content-stretch flex flex-col items-start justify-between p-[20px] sm:p-[25px] relative rounded-[25px] w-full font-inter min-h-[200px]">
           {/* Card Border */}
           <div
             aria-hidden="true"
@@ -370,7 +370,7 @@ export function TrendsView() {
       </div>
 
       {/* Emotional Balance Sheet Card */}
-      <div className="box-border content-stretch flex flex-col gap-[30px] items-start justify-start p-[25px] relative rounded-[25px] w-full font-inter">
+      <div className="box-border content-stretch flex flex-col gap-[25px] sm:gap-[30px] items-start justify-start p-[20px] sm:p-[25px] relative rounded-[25px] w-full font-inter">
         {/* Card Border */}
         <div
           aria-hidden="true"

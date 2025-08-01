@@ -88,7 +88,7 @@ export function SignInForm({ showDemoButton = false }: { showDemoButton?: boolea
   }
 
   return (
-    <div className="box-border content-stretch flex flex-col gap-[30px] items-center justify-start p-[25px] relative rounded-[25px] size-full">
+    <div className="box-border content-stretch flex flex-col gap-[20px] sm:gap-[30px] items-center justify-start p-[20px] sm:p-[25px] relative rounded-[25px] size-full">
       {/* Card Border */}
       <div
         aria-hidden="true"
@@ -110,15 +110,15 @@ export function SignInForm({ showDemoButton = false }: { showDemoButton?: boolea
       </div>
 
       {/* Form Content */}
-      <div className="box-border content-stretch flex flex-col gap-[25px] items-center justify-start p-0 relative shrink-0 w-full">
+      <div className="box-border content-stretch flex flex-col gap-[20px] sm:gap-[25px] items-center justify-start p-0 relative shrink-0 w-full">
         {/* Custom Tabs */}
-        <div className="bg-[var(--primary-inactive)] box-border content-stretch flex flex-row h-10 items-center justify-end p-[4px] relative rounded-[10px] shrink-0">
+        <div className="bg-[var(--primary-inactive)] box-border content-stretch flex flex-row h-9 sm:h-10 items-center justify-end p-[3px] sm:p-[4px] relative rounded-[10px] shrink-0">
           <button
             onClick={() => {
               setActiveTab('signin')
               clearMessages()
             }}
-            className={`box-border content-stretch flex flex-row h-full items-center justify-center overflow-clip px-[11px] py-[5px] relative rounded-[7px] shrink-0 transition-all duration-200 ${
+            className={`box-border content-stretch flex flex-row h-full items-center justify-center overflow-clip px-[8px] sm:px-[11px] py-[4px] sm:py-[5px] relative rounded-[7px] shrink-0 transition-all duration-200 ${
               activeTab === 'signin' 
                 ? 'bg-[var(--button-primary)]' 
                 : ''
@@ -135,7 +135,7 @@ export function SignInForm({ showDemoButton = false }: { showDemoButton?: boolea
               setActiveTab('signup')
               clearMessages()
             }}
-            className={`box-border content-stretch flex flex-row h-full items-center justify-center px-[11px] py-[5px] relative rounded-[7px] shrink-0 transition-all duration-200 ${
+            className={`box-border content-stretch flex flex-row h-full items-center justify-center px-[8px] sm:px-[11px] py-[4px] sm:py-[5px] relative rounded-[7px] shrink-0 transition-all duration-200 ${
               activeTab === 'signup' 
                 ? 'bg-[var(--button-primary)]' 
                 : ''
@@ -151,7 +151,7 @@ export function SignInForm({ showDemoButton = false }: { showDemoButton?: boolea
 
         {/* Form Fields */}
         {activeTab === 'signin' ? (
-          <form onSubmit={handleSignIn} className="box-border content-stretch flex flex-col gap-[25px] items-center justify-start p-0 relative shrink-0 w-full">
+          <form onSubmit={handleSignIn} className="box-border content-stretch flex flex-col gap-[20px] sm:gap-[25px] items-center justify-start p-0 relative shrink-0 w-full">
             {/* Email Field */}
             <div className="box-border content-stretch flex flex-col gap-[5px] items-start justify-start p-0 relative shrink-0 w-full">
               <div className="font-inter font-normal leading-[0] not-italic relative shrink-0 text-[var(--annotation)] text-[12px] text-left text-nowrap">
@@ -163,7 +163,7 @@ export function SignInForm({ showDemoButton = false }: { showDemoButton?: boolea
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="bg-[var(--primary-inactive)] border border-[var(--card-border)] rounded-[10px] h-[50px] px-[15px] font-inter font-normal text-[var(--base-text)] text-[14px] placeholder:text-[var(--annotation)] focus:ring-0 focus:border-[var(--card-border)] focus:outline-none"
+                className="bg-[var(--primary-inactive)] border border-[var(--card-border)] rounded-[10px] h-[45px] sm:h-[50px] px-[12px] sm:px-[15px] font-inter font-normal text-[var(--base-text)] text-[13px] sm:text-[14px] placeholder:text-[var(--annotation)] focus:ring-0 focus:border-[var(--card-border)] focus:outline-none"
               />
             </div>
 
@@ -178,7 +178,7 @@ export function SignInForm({ showDemoButton = false }: { showDemoButton?: boolea
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="bg-[var(--primary-inactive)] border border-[var(--card-border)] rounded-[10px] h-[50px] px-[15px] font-inter font-normal text-[var(--base-text)] text-[14px] placeholder:text-[var(--annotation)] focus:ring-0 focus:border-[var(--card-border)] focus:outline-none"
+                className="bg-[var(--primary-inactive)] border border-[var(--card-border)] rounded-[10px] h-[45px] sm:h-[50px] px-[12px] sm:px-[15px] font-inter font-normal text-[var(--base-text)] text-[13px] sm:text-[14px] placeholder:text-[var(--annotation)] focus:ring-0 focus:border-[var(--card-border)] focus:outline-none"
               />
             </div>
 
@@ -204,9 +204,9 @@ export function SignInForm({ showDemoButton = false }: { showDemoButton?: boolea
               <button
                 type="submit"
                 disabled={loading}
-                className="bg-[var(--button-primary)] box-border content-stretch flex flex-row gap-2.5 h-[50px] items-center justify-center px-[116px] py-5 relative rounded-[10px] shrink-0 w-full hover:bg-[#e0e0e0] transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="bg-[var(--button-primary)] box-border content-stretch flex flex-row gap-2.5 h-[45px] sm:h-[50px] items-center justify-center px-[116px] py-4 sm:py-5 relative rounded-[10px] shrink-0 w-full hover:bg-[#e0e0e0] transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <div className="font-inter font-normal leading-[0] not-italic relative shrink-0 text-[var(--button-text-primary)] text-[14px] text-center text-nowrap">
+                <div className="font-inter font-normal leading-[0] not-italic relative shrink-0 text-[var(--button-text-primary)] text-[13px] sm:text-[14px] text-center text-nowrap">
                   <p className="block leading-[normal] whitespace-pre">
                     {loading ? 'Signing in...' : 'Sign In'}
                   </p>
@@ -220,13 +220,13 @@ export function SignInForm({ showDemoButton = false }: { showDemoButton?: boolea
                     localStorage.setItem('demo-user', 'true')
                     window.location.reload()
                   }}
-                  className="box-border content-stretch flex flex-row gap-2.5 h-[50px] items-center justify-center px-[116px] py-5 relative rounded-[10px] shrink-0 w-full hover:bg-[#4d4d4d] transition-colors duration-200"
+                  className="box-border content-stretch flex flex-row gap-2.5 h-[45px] sm:h-[50px] items-center justify-center px-[116px] py-4 sm:py-5 relative rounded-[10px] shrink-0 w-full hover:bg-[#4d4d4d] transition-colors duration-200"
                 >
                   <div
                     aria-hidden="true"
                     className="absolute border border-[var(--button-primary)] border-solid inset-0 pointer-events-none rounded-[10px]"
                   />
-                  <div className="font-inter font-normal leading-[0] not-italic relative shrink-0 text-[var(--button-text-secondary)] text-[14px] text-center text-nowrap">
+                  <div className="font-inter font-normal leading-[0] not-italic relative shrink-0 text-[var(--button-text-secondary)] text-[13px] sm:text-[14px] text-center text-nowrap">
                     <p className="block leading-[normal] whitespace-pre">
                       Demo Login
                     </p>
@@ -236,7 +236,7 @@ export function SignInForm({ showDemoButton = false }: { showDemoButton?: boolea
             </div>
           </form>
         ) : (
-          <form onSubmit={handleSignUp} className="box-border content-stretch flex flex-col gap-[25px] items-center justify-start p-0 relative shrink-0 w-full">
+          <form onSubmit={handleSignUp} className="box-border content-stretch flex flex-col gap-[20px] sm:gap-[25px] items-center justify-start p-0 relative shrink-0 w-full">
             {/* Name Field */}
             <div className="box-border content-stretch flex flex-col gap-[5px] items-start justify-start p-0 relative shrink-0 w-full">
               <div className="font-inter font-normal leading-[0] not-italic relative shrink-0 text-[var(--annotation)] text-[12px] text-left text-nowrap">
@@ -248,7 +248,7 @@ export function SignInForm({ showDemoButton = false }: { showDemoButton?: boolea
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
-                className="bg-[var(--primary-inactive)] border border-[var(--card-border)] rounded-[10px] h-[50px] px-[15px] font-inter font-normal text-[var(--base-text)] text-[14px] placeholder:text-[var(--annotation)] focus:ring-0 focus:border-[var(--card-border)] focus:outline-none"
+                className="bg-[var(--primary-inactive)] border border-[var(--card-border)] rounded-[10px] h-[45px] sm:h-[50px] px-[12px] sm:px-[15px] font-inter font-normal text-[var(--base-text)] text-[13px] sm:text-[14px] placeholder:text-[var(--annotation)] focus:ring-0 focus:border-[var(--card-border)] focus:outline-none"
               />
             </div>
 
@@ -263,7 +263,7 @@ export function SignInForm({ showDemoButton = false }: { showDemoButton?: boolea
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="bg-[var(--primary-inactive)] border border-[var(--card-border)] rounded-[10px] h-[50px] px-[15px] font-inter font-normal text-[var(--base-text)] text-[14px] placeholder:text-[var(--annotation)] focus:ring-0 focus:border-[var(--card-border)] focus:outline-none"
+                className="bg-[var(--primary-inactive)] border border-[var(--card-border)] rounded-[10px] h-[45px] sm:h-[50px] px-[12px] sm:px-[15px] font-inter font-normal text-[var(--base-text)] text-[13px] sm:text-[14px] placeholder:text-[var(--annotation)] focus:ring-0 focus:border-[var(--card-border)] focus:outline-none"
               />
             </div>
 
@@ -278,7 +278,7 @@ export function SignInForm({ showDemoButton = false }: { showDemoButton?: boolea
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="bg-[var(--primary-inactive)] border border-[var(--card-border)] rounded-[10px] h-[50px] px-[15px] font-inter font-normal text-[var(--base-text)] text-[14px] placeholder:text-[var(--annotation)] focus:ring-0 focus:border-[var(--card-border)] focus:outline-none"
+                className="bg-[var(--primary-inactive)] border border-[var(--card-border)] rounded-[10px] h-[45px] sm:h-[50px] px-[12px] sm:px-[15px] font-inter font-normal text-[var(--base-text)] text-[13px] sm:text-[14px] placeholder:text-[var(--annotation)] focus:ring-0 focus:border-[var(--card-border)] focus:outline-none"
               />
             </div>
 
@@ -304,9 +304,9 @@ export function SignInForm({ showDemoButton = false }: { showDemoButton?: boolea
               <button
                 type="submit"
                 disabled={loading}
-                className="bg-[var(--button-primary)] box-border content-stretch flex flex-row gap-2.5 h-[50px] items-center justify-center px-[116px] py-5 relative rounded-[10px] shrink-0 w-full hover:bg-[#e0e0e0] transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="bg-[var(--button-primary)] box-border content-stretch flex flex-row gap-2.5 h-[45px] sm:h-[50px] items-center justify-center px-[116px] py-4 sm:py-5 relative rounded-[10px] shrink-0 w-full hover:bg-[#e0e0e0] transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <div className="font-inter font-normal leading-[0] not-italic relative shrink-0 text-[var(--button-text-primary)] text-[14px] text-center text-nowrap">
+                <div className="font-inter font-normal leading-[0] not-italic relative shrink-0 text-[var(--button-text-primary)] text-[13px] sm:text-[14px] text-center text-nowrap">
                   <p className="block leading-[normal] whitespace-pre">
                     {loading ? 'Creating account...' : 'Create Account'}
                   </p>

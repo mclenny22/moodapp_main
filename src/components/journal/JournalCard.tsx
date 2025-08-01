@@ -34,7 +34,7 @@ export function JournalCard({ entry, onClick }: JournalCardProps) {
 
   return (
     <div
-      className="box-border content-stretch flex flex-col items-start justify-start p-[25px] relative rounded-[25px] size-full cursor-pointer transition-all duration-700 ease-out hover:border-[var(--annotation)] font-sans overflow-hidden"
+      className="box-border content-stretch flex flex-col items-start justify-start p-[20px] sm:p-[25px] relative rounded-[25px] size-full cursor-pointer transition-all duration-700 ease-out hover:border-[var(--annotation)] font-sans overflow-hidden"
       style={{ 
         gap: isExpanded ? '30px' : '0px',
         transition: 'all 700ms ease-out'
