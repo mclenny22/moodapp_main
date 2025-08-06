@@ -259,7 +259,7 @@ export function TodayView({ userName }: { userName?: string }) {
                     </div>
                     <div
                       aria-hidden="true"
-                      className="absolute border-solid inset-0 pointer-events-none rounded-xl"
+                      className="absolute border border-solid inset-0 pointer-events-none rounded-xl"
                       style={{ borderColor: getSentimentGradientColor(todaysEntry.sentiment_score) }}
                     />
                   </div>
