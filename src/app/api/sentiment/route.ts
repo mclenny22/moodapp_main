@@ -57,7 +57,7 @@ Please respond in this exact JSON format:
 }`
 
     const completion = await openai.chat.completions.create({
-      model: "gpt-5-nano-2025-08-07",
+      model: "gpt-4o-mini",
       messages: [
         {
           role: "system",
@@ -68,7 +68,7 @@ Please respond in this exact JSON format:
           content: prompt
         }
       ],
-      temperature: 1,
+      temperature: 0.3,
       max_completion_tokens: 200,
     })
 

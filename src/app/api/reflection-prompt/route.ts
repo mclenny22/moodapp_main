@@ -21,7 +21,7 @@ export async function POST(request: Request) {
     }
 
     const completion = await openai.chat.completions.create({
-      model: 'gpt-5-nano-2025-08-07',
+      model: 'gpt-4o-mini',
       messages: [
         {
           role: 'system',
@@ -51,7 +51,7 @@ export async function POST(request: Request) {
         }
       ],
       max_completion_tokens: 100,
-      temperature: 1,
+      temperature: 0.7,
     })
 
     const reflectionPrompt = completion.choices[0]?.message?.content?.trim()
