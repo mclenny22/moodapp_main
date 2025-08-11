@@ -50,7 +50,7 @@ export async function POST(request: Request) {
           content: `Generate a reflection prompt based on this journal entry: ${content}`
         }
       ],
-      max_tokens: 100,
+      max_completion_tokens: 100,
       temperature: 0.7,
     })
 

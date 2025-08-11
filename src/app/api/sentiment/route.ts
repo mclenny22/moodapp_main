@@ -69,7 +69,7 @@ Please respond in this exact JSON format:
         }
       ],
       temperature: 0.3,
-      max_tokens: 200,
+      max_completion_tokens: 200,
     })
 
     const responseText = completion.choices[0]?.message?.content
