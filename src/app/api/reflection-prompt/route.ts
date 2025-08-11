@@ -13,7 +13,7 @@ export async function POST(request: Request) {
     }
 
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4.1-nano-2025-04-14',
+      model: 'gpt-5-nano-2025-08-07',
       messages: [
         {
           role: 'system',
