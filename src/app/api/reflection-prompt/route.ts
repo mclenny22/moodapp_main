@@ -1,4 +1,12 @@
 import OpenAI from 'openai'
+import { validateEnv } from '@/lib/env'
+
+// Validate environment variables
+try {
+  validateEnv()
+} catch (error) {
+  console.error('Environment validation failed:', error)
+}
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -55,8 +63,23 @@ export async function POST(request: Request) {
     return Response.json({ reflectionPrompt })
   } catch (error) {
     console.error('Error generating reflection prompt:', error)
+    
+    // Provide more specific error information
+    let errorMessage = 'Failed to generate reflection prompt'
+    if (error instanceof Error) {
+      if (error.message.includes('API key')) {
+        errorMessage = 'OpenAI API key not configured'
+      } else if (error.message.includes('rate limit')) {
+        errorMessage = 'OpenAI rate limit exceeded'
+      } else if (error.message.includes('quota')) {
+        errorMessage = 'OpenAI quota exceeded'
+      } else {
+        errorMessage = error.message
+      }
+    }
+    
     return Response.json(
-      { error: 'Failed to generate reflection prompt' },
+      { error: errorMessage },
       { status: 500 }
     )
   }

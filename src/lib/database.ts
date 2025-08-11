@@ -48,14 +48,21 @@ export async function createJournalEntry(
 
     if (error) {
       console.error('Error creating journal entry:', error)
-      return null
+      if (error.code === '23505') {
+        throw new Error('An entry for today already exists')
+      } else if (error.code === '23503') {
+        throw new Error('User not found or unauthorized')
+      } else if (error.code === '42P01') {
+        throw new Error('Database table not found - please check your database setup')
+      }
+      throw new Error(`Database error: ${error.message}`)
     }
 
     console.log('Successfully created journal entry with reflection prompt:', data.reflection_prompt)
     return data
   } catch (error) {
     console.error('Error creating journal entry:', error)
-    return null
+    throw error // Re-throw to let the calling code handle it
   }
 }
 
@@ -228,14 +235,19 @@ export async function updateJournalEntry(
 
     if (error) {
       console.error('Error updating journal entry:', error)
-      return null
+      if (error.code === '23503') {
+        throw new Error('User not found or unauthorized')
+      } else if (error.code === '42P01') {
+        throw new Error('Database table not found - please check your database setup')
+      }
+      throw new Error(`Database error: ${error.message}`)
     }
 
     console.log('Successfully updated journal entry with reflection prompt:', data.reflection_prompt)
     return data
   } catch (error) {
     console.error('Exception updating journal entry:', error)
-    return null
+    throw error // Re-throw to let the calling code handle it
   }
 } 
 

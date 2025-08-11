@@ -1,5 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import OpenAI from 'openai'
+import { validateEnv } from '@/lib/env'
+
+// Validate environment variables
+try {
+  validateEnv()
+} catch (error) {
+  console.error('Environment validation failed:', error)
+}
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -90,8 +98,23 @@ Please respond in this exact JSON format:
 
   } catch (error) {
     console.error('Sentiment analysis error:', error)
+    
+    // Provide more specific error information
+    let errorMessage = 'Failed to analyze sentiment'
+    if (error instanceof Error) {
+      if (error.message.includes('API key')) {
+        errorMessage = 'OpenAI API key not configured'
+      } else if (error.message.includes('rate limit')) {
+        errorMessage = 'OpenAI rate limit exceeded'
+      } else if (error.message.includes('quota')) {
+        errorMessage = 'OpenAI quota exceeded'
+      } else {
+        errorMessage = error.message
+      }
+    }
+    
     return NextResponse.json(
-      { error: 'Failed to analyze sentiment' },
+      { error: errorMessage },
       { status: 500 }
     )
   }

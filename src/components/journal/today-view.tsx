@@ -89,7 +89,8 @@ export function TodayView({ userName }: { userName?: string }) {
       })
 
       if (!sentimentResponse.ok) {
-        throw new Error('Failed to analyze sentiment')
+        const errorData = await sentimentResponse.json().catch(() => ({}))
+        throw new Error(errorData.error || `HTTP ${sentimentResponse.status}: Failed to analyze sentiment`)
       }
 
       const analysis = await sentimentResponse.json()
@@ -112,7 +113,9 @@ export function TodayView({ userName }: { userName?: string }) {
         console.log('Generated reflection prompt for edit:', prompt)
         console.log('Analysis object with reflection prompt:', analysis)
       } else {
-        console.error('Reflection API failed:', reflectionResponse.status, reflectionResponse.statusText)
+        const errorData = await reflectionResponse.json().catch(() => ({}))
+        console.error('Reflection API failed:', reflectionResponse.status, reflectionResponse.statusText, errorData.error)
+        // Continue without reflection prompt rather than failing completely
       }
       
       // Update the entry in database with complete analysis
@@ -129,7 +132,21 @@ export function TodayView({ userName }: { userName?: string }) {
       
     } catch (error) {
       console.error('Error updating entry:', error)
-      setError('Failed to update entry. Please try again.')
+      let errorMessage = 'Failed to update entry. Please try again.'
+      
+      if (error instanceof Error) {
+        if (error.message.includes('User not found')) {
+          errorMessage = 'Authentication error. Please sign in again.'
+        } else if (error.message.includes('Database table not found')) {
+          errorMessage = 'Database setup error. Please contact support.'
+        } else if (error.message.includes('OpenAI')) {
+          errorMessage = 'AI analysis service error. Please try again later.'
+        } else {
+          errorMessage = error.message
+        }
+      }
+      
+      setError(errorMessage)
     } finally {
       setIsUpdating(false)
     }
@@ -148,11 +165,13 @@ export function TodayView({ userName }: { userName?: string }) {
         headers: {
           'Content-Type': 'application/json',
         },
+        },
         body: JSON.stringify({ content }),
       })
 
       if (!sentimentResponse.ok) {
-        throw new Error('Failed to analyze sentiment')
+        const errorData = await sentimentResponse.json().catch(() => ({}))
+        throw new Error(errorData.error || `HTTP ${sentimentResponse.status}: Failed to analyze sentiment`)
       }
 
       const analysis = await sentimentResponse.json()
@@ -175,7 +194,9 @@ export function TodayView({ userName }: { userName?: string }) {
         console.log('Generated reflection prompt for new entry:', prompt)
         console.log('Analysis object with reflection prompt:', analysis)
       } else {
-        console.error('Reflection API failed for new entry:', reflectionResponse.status, reflectionResponse.statusText)
+        const errorData = await reflectionResponse.json().catch(() => ({}))
+        console.error('Reflection API failed for new entry:', reflectionResponse.status, reflectionResponse.statusText, errorData.error)
+        // Continue without reflection prompt rather than failing completely
       }
       
       // Save to database with analysis (now includes reflection_prompt)
@@ -192,7 +213,23 @@ export function TodayView({ userName }: { userName?: string }) {
       
     } catch (error) {
       console.error('Error submitting entry:', error)
-      setError('Failed to submit entry. Please try again.')
+      let errorMessage = 'Failed to submit entry. Please try again.'
+      
+      if (error instanceof Error) {
+        if (error.message.includes('already exists')) {
+          errorMessage = 'You already have an entry for today. You can edit it instead.'
+        } else if (error.message.includes('User not found')) {
+          errorMessage = 'Authentication error. Please sign in again.'
+        } else if (error.message.includes('Database table not found')) {
+          errorMessage = 'Database setup error. Please contact support.'
+        } else if (error.message.includes('OpenAI')) {
+          errorMessage = 'AI analysis service error. Please try again later.'
+        } else {
+          errorMessage = error.message
+        }
+      }
+      
+      setError(errorMessage)
     } finally {
       setIsSubmitting(false)
     }
