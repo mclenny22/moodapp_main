@@ -51,7 +51,7 @@ export async function POST(request: Request) {
         }
       ],
       max_completion_tokens: 100,
-      temperature: 0.7,
+      temperature: 1,
     })
 
     const reflectionPrompt = completion.choices[0]?.message?.content?.trim()

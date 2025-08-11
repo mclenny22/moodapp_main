@@ -68,7 +68,7 @@ Please respond in this exact JSON format:
           content: prompt
         }
       ],
-      temperature: 0.3,
+      temperature: 1,
       max_completion_tokens: 200,
     })
 
