@@ -165,7 +165,6 @@ export function TodayView({ userName }: { userName?: string }) {
         headers: {
           'Content-Type': 'application/json',
         },
-        },
         body: JSON.stringify({ content }),
       })
 
